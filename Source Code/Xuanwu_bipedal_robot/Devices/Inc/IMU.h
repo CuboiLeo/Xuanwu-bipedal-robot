@@ -9,10 +9,15 @@ typedef struct IMU
 	float gx;	// rad/s
 	float gy;	//rad/s
 	float gz; // rad/s
-	float yaw; //rad
-	float pitch; //rad
-	float roll; //rad
+	float yaw_rad; //rad
+	float pitch_rad; //rad
+	float roll_rad; //rad
+	float yaw_deg; //deg
+	float pitch_deg; //deg
+	float roll_deg; //deg
+
+	float temp; // degC
 }IMU_t;
 
-IMU_t g_IMU;
+extern IMU_t g_IMU;
 #endif

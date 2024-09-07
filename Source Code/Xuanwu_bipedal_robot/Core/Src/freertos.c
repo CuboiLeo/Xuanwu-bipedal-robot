@@ -48,18 +48,20 @@
 osSemaphoreId imuBinarySem01Handle;
 osStaticSemaphoreDef_t imuBinarySemControlBlock;
 /* USER CODE END Variables */
-osThreadId InitializationHandle;
+osThreadId DebugHandle;
 osThreadId IMUHandle;
 uint32_t IMUBuffer[ 512 ];
 osStaticThreadDef_t IMUControlBlock;
+osThreadId RobotHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 
 /* USER CODE END FunctionPrototypes */
 
-void Initialization_Task(void const * argument);
+void Debug_Task(void const * argument);
 void IMU_Task(void const * argument);
+void Robot_Task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -108,13 +110,17 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* definition and creation of Initialization */
-  osThreadDef(Initialization, Initialization_Task, osPriorityHigh, 0, 128);
-  InitializationHandle = osThreadCreate(osThread(Initialization), NULL);
+  /* definition and creation of Debug */
+  osThreadDef(Debug, Debug_Task, osPriorityNormal, 0, 256);
+  DebugHandle = osThreadCreate(osThread(Debug), NULL);
 
   /* definition and creation of IMU */
-  osThreadStaticDef(IMU, IMU_Task, osPriorityAboveNormal, 0, 512, IMUBuffer, &IMUControlBlock);
+  osThreadStaticDef(IMU, IMU_Task, osPriorityHigh, 0, 512, IMUBuffer, &IMUControlBlock);
   IMUHandle = osThreadCreate(osThread(IMU), NULL);
+
+  /* definition and creation of Robot */
+  osThreadDef(Robot, Robot_Task, osPriorityHigh, 0, 1280);
+  RobotHandle = osThreadCreate(osThread(Robot), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -122,22 +128,22 @@ void MX_FREERTOS_Init(void) {
 
 }
 
-/* USER CODE BEGIN Header_Initialization_Task */
+/* USER CODE BEGIN Header_Debug_Task */
 /**
-  * @brief  Function implementing the Initialization thread.
+  * @brief  Function implementing the Debug thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_Initialization_Task */
-__weak void Initialization_Task(void const * argument)
+/* USER CODE END Header_Debug_Task */
+__weak void Debug_Task(void const * argument)
 {
-  /* USER CODE BEGIN Initialization_Task */
+  /* USER CODE BEGIN Debug_Task */
   /* Infinite loop */
   for(;;)
   {
     osDelay(1);
   }
-  /* USER CODE END Initialization_Task */
+  /* USER CODE END Debug_Task */
 }
 
 /* USER CODE BEGIN Header_IMU_Task */
@@ -156,6 +162,24 @@ __weak void IMU_Task(void const * argument)
     osDelay(1);
   }
   /* USER CODE END IMU_Task */
+}
+
+/* USER CODE BEGIN Header_Robot_Task */
+/**
+* @brief Function implementing the Robot thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Robot_Task */
+__weak void Robot_Task(void const * argument)
+{
+  /* USER CODE BEGIN Robot_Task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END Robot_Task */
 }
 
 /* Private application code --------------------------------------------------*/
