@@ -1073,11 +1073,6 @@
               <FileType>1</FileType>
               <FilePath>..\App\Src\Motor.c</FilePath>
             </File>
-            <File>
-              <FileName>Motor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\App\Inc\Motor.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -1097,6 +1092,11 @@
               <FileName>FusionOffset.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Alg\Src\FusionOffset.c</FilePath>
+            </File>
+            <File>
+              <FileName>PID.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Alg\Src\PID.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1134,14 +1134,14 @@
           <GroupName>BSP</GroupName>
           <Files>
             <File>
-              <FileName>can_bsp.c</FileName>
+              <FileName>CAN_BSP.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\Src\can_bsp.c</FilePath>
+              <FilePath>..\BSP\Src\CAN_BSP.c</FilePath>
             </File>
             <File>
-              <FileName>delay.c</FileName>
+              <FileName>Delay.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\BSP\Src\delay.c</FilePath>
+              <FilePath>..\BSP\Src\Delay.c</FilePath>
             </File>
           </Files>
         </Group>
