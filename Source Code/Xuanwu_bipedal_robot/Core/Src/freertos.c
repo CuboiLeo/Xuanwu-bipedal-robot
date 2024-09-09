@@ -53,6 +53,7 @@ osThreadId IMUHandle;
 uint32_t IMUBuffer[ 512 ];
 osStaticThreadDef_t IMUControlBlock;
 osThreadId RobotHandle;
+osThreadId Motor_CtrlHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -62,6 +63,7 @@ osThreadId RobotHandle;
 void Debug_Task(void const * argument);
 void IMU_Task(void const * argument);
 void Robot_Task(void const * argument);
+void Motor_Ctrl_Task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -122,6 +124,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(Robot, Robot_Task, osPriorityHigh, 0, 1280);
   RobotHandle = osThreadCreate(osThread(Robot), NULL);
 
+  /* definition and creation of Motor_Ctrl */
+  osThreadDef(Motor_Ctrl, Motor_Ctrl_Task, osPriorityHigh, 0, 256);
+  Motor_CtrlHandle = osThreadCreate(osThread(Motor_Ctrl), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -180,6 +186,24 @@ __weak void Robot_Task(void const * argument)
     osDelay(1);
   }
   /* USER CODE END Robot_Task */
+}
+
+/* USER CODE BEGIN Header_Motor_Ctrl_Task */
+/**
+* @brief Function implementing the Motor_Ctrl thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Motor_Ctrl_Task */
+__weak void Motor_Ctrl_Task(void const * argument)
+{
+  /* USER CODE BEGIN Motor_Ctrl_Task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END Motor_Ctrl_Task */
 }
 
 /* Private application code --------------------------------------------------*/
