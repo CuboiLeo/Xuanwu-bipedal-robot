@@ -57,6 +57,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define CAN2_EN_Pin GPIO_PIN_13
+#define CAN2_EN_GPIO_Port GPIOC
+#define CAN1_EN_Pin GPIO_PIN_14
+#define CAN1_EN_GPIO_Port GPIOC
 #define POWER_5V_Pin GPIO_PIN_15
 #define POWER_5V_GPIO_Port GPIOC
 #define ACC_CS_Pin GPIO_PIN_0

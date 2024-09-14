@@ -6220,7 +6220,7 @@ static void FDCAN_CopyMessageToRAM(const FDCAN_HandleTypeDef *hfdcan, const FDCA
                  pTxHeader->TxEventFifoControl |
                  pTxHeader->FDFormat |
                  pTxHeader->BitRateSwitch |
-                 pTxHeader->DataLength);
+                 (pTxHeader->DataLength << 16U));
 
   /* Calculate Tx element address */
   TxAddress = (uint32_t *)(hfdcan->msgRam.TxBufferSA + (BufferIndex * hfdcan->Init.TxElmtSize * 4U));
@@ -6232,7 +6232,7 @@ static void FDCAN_CopyMessageToRAM(const FDCAN_HandleTypeDef *hfdcan, const FDCA
   TxAddress++;
 
   /* Write Tx payload to the message RAM */
-  for (ByteCounter = 0; ByteCounter < DLCtoBytes[pTxHeader->DataLength >> 16]; ByteCounter += 4U)
+  for (ByteCounter = 0; ByteCounter < DLCtoBytes[pTxHeader->DataLength]; ByteCounter += 4U)
   {
     *TxAddress = (((uint32_t)pTxData[ByteCounter + 3U] << 24U) |
                   ((uint32_t)pTxData[ByteCounter + 2U] << 16U) |

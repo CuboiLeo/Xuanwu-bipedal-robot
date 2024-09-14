@@ -1,6 +1,9 @@
 #include "ET16S_Remote.h"
 #include "usart.h"
 #include "cmsis_os.h"
+#include "Robot.h"
+
+Robot_t g_Robot;
 
 void Robot_Task(void const * argument)
 {

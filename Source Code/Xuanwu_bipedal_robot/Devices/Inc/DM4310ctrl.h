@@ -3,19 +3,15 @@
 #include "main.h"
 #include "DM4310driver.h"
 
-extern int8_t motor_id;
-
-extern motor_t motor[num];
+extern motor_t g_Motor[joint_num];
 
 void dm4310_motor_init(void);
-void ctrl_enable(void);
-void ctrl_disable(void);
-void ctrl_set(void);
-void ctrl_clear_para(void);
-void ctrl_clear_err(void);
-void ctrl_add(void);
-void ctrl_minus(void);
-void ctrl_send(void);
+void dm4310_reset_joints(void);
+void dm4310_send_all(void);
+void dm4310_disable_all(void);
+void dm4310_enable_all(void);
+uint8_t dm4310_return_zero_pos(void);
+void dm4310_virtual_boundary(void);
 
 #endif /* __DM4310_CTRL_H__ */
 

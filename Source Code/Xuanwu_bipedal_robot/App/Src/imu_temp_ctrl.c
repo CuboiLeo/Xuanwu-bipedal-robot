@@ -14,14 +14,6 @@ extern osSemaphoreId imuBinarySem01Handle;
 FusionAhrs IMU_AHRS;
 IMU_t g_IMU;
 
-/**
-************************************************************************
-* @brief:      	IMU_TempCtrlTask(void const * argument)
-* @param:       argument - 任务参数
-* @retval:     	void
-* @details:    	IMU温度控制任务函数
-************************************************************************
-**/
 void IMU_Task(void const * argument)
 {
 		portTickType xLastWakeTime;
@@ -67,14 +59,7 @@ void IMU_Task(void const * argument)
 				vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
 }
-/**
-************************************************************************
-* @brief:      	HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-* @param:       GPIO_Pin - 触发中断的GPIO引脚
-* @retval:     	void
-* @details:    	GPIO外部中断回调函数，处理加速度计和陀螺仪中断
-************************************************************************
-**/
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     if(GPIO_Pin == ACC_INT_Pin)

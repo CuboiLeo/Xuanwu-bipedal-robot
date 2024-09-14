@@ -22,19 +22,17 @@
 
 typedef enum
 {
-	Motor1,
-	Motor2,
-	Motor3,
-	Motor4,
-	Motor5,
-	Motor6,
-	Motor7,
-	Motor8,
-	num
+	Left_Hip_Yaw,
+	Left_Hip_Roll,
+	Left_Hip_Pitch,
+	Left_Knee_Pitch,
+	Right_Hip_Yaw,
+	Right_Hip_Roll,
+	Right_Hip_Pitch,
+	Right_Knee_Pitch,
+	joint_num
 } motor_num;
 
-
-// 电机回传信息结构体
 typedef struct 
 {
 	int id;
@@ -53,7 +51,6 @@ typedef struct
 	float Tcoil;
 }motor_fbpara_t;
 
-// 电机参数设置结构体
 typedef struct 
 {
 	int8_t mode;
@@ -66,33 +63,32 @@ typedef struct
 
 typedef struct
 {
+	uint8_t can_bus;
 	int16_t id;
-	uint8_t start_flag;
+	uint8_t reached_pos_flag;
+	float range;
 	motor_fbpara_t para;
 	motor_ctrl_t ctrl;
-	motor_ctrl_t cmd;
 }motor_t;
 
 float uint_to_float(int x_int, float x_min, float x_max, int bits);
 int float_to_uint(float x_float, float x_min, float x_max, int bits);
-void dm4310_ctrl_send(hcan_t* hcan, motor_t *motor);
-void dm4310_enable(hcan_t* hcan, motor_t *motor);
-void dm4310_disable(hcan_t* hcan, motor_t *motor);
-void dm4310_set(motor_t *motor);
+void dm4310_ctrl_send(motor_t *motor);
+void dm4310_enable(motor_t *motor);
+void dm4310_disable(motor_t *motor);
 void dm4310_clear_para(motor_t *motor);
-void dm4310_clear_err(hcan_t* hcan, motor_t *motor);
+void dm4310_clear_err(motor_t *motor);
 void dm4310_fbdata(motor_t *motor, uint8_t *rx_data);
 
-void enable_motor_mode(hcan_t* hcan, uint16_t motor_id, uint16_t mode_id);
-void disable_motor_mode(hcan_t* hcan, uint16_t motor_id, uint16_t mode_id);
+void enable_motor_mode(FDCAN_HandleTypeDef *hcan, uint16_t motor_id, uint16_t mode_id);
+void disable_motor_mode(FDCAN_HandleTypeDef *hcan, uint16_t motor_id, uint16_t mode_id);
 
-void mit_ctrl(hcan_t* hcan, uint16_t motor_id, float pos, float vel,float kp, float kd, float torq);
-void pos_speed_ctrl(hcan_t* hcan,uint16_t motor_id, float pos, float vel);
-void speed_ctrl(hcan_t* hcan,uint16_t motor_id, float _vel);
-void pos_force_ctrl(hcan_t* hcan,uint16_t motor_id, float pos, uint16_t vel, uint16_t i);
-	
-void save_pos_zero(hcan_t* hcan, uint16_t motor_id, uint16_t mode_id);
-void clear_err(hcan_t* hcan, uint16_t motor_id, uint16_t mode_id);
+void mit_ctrl(FDCAN_HandleTypeDef *hcan, uint16_t motor_id, float pos, float vel,float kp, float kd, float torq);
+void pos_speed_ctrl(FDCAN_HandleTypeDef *hcan,uint16_t motor_id, float pos, float vel);
+void speed_ctrl(FDCAN_HandleTypeDef *hcan,uint16_t motor_id, float _vel);
+void pos_force_ctrl(FDCAN_HandleTypeDef *hcan,uint16_t motor_id, float pos, uint16_t vel, uint16_t i);
+
+void save_pos_zero(FDCAN_HandleTypeDef *hcan, uint16_t motor_id, uint16_t mode_id);
+void clear_err(FDCAN_HandleTypeDef *hcan, uint16_t motor_id, uint16_t mode_id);
 
 #endif /* __DM4310_DRV_H__ */
-
