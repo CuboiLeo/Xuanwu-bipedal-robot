@@ -200,10 +200,5 @@ void dm4310_virtual_boundary(void)
 			g_Motor[i].ctrl.kp_set = 3;
 			g_Motor[i].ctrl.kd_set = 1;
 		}
-		else
-		{
-			g_Motor[i].ctrl.kp_set = 0;
-			g_Motor[i].ctrl.kd_set = 0;
-		}
 	}
 }

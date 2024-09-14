@@ -2,6 +2,7 @@
 #include "CMSIS_os.h"
 #include "Delay.h"
 #include "Robot.h"
+#include "math.h"
 
 void Motor_Ctrl_Task(void const * argument)
 {
@@ -10,6 +11,7 @@ void Motor_Ctrl_Task(void const * argument)
     xLastWakeTime = xTaskGetTickCount();
     const TickType_t TimeIncrement = pdMS_TO_TICKS(2);
 
+		float count = 0;
     can_bsp_init();
     delay_init(480);
     osDelay(100);
@@ -30,7 +32,13 @@ void Motor_Ctrl_Task(void const * argument)
 			
 			if(g_Robot.soft_start_flag == ALL_JOINTS_ZEROED)
 			{
-				
+				for(int i = 0; i < joint_num; i++)
+				{
+					count += 3.1415926f*0.0005f;
+					g_Motor[i].ctrl.pos_set = 0.4f*sinf(count);
+					g_Motor[i].ctrl.kp_set = 5;
+					g_Motor[i].ctrl.kd_set = 1;
+				}
 			}
 
       dm4310_virtual_boundary();
