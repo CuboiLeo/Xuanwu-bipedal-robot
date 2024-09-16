@@ -3,6 +3,7 @@
 #include "usart.h"
 #include <stdio.h>
 #include "IMU.h"
+#include "Robot.h"
 
 extern IMU_t g_IMU;
 
@@ -16,8 +17,8 @@ void Debug_Task(void const * argument)
 	for(;;)
   {
 		printf("/*%f,%f,%f,%f,%f,%f*/\n",
-		g_IMU.ax,g_IMU.ay,g_IMU.az,
-		g_IMU.roll_deg,g_IMU.pitch_deg,g_IMU.yaw_deg);
+		g_Robot.left_foot.x,g_Robot.left_foot.y,g_Robot.left_foot.z,
+		g_Robot.right_foot.x,g_Robot.right_foot.y,g_Robot.right_foot.z);
     vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
   }
 }

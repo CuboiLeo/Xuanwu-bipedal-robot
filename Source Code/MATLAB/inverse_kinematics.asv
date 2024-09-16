@@ -1,0 +1,25 @@
+syms theta_1_1 theta_1_2 px py pz a2 a3 a4 theta_3_1 theta_3_2 theta_4_1 theta_4_2
+
+theta_1_1 = atan2(py,px)-atan2(a2,sqrt(px^2+py^2-a2^2));
+theta_1_2 = pi+atan2(py,px)+atan2(-sqrt(px^2+py^2-a2^2),a2);
+
+D = (px^2+py^2+pz^2-a2^2-a3^2-a4^2)/(2*a3*a4);
+theta_4_1 = atan2(sqrt(1-D^2),D);
+theta_4_2 = atan2(-sqrt(1-D^2),D);
+
+theta_3_1 = atan2(pz,sqrt(px^2+py^2-a2^2))-atan2(a4*sin(theta_4_1),a3+a4*cos(theta_4_1));
+theta_3_2 = atan2(pz,sqrt(px^2+py^2-a2^2))-atan2(a4*sin(theta_4_2),a3+a4*cos(theta_4_2));
+
+px_val = -0.2;
+py_val = 0;
+pz_val = 0.55;
+a2_val = -0.095;
+a3_val = -0.09;
+a4_val = -0.18;
+
+theta_1_1 = vpa(subs(theta_1_1,{px py pz a2 a3 a4},{px_val py_val pz_val a2_val a3_val a4_val}),2)
+theta_1_2 = vpa(subs(theta_1_2,{px py pz a2 a3 a4},{px_val py_val pz_val a2_val a3_val a4_val}),2)
+theta_4_1 = vpa(subs(theta_4_1,{px py pz a2 a3 a4},{px_val py_val pz_val a2_val a3_val a4_val}),2)
+theta_4_2 = vpa(subs(theta_4_2,{px py pz a2 a3 a4},{px_val py_val pz_val a2_val a3_val a4_val}),2)
+theta_3_1 = vpa(subs(theta_3_1,{px py pz a2 a3 a4},{px_val py_val pz_val a2_val a3_val a4_val}),2)
+theta_3_2 = vpa(subs(theta_3_2,{px py pz a2 a3 a4},{px_val py_val pz_val a2_val a3_val a4_val}),2)m 
