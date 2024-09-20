@@ -29,6 +29,7 @@
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
+typedef StaticTask_t osStaticThreadDef_t;
 /* USER CODE BEGIN PTD */
 
 /* USER CODE END PTD */
@@ -46,42 +47,70 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 osSemaphoreId imuBinarySem01Handle;
-osStaticSemaphoreDef_t imuBinarySemControlBlock;
+StaticSemaphore_t  imuBinarySemControlBlock;
 /* USER CODE END Variables */
-osThreadId DebugHandle;
-osThreadId IMUHandle;
+/* Definitions for Debug */
+osThreadId_t DebugHandle;
+const osThreadAttr_t Debug_attributes = {
+  .name = "Debug",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for IMU */
+osThreadId_t IMUHandle;
 uint32_t IMUBuffer[ 512 ];
 osStaticThreadDef_t IMUControlBlock;
-osThreadId RobotHandle;
-osThreadId Motor_CtrlHandle;
+const osThreadAttr_t IMU_attributes = {
+  .name = "IMU",
+  .cb_mem = &IMUControlBlock,
+  .cb_size = sizeof(IMUControlBlock),
+  .stack_mem = &IMUBuffer[0],
+  .stack_size = sizeof(IMUBuffer),
+  .priority = (osPriority_t) osPriorityHigh,
+};
+/* Definitions for Robot */
+osThreadId_t RobotHandle;
+const osThreadAttr_t Robot_attributes = {
+  .name = "Robot",
+  .stack_size = 1280 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
+/* Definitions for Motor_Ctrl */
+osThreadId_t Motor_CtrlHandle;
+const osThreadAttr_t Motor_Ctrl_attributes = {
+  .name = "Motor_Ctrl",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 
 /* USER CODE END FunctionPrototypes */
 
-void Debug_Task(void const * argument);
-void IMU_Task(void const * argument);
-void Robot_Task(void const * argument);
-void Motor_Ctrl_Task(void const * argument);
+void Debug_Task(void *argument);
+void IMU_Task(void *argument);
+void Robot_Task(void *argument);
+void Motor_Ctrl_Task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
-/* GetIdleTaskMemory prototype (linked to static allocation support) */
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize );
+/* Hook prototypes */
+void configureTimerForRunTimeStats(void);
+unsigned long getRunTimeCounterValue(void);
 
-/* USER CODE BEGIN GET_IDLE_TASK_MEMORY */
-static StaticTask_t xIdleTaskTCBBuffer;
-static StackType_t xIdleStack[configMINIMAL_STACK_SIZE];
-
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize )
+/* USER CODE BEGIN 1 */
+/* Functions needed when configGENERATE_RUN_TIME_STATS is on */
+__weak void configureTimerForRunTimeStats(void)
 {
-  *ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
-  *ppxIdleTaskStackBuffer = &xIdleStack[0];
-  *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
-  /* place for user code */
+
 }
-/* USER CODE END GET_IDLE_TASK_MEMORY */
+
+__weak unsigned long getRunTimeCounterValue(void)
+{
+return 0;
+}
+/* USER CODE END 1 */
 
 /**
   * @brief  FreeRTOS initialization
@@ -99,8 +128,12 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* definition and creation of imuBinarySem01 */
-  osSemaphoreStaticDef(imuBinarySem01, &imuBinarySemControlBlock);
-  imuBinarySem01Handle = osSemaphoreCreate(osSemaphore(imuBinarySem01), 1);
+  const osSemaphoreAttr_t imuBinarySem01_attributes = {
+    .name = "imuBinarySem01",
+    .cb_mem = &imuBinarySemControlBlock,       // Pointer to the static control block
+    .cb_size = sizeof(imuBinarySemControlBlock) // Size of the control block
+	};
+	osSemaphoreId_t imuBinarySem01Handle = osSemaphoreNew(1, 1, &imuBinarySem01_attributes);
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
@@ -112,25 +145,25 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* definition and creation of Debug */
-  osThreadDef(Debug, Debug_Task, osPriorityNormal, 0, 256);
-  DebugHandle = osThreadCreate(osThread(Debug), NULL);
+  /* creation of Debug */
+  DebugHandle = osThreadNew(Debug_Task, NULL, &Debug_attributes);
 
-  /* definition and creation of IMU */
-  osThreadStaticDef(IMU, IMU_Task, osPriorityHigh, 0, 512, IMUBuffer, &IMUControlBlock);
-  IMUHandle = osThreadCreate(osThread(IMU), NULL);
+  /* creation of IMU */
+  IMUHandle = osThreadNew(IMU_Task, NULL, &IMU_attributes);
 
-  /* definition and creation of Robot */
-  osThreadDef(Robot, Robot_Task, osPriorityHigh, 0, 1280);
-  RobotHandle = osThreadCreate(osThread(Robot), NULL);
+  /* creation of Robot */
+  RobotHandle = osThreadNew(Robot_Task, NULL, &Robot_attributes);
 
-  /* definition and creation of Motor_Ctrl */
-  osThreadDef(Motor_Ctrl, Motor_Ctrl_Task, osPriorityHigh, 0, 256);
-  Motor_CtrlHandle = osThreadCreate(osThread(Motor_Ctrl), NULL);
+  /* creation of Motor_Ctrl */
+  Motor_CtrlHandle = osThreadNew(Motor_Ctrl_Task, NULL, &Motor_Ctrl_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
+
+  /* USER CODE BEGIN RTOS_EVENTS */
+  /* add events, ... */
+  /* USER CODE END RTOS_EVENTS */
 
 }
 
@@ -141,7 +174,7 @@ void MX_FREERTOS_Init(void) {
   * @retval None
   */
 /* USER CODE END Header_Debug_Task */
-__weak void Debug_Task(void const * argument)
+__weak void Debug_Task(void *argument)
 {
   /* USER CODE BEGIN Debug_Task */
   /* Infinite loop */
@@ -159,7 +192,7 @@ __weak void Debug_Task(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_IMU_Task */
-__weak void IMU_Task(void const * argument)
+__weak void IMU_Task(void *argument)
 {
   /* USER CODE BEGIN IMU_Task */
   /* Infinite loop */
@@ -177,7 +210,7 @@ __weak void IMU_Task(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_Robot_Task */
-__weak void Robot_Task(void const * argument)
+__weak void Robot_Task(void *argument)
 {
   /* USER CODE BEGIN Robot_Task */
   /* Infinite loop */
@@ -195,7 +228,7 @@ __weak void Robot_Task(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_Motor_Ctrl_Task */
-__weak void Motor_Ctrl_Task(void const * argument)
+__weak void Motor_Ctrl_Task(void *argument)
 {
   /* USER CODE BEGIN Motor_Ctrl_Task */
   /* Infinite loop */
@@ -210,3 +243,4 @@ __weak void Motor_Ctrl_Task(void const * argument)
 /* USER CODE BEGIN Application */
 
 /* USER CODE END Application */
+

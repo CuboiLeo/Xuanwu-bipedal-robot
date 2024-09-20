@@ -29,12 +29,12 @@ void dm4310_motor_init(void)
 	g_Motor[Left_Hip_Pitch].can_bus = 1;
 	g_Motor[Left_Hip_Pitch].id = 0x03;
 	g_Motor[Left_Hip_Pitch].ctrl.mode = 0;
-	g_Motor[Left_Hip_Pitch].range = 1.0f;
+	g_Motor[Left_Hip_Pitch].range = 0.6f;
 
 	g_Motor[Left_Knee_Pitch].can_bus = 1;
 	g_Motor[Left_Knee_Pitch].id = 0x04;
 	g_Motor[Left_Knee_Pitch].ctrl.mode = 0;
-	g_Motor[Left_Knee_Pitch].range = 1.5f;
+	g_Motor[Left_Knee_Pitch].range = 0.6f;
 
 	g_Motor[Right_Hip_Yaw].can_bus = 2;
 	g_Motor[Right_Hip_Yaw].id = 0x05;
@@ -49,12 +49,12 @@ void dm4310_motor_init(void)
 	g_Motor[Right_Hip_Pitch].can_bus = 2;
 	g_Motor[Right_Hip_Pitch].id = 0x07;
 	g_Motor[Right_Hip_Pitch].ctrl.mode = 0;
-	g_Motor[Right_Hip_Pitch].range = 1.0f;
+	g_Motor[Right_Hip_Pitch].range = 0.6f;
 
 	g_Motor[Right_Knee_Pitch].can_bus = 2;
 	g_Motor[Right_Knee_Pitch].id = 0x08;
 	g_Motor[Right_Knee_Pitch].ctrl.mode = 0;
-	g_Motor[Right_Knee_Pitch].range = 1.5f;
+	g_Motor[Right_Knee_Pitch].range = 0.6f;
 }
 
 void fdcan1_rx_callback(void)

@@ -1,25 +1,20 @@
-syms theta_1_1 theta_1_2 px py pz a2 a3 a4 theta_3_1 theta_3_2 theta_4_1 theta_4_2
+clear; close all; clc;
+px = -0.095;
+py = 0.0;
+pz = -0.5599999;
+a2 = -0.095;
+a4 = -0.18;
+a5 = -0.38;
 
-theta_1_1 = atan2(py,px)-atan2(a2,sqrt(px^2+py^2-a2^2));
+theta_1_1 = atan2(py,px)-atan2(a2,sqrt(px^2+py^2-a2^2))-3*pi/2
 theta_1_2 = pi+atan2(py,px)+atan2(-sqrt(px^2+py^2-a2^2),a2);
 
-D = (px^2+py^2+pz^2-a2^2-a3^2-a4^2)/(2*a3*a4);
-theta_4_1 = atan2(sqrt(1-D^2),D);
-theta_4_2 = atan2(-sqrt(1-D^2),D);
+D = (px^2+py^2+pz^2-a2^2-a4^2-a5^2)/(2*a4*a5);
+theta_4_1 = atan2(sqrt(1-D^2),D)
+theta_4_2 = atan2(-sqrt(1-D^2),D)
 
-theta_3_1 = atan2(pz,sqrt(px^2+py^2-a2^2))-atan2(a4*sin(theta_4_1),a3+a4*cos(theta_4_1));
-theta_3_2 = atan2(pz,sqrt(px^2+py^2-a2^2))-atan2(a4*sin(theta_4_2),a3+a4*cos(theta_4_2));
+theta_3_1 = atan2(pz,sqrt(px^2+py^2-a2^2))-atan2(a5*sin(theta_4_1),a4+a5*cos(theta_4_1))-pi/2
+theta_3_2 = atan2(pz,sqrt(px^2+py^2-a2^2))-atan2(a5*sin(theta_4_2),a4+a5*cos(theta_4_2))
 
-px_val = 0.2;
-py_val = 0.1;
-pz_val = 0.55;
-a2_val = 0.095;
-a3_val = 0.18;
-a4_val = 0.38;
 
-theta_1_1 = vpa(subs(theta_1_1,{px py pz a2 a3 a4},{px_val py_val pz_val a2_val a3_val a4_val}),2)
-theta_1_2 = vpa(subs(theta_1_2,{px py pz a2 a3 a4},{px_val py_val pz_val a2_val a3_val a4_val}),2)
-theta_4_1 = vpa(subs(theta_4_1,{px py pz a2 a3 a4},{px_val py_val pz_val a2_val a3_val a4_val}),2)
-theta_4_2 = vpa(subs(theta_4_2,{px py pz a2 a3 a4},{px_val py_val pz_val a2_val a3_val a4_val}),2)
-theta_3_1 = vpa(subs(theta_3_1,{px py pz a2 a3 a4},{px_val py_val pz_val a2_val a3_val a4_val}),2)
-theta_3_2 = vpa(subs(theta_3_2,{px py pz a2 a3 a4},{px_val py_val pz_val a2_val a3_val a4_val}),2)
+

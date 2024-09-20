@@ -18,7 +18,7 @@ void IMU_Task(void const * argument)
 {
 		portTickType xLastWakeTime;
 		xLastWakeTime = xTaskGetTickCount();
-		const TickType_t TimeIncrement = pdMS_TO_TICKS(10);
+		const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
 
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 		FusionAhrsInitialise(&IMU_AHRS);
@@ -28,7 +28,7 @@ void IMU_Task(void const * argument)
     }
     for(;;)
     {
-        osSemaphoreWait(imuBinarySem01Handle, osWaitForever);
+        osSemaphoreAcquire(imuBinarySem01Handle, osWaitForever);
         
         BMI088_read(gyro, accel, &temp);
 			

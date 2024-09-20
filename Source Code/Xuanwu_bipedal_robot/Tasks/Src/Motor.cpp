@@ -9,9 +9,9 @@ void Motor_Ctrl_Task(void const * argument)
   /* USER CODE BEGIN Motor_Ctrl_Task */
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(2);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
 
-		float count = 0;
+		//float count = 0;
     can_bsp_init();
     delay_init(480);
     osDelay(100);
@@ -23,22 +23,32 @@ void Motor_Ctrl_Task(void const * argument)
     
     dm4310_reset_joints();
 		osDelay(500);
+
   /* Infinite loop */
     for(;;)
     {
-			if(g_Robot.soft_start_flag != ALL_JOINTS_ZEROED){
-				g_Robot.soft_start_flag = dm4310_return_zero_pos();
+      uint8_t soft_start_flag = robot.getSoftStartFlag();
+			
+			if(soft_start_flag != ALL_JOINTS_ZEROED){
+				soft_start_flag = dm4310_return_zero_pos();
+        robot.setSoftStartFlag(soft_start_flag);
 			}
 			
-			if(g_Robot.soft_start_flag == ALL_JOINTS_ZEROED)
+			if(soft_start_flag == ALL_JOINTS_ZEROED)
 			{
 				for(int i = 0; i < joint_num; i++)
 				{
-					count += 3.1415926f*0.0005f;
-					g_Motor[i].ctrl.pos_set = 0.4f*sinf(count);
+//					count += 3.1415926f*0.0005f;
 					g_Motor[i].ctrl.kp_set = 5;
 					g_Motor[i].ctrl.kd_set = 1;
 				}
+				
+				Joint_Angle ref_left_leg_angles = robot.getRefJointAnglesLeft();
+				
+				g_Motor[Left_Hip_Yaw].ctrl.pos_set = ref_left_leg_angles.hip_yaw;
+				g_Motor[Left_Hip_Roll].ctrl.pos_set = ref_left_leg_angles.hip_roll;
+				g_Motor[Left_Hip_Pitch].ctrl.pos_set = ref_left_leg_angles.hip_pitch;
+				g_Motor[Left_Knee_Pitch].ctrl.pos_set = ref_left_leg_angles.knee_pitch;
 			}
 
       dm4310_virtual_boundary();

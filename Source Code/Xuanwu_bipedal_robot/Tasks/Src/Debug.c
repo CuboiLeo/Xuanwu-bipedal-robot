@@ -3,7 +3,7 @@
 #include "usart.h"
 #include <stdio.h>
 #include "IMU.h"
-#include "Robot.h"
+//#include "Robot.h"
 
 extern IMU_t g_IMU;
 
@@ -16,34 +16,26 @@ void Debug_Task(void const * argument)
 	HAL_UART_Init(&huart7);
 	for(;;)
   {
-		printf("/*%f,%f,%f,%f,%f,%f*/\n",
-		g_Robot.left_foot.x,g_Robot.left_foot.y,g_Robot.left_foot.z,
-		g_Robot.right_foot.x,g_Robot.right_foot.y,g_Robot.right_foot.z);
+//		printf("/*%f,%f,%f,%f,%f,%f*/\n",
+//		g_Robot.left_foot.x,g_Robot.left_foot.y,g_Robot.left_foot.z,
+//		g_Robot.right_foot.x,g_Robot.right_foot.y,g_Robot.right_foot.z);
     vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
   }
 }
 
-#pragma import(__use_no_semihosting)     
+__asm(".global __use_no_semihosting"); //for ARM Compiler 6
  
 int _ttywrch(int ch)   
 {
     ch=ch;
     return ch;
 }
-            
-struct __FILE
-{
-    int handle;
-    /* Whatever you require here. If the only file you are using is */
-    /* standard output using printf() for debugging, no file handling */
-    /* is required. */
-};
  
 FILE __stdout;    
   
 void _sys_exit(int x)
 {
-    x = x;
+    x = x; // Prevent unused variable warning
 }
  
 int fputc(int ch, FILE *f){     
