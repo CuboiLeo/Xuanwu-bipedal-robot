@@ -1,46 +1,6 @@
 #include "Motor.h"
-#include "CMSIS_os.h"
-#include "Delay.h"
 #include "math.h"
 #include "Robot_Types.h"
-
-Motor motor;
-
-void Motor_Ctrl_Task(void const * argument)
-{
-  /* USER CODE BEGIN Motor_Ctrl_Task */
-    portTickType xLastWakeTime;
-    xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
-
-	//float count = 0;
-    can_bsp_init();
-    delay_init(480);
-    osDelay(100);
-    FDCAN1_PowerUp(GPIO_PIN_SET);
-    FDCAN2_PowerUp(GPIO_PIN_SET);
-    osDelay(500);
-    osDelay(500);
-    
-    motor.resetJoints();
-	osDelay(500);
-
-  /* Infinite loop */
-    for(;;)
-    {   
-		uint8_t soft_start_flag = motor.getSoftStartFlag();    
-		if(soft_start_flag != motor.ALL_JOINTS_ZEROED_FLAG){
-        	soft_start_flag = motor.returnZeroPos();
-            motor.setSoftStartFlag(soft_start_flag);
-        }		
-
-      	motor.createVirtualBoundary();
-		motor.sendAll();
-			
-      vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
-    }
-  /* USER CODE END Motor_Ctrl_Task */
-}
 
 Motor::Motor()
 {
@@ -169,12 +129,12 @@ void Motor::createVirtualBoundary(void)
 
 void Motor::resetJoints(void)
 {
-  	motor.disableAll();
+  	disableAll();
 	for (int i = 0; i < NUM_MOTORS; i++)
 	{
 		dm4310_clear_para(&motor_info[i]);
 	}
-	motor.enableAll();
+	enableAll();
 }
 
 void Motor::sendAll(void)
@@ -222,32 +182,4 @@ void Motor::enableAll(void)
 	delay_us(200);
 	dm4310_enable(&motor_info[Right_Hip_Pitch]);
 	dm4310_enable(&motor_info[Right_Knee_Pitch]);
-}
-
-void fdcan1_rx_callback(void)
-{
-	uint16_t rec_id;
-	uint8_t rx_data[8] = {0};
-	fdcanx_receive(&hfdcan1, &rec_id, rx_data);
-	switch (rec_id)
-	{
- 		case 0x11: dm4310_fbdata(&motor.motor_info[Left_Hip_Yaw], rx_data); break;
-		case 0x12: dm4310_fbdata(&motor.motor_info[Left_Hip_Roll], rx_data); break;
-		case 0x13: dm4310_fbdata(&motor.motor_info[Left_Hip_Pitch], rx_data); break;
-		case 0x14: dm4310_fbdata(&motor.motor_info[Left_Knee_Pitch], rx_data); break;
-	}
-}
-
-void fdcan2_rx_callback(void)
-{
-	uint16_t rec_id;
-	uint8_t rx_data[8] = {0};
-	fdcanx_receive(&hfdcan2, &rec_id, rx_data);
-	switch (rec_id)
-	{
-		case 0x15: dm4310_fbdata(&motor.motor_info[Right_Hip_Yaw], rx_data); break;
-		case 0x16: dm4310_fbdata(&motor.motor_info[Right_Hip_Roll], rx_data); break;
-		case 0x17: dm4310_fbdata(&motor.motor_info[Right_Hip_Pitch], rx_data); break;
-		case 0x18: dm4310_fbdata(&motor.motor_info[Right_Knee_Pitch], rx_data); break;
-	}
 }

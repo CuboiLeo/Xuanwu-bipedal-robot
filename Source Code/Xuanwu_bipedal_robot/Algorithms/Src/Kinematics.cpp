@@ -1,8 +1,6 @@
 #include "Kinematics.h"
 #include "User_Math.h"
 
-Kinematics kinematics;
-
 Kinematics::Kinematics()
 {
       // Initialize inverse kinematics joint angles

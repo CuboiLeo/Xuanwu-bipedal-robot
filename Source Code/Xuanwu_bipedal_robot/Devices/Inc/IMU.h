@@ -6,6 +6,8 @@ extern "C" {
 #endif
 
 #include "Fusion.h"
+#include "BMI088driver.h"
+#include "BMI088Middleware.h"
 
 class IMU {
 public:
@@ -43,8 +45,6 @@ private:
 
     FusionAhrs IMU_AHRS;  // Fusion AHRS object for quaternion calculations
 };
-
-extern void IMU_Task(void const * argument);
 
 #ifdef __cplusplus
 }

@@ -1,43 +1,9 @@
 #include "IMU.h"
 #include "main.h"
 #include "cmsis_os.h"
-#include "BMI088driver.h"
 #include "gpio.h"
 #include "tim.h"
 #include "User_Math.h"
-
-// External semaphore handle (from FreeRTOS)
-extern osSemaphoreId imuBinarySem01Handle;
-
-IMU imu;
-
-void IMU_Task(void const * argument)
-{
-    portTickType xLastWakeTime;
-    xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
-
-    float gyro[3], accel[3], temperature;
-    HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-    while(BMI088_init()) {
-        // Waiting for sensor to initialize
-    }
-    for(;;)
-    {
-      osSemaphoreAcquire(imuBinarySem01Handle, osWaitForever);
-
-      // Read IMU data
-      BMI088_read(gyro, accel, &temperature);
-      // Keep the IMU at a constant temperature
-      imu.heatControl();
-      // Update IMU object with sensor values
-      imu.updateRaw(accel, gyro, temperature);
-      // Process IMU to update orientation
-      imu.processData();
-      
-      vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
-    }
-}
 
 IMU::IMU() {
     ax = ay = az = 0;
@@ -87,16 +53,4 @@ void IMU::processData() {
     yaw_rad = yaw_deg * DEG2RAD;
     pitch_rad = pitch_deg * DEG2RAD;
     roll_rad = roll_deg * DEG2RAD;
-}
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-    if(GPIO_Pin == ACC_INT_Pin)
-    {
-        osSemaphoreRelease(imuBinarySem01Handle);
-    }
-    else if(GPIO_Pin == GYRO_INT_Pin)
-    {
-
-    }
 }

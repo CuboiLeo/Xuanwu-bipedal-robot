@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "adc.h"
 #include "dma.h"
 #include "fdcan.h"
 #include "memorymap.h"
@@ -103,6 +104,8 @@ int main(void)
   MX_UART5_Init();
   MX_FDCAN1_Init();
   MX_FDCAN2_Init();
+  MX_ADC1_Init();
+  MX_TIM12_Init();
   /* USER CODE BEGIN 2 */
 	
   /* USER CODE END 2 */

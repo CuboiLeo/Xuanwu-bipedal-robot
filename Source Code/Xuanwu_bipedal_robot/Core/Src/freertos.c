@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "Task_Manager.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -82,6 +82,13 @@ const osThreadAttr_t Motor_Ctrl_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
+/* Definitions for System_Monitor */
+osThreadId_t System_MonitorHandle;
+const osThreadAttr_t System_Monitor_attributes = {
+  .name = "System_Monitor",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -92,6 +99,7 @@ void Debug_Task(void *argument);
 void IMU_Task(void *argument);
 void Robot_Task(void *argument);
 void Motor_Ctrl_Task(void *argument);
+void System_Monitor_Task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -156,6 +164,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of Motor_Ctrl */
   Motor_CtrlHandle = osThreadNew(Motor_Ctrl_Task, NULL, &Motor_Ctrl_attributes);
+
+  /* creation of System_Monitor */
+  System_MonitorHandle = osThreadNew(System_Monitor_Task, NULL, &System_Monitor_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -237,6 +248,24 @@ __weak void Motor_Ctrl_Task(void *argument)
     osDelay(1);
   }
   /* USER CODE END Motor_Ctrl_Task */
+}
+
+/* USER CODE BEGIN Header_System_Monitor_Task */
+/**
+* @brief Function implementing the System_Monitor thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_System_Monitor_Task */
+__weak void System_Monitor_Task(void *argument)
+{
+  /* USER CODE BEGIN System_Monitor_Task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END System_Monitor_Task */
 }
 
 /* Private application code --------------------------------------------------*/

@@ -53,10 +53,9 @@ public:
     void setActFootPosLeft(const Foot_Position& position) { act_left_foot_pos = position; };
     void setActFootPosRight(const Foot_Position& position) { act_right_foot_pos = position; };
 
-    // Public interface for interacting with the robot's components
-    Kinematics* getKinematics() { return kinematics; };
-    Motor* getMotor() { return motor; };
-    Remote* getRemote() { return remote; };
+    // Public interface for interacting with battery voltage
+    void initBatteryADC() const;
+    float getBatteryVoltage();
 
 private:
     // Internal state of the robot
@@ -70,12 +69,9 @@ private:
     Foot_Position act_left_foot_pos;  // Actual left foot position through forward kinematics
     Foot_Position act_right_foot_pos; // Actual right foot position through forward kinematics
 
-    Kinematics* kinematics;
-    Motor* motor;
-    Remote* remote;
+    float battery_voltage; // Battery voltage in volts
+    uint16_t battery_adc_val[2]; // ADC values for battery voltage
 };
-
-extern void Robot_Task(void const* argument);
 
 #ifdef __cplusplus
 }

@@ -7,6 +7,7 @@ extern "C" {
 
 #include "DM4310driver.h"
 #include "Robot.h"
+#include "Delay.h"
 
 #define	FDCAN1_PowerUp(x) HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, x)
 #define	FDCAN2_PowerUp(x) HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, x)
@@ -36,8 +37,6 @@ private:
     motor_t motor_info[NUM_MOTORS];
     uint8_t soft_start_flag;
 };
-	
-extern void Motor_Ctrl_Task(void const * argument);
 
 #ifdef __cplusplus
 }

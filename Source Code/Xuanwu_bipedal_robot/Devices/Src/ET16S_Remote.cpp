@@ -2,8 +2,6 @@
 #include "dma.h"
 #include "usart.h"
 
-Remote remote;
-
 Remote::Remote()
 {
     for(uint8_t i = 0; i < REMOTE_CHANNEL_NUM; i++)
@@ -39,17 +37,5 @@ void Remote::processBuffer(void)
         channel_val[13] = ((remote_buffer[18] >> 7 | remote_buffer[19] << 1 | remote_buffer[20] << 9) & 0x07FF) - 1024;
         channel_val[14] = ((remote_buffer[20] >> 2 | remote_buffer[21] << 6) & 0x07FF) - 1024;
         channel_val[15] = ((remote_buffer[21] >> 5 | remote_buffer[22] << 3) & 0x07FF) - 1024;
-    }
-}
-
-void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
-{
-    if(huart->Instance == REMOTE_UART.Instance)
-    {
-        remote.processBuffer();
-        // enable uart receive for next data frame
-        HAL_UARTEx_ReceiveToIdle_DMA(huart, remote.remote_buffer, remote.REMOTE_BUFFER_SIZE);
-        // still disable half transfer interrupt (@ref void UART_Service_Init(void))
-        __HAL_DMA_DISABLE_IT(REMOTE_UART.hdmarx, DMA_IT_HT);
     }
 }

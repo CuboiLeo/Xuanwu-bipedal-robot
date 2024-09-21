@@ -28,19 +28,3 @@ extern "C" {
         return ch;
     }
 }
-
-void Debug_Task(void const * argument) {
-    portTickType xLastWakeTime;
-    xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(100);
-    
-    HAL_UART_Init(&huart7);
-
-    for (;;) {
-//         printf("/*%f,%f,%f,%f,%f,%f*/\n",
-//                g_Robot.left_foot.x, g_Robot.left_foot.y, g_Robot.left_foot.z,
-//                g_Robot.right_foot.x, g_Robot.right_foot.y, g_Robot.right_foot.z);
-
-        vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
-    }
-}

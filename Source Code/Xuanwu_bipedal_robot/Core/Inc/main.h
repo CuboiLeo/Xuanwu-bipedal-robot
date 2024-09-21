@@ -67,12 +67,16 @@ void Error_Handler(void);
 #define ACC_CS_GPIO_Port GPIOC
 #define GYRO_CS_Pin GPIO_PIN_3
 #define GYRO_CS_GPIO_Port GPIOC
+#define BAT_Pin GPIO_PIN_4
+#define BAT_GPIO_Port GPIOC
 #define ACC_INT_Pin GPIO_PIN_10
 #define ACC_INT_GPIO_Port GPIOE
 #define ACC_INT_EXTI_IRQn EXTI15_10_IRQn
 #define GYRO_INT_Pin GPIO_PIN_12
 #define GYRO_INT_GPIO_Port GPIOE
 #define GYRO_INT_EXTI_IRQn EXTI15_10_IRQn
+#define BUZZER_Pin GPIO_PIN_15
+#define BUZZER_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
