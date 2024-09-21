@@ -1,5 +1,10 @@
 #ifndef __DM4310_DRV_H__
 #define __DM4310_DRV_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "main.h"
 #include "fdcan.h"
 #include "can_bsp.h"
@@ -19,19 +24,6 @@
 #define KD_MAX 5.0f
 #define T_MIN -10.0f
 #define T_MAX 10.0f
-
-typedef enum
-{
-	Left_Hip_Yaw,
-	Left_Hip_Roll,
-	Left_Hip_Pitch,
-	Left_Knee_Pitch,
-	Right_Hip_Yaw,
-	Right_Hip_Roll,
-	Right_Hip_Pitch,
-	Right_Knee_Pitch,
-	joint_num
-} motor_num;
 
 typedef struct 
 {
@@ -90,5 +82,9 @@ void pos_force_ctrl(FDCAN_HandleTypeDef *hcan,uint16_t motor_id, float pos, uint
 
 void save_pos_zero(FDCAN_HandleTypeDef *hcan, uint16_t motor_id, uint16_t mode_id);
 void clear_err(FDCAN_HandleTypeDef *hcan, uint16_t motor_id, uint16_t mode_id);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __DM4310_DRV_H__ */

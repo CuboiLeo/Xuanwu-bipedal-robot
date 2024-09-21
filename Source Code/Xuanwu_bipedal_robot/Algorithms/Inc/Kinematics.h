@@ -7,8 +7,9 @@ extern "C" {
 
 #include "math.h"
 #include "stdint.h"
+#include "Robot_Types.h"
 #include "Robot.h"
-
+	
 class Kinematics {
     public:
         Kinematics();
@@ -25,8 +26,6 @@ class Kinematics {
         Foot_Position FK_left_foot_pos;
         Foot_Position FK_right_foot_pos;    
 };
-
-extern Kinematics kinematics;
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,11 @@
 #ifndef BMI088MIDDLEWARE_H
 #define BMI088MIDDLEWARE_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include "stdint.h"
 
 #define BMI088_USE_SPI
@@ -22,6 +27,10 @@ extern uint8_t BMI088_read_write_byte(uint8_t reg);
 
 #elif defined(BMI088_USE_IIC)
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

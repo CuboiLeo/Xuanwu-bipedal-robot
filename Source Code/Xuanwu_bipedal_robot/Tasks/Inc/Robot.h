@@ -7,27 +7,11 @@ extern "C" {
  
 #include "stdint.h"
 #include "User_Math.h"
+#include "Robot_Types.h"
 
-struct Joint_Angle { // Joint angles in radians
-    float hip_yaw;
-    float hip_roll;
-    float hip_pitch;
-    float knee_pitch;
-};
-
-struct Foot_Position { // Foot position w.r.t Central Connector Module in meters
-    float x;
-    float y;
-    float z;
-};
-
-struct DH_Parameter {
-        float a;      // Link length
-        float alpha;  // Link twist
-        float d;      // Link offset
-        float theta;  // Joint angle
-};
-
+class Kinematics;
+class Motor;
+class Remote;
 class Robot {
 public:
     static constexpr int NUM_JOINTS = 5;
@@ -50,28 +34,29 @@ public:
 
     Robot();
     // Public interface for interacting with joint angles
-    Joint_Angle getActJointAnglesLeft() const;
-    Joint_Angle getActJointAnglesRight() const;
-    void setActJointAnglesLeft(const Joint_Angle& angles);
-    void setActJointAnglesRight(const Joint_Angle& angles);
-    Joint_Angle getRefJointAnglesLeft() const;
-    Joint_Angle getRefJointAnglesRight() const;
-    void setRefJointAnglesLeft(const Joint_Angle& angles);
-    void setRefJointAnglesRight(const Joint_Angle& angles);
+    Joint_Angle getActJointAnglesLeft() const { return act_left_leg_angles; };
+    Joint_Angle getActJointAnglesRight() const { return act_right_leg_angles; };
+    void setActJointAnglesLeft(const Joint_Angle& angles) { act_left_leg_angles = angles; };
+    void setActJointAnglesRight(const Joint_Angle& angles) { act_right_leg_angles = angles; };
+    Joint_Angle getRefJointAnglesLeft() const { return ref_left_leg_angles; };
+    Joint_Angle getRefJointAnglesRight() const { return ref_right_leg_angles; };
+    void setRefJointAnglesLeft(const Joint_Angle& angles) { ref_left_leg_angles = angles; };
+    void setRefJointAnglesRight(const Joint_Angle& angles) { ref_right_leg_angles = angles; };
 
     // Public interface for interacting with foot position
-    Foot_Position getRefFootPosLeft() const;
-    Foot_Position getRefFootPosRight() const;
-    void setRefFootPosLeft(const Foot_Position& position);
-    void setRefFootPosRight(const Foot_Position& position);
-    Foot_Position getActFootPosLeft() const;
-    Foot_Position getActFootPosRight() const;
-    void setActFootPosLeft(const Foot_Position& position);
-    void setActFootPosRight(const Foot_Position& position);
+    Foot_Position getRefFootPosLeft() const { return ref_left_foot_pos; };
+    Foot_Position getRefFootPosRight() const { return ref_right_foot_pos; };
+    void setRefFootPosLeft(const Foot_Position& position) { ref_left_foot_pos = position; };
+    void setRefFootPosRight(const Foot_Position& position) { ref_right_foot_pos = position; };
+    Foot_Position getActFootPosLeft() const { return act_left_foot_pos; };
+    Foot_Position getActFootPosRight() const { return act_right_foot_pos; };
+    void setActFootPosLeft(const Foot_Position& position) { act_left_foot_pos = position; };
+    void setActFootPosRight(const Foot_Position& position) { act_right_foot_pos = position; };
 
-    // Public interface for soft start flag
-    uint8_t getSoftStartFlag() const;
-    void setSoftStartFlag(uint8_t flag);
+    // Public interface for interacting with the robot's components
+    Kinematics* getKinematics() { return kinematics; };
+    Motor* getMotor() { return motor; };
+    Remote* getRemote() { return remote; };
 
 private:
     // Internal state of the robot
@@ -85,10 +70,11 @@ private:
     Foot_Position act_left_foot_pos;  // Actual left foot position through forward kinematics
     Foot_Position act_right_foot_pos; // Actual right foot position through forward kinematics
 
-    uint8_t soft_start_flag;
+    Kinematics* kinematics;
+    Motor* motor;
+    Remote* remote;
 };
 
-extern Robot robot;
 extern void Robot_Task(void const* argument);
 
 #ifdef __cplusplus

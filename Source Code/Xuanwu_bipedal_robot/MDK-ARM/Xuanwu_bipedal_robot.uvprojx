@@ -998,14 +998,14 @@
           <GroupName>Tasks</GroupName>
           <Files>
             <File>
-              <FileName>IMU_Temp_Ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Tasks\Src\IMU_Temp_Ctrl.c</FilePath>
+              <FileName>IMU.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Tasks\Src\IMU.cpp</FilePath>
             </File>
             <File>
-              <FileName>Debug.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Tasks\Src\Debug.c</FilePath>
+              <FileName>Debug.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Tasks\Src\Debug.cpp</FilePath>
             </File>
             <File>
               <FileName>Robot.cpp</FileName>
@@ -1028,9 +1028,9 @@
               <FilePath>..\Algorithms\Src\Kinematics.cpp</FilePath>
             </File>
             <File>
-              <FileName>PID.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Algorithms\Src\PID.c</FilePath>
+              <FileName>PID.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Algorithms\Src\PID.cpp</FilePath>
             </File>
             <File>
               <FileName>FusionAhrs.c</FileName>
@@ -1063,14 +1063,9 @@
               <FilePath>..\Devices\Src\BMI088Middleware.c</FilePath>
             </File>
             <File>
-              <FileName>ET16S_Remote.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Devices\Src\ET16S_Remote.c</FilePath>
-            </File>
-            <File>
-              <FileName>DM4310ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Devices\Src\DM4310ctrl.c</FilePath>
+              <FileName>ET16S_Remote.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Devices\Src\ET16S_Remote.cpp</FilePath>
             </File>
             <File>
               <FileName>DM4310driver.c</FileName>

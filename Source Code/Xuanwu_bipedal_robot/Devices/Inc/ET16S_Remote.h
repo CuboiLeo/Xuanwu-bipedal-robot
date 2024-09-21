@@ -5,21 +5,25 @@
 extern "C" {
 #endif
 
-#define REMOTE_UART huart5
-#define REMOTE_BUFFER_SIZE 25
+#define REMOTE_UART (huart5)
 
 #include "usart.h"
 #include <stdint.h>
 
-typedef struct Remote
+class Remote
 {
-    uint8_t remote_buffer[REMOTE_BUFFER_SIZE];
-    int16_t val[16];
-}Remote_t;
+    public:
+        Remote();
+        static constexpr uint8_t REMOTE_BUFFER_SIZE = 25;
+        static constexpr uint8_t REMOTE_CHANNEL_NUM = 16;
+        void Init(UART_HandleTypeDef *huart);
+        void processBuffer(void);
 
-extern Remote_t g_Remote;
-
-void Remote_Init(UART_HandleTypeDef *huart);
+        friend void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size);
+    private:
+        int16_t channel_val[REMOTE_CHANNEL_NUM];
+        uint8_t remote_buffer[REMOTE_BUFFER_SIZE];
+};
 
 #ifdef __cplusplus
 }

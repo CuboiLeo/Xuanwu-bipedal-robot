@@ -1,6 +1,11 @@
 #ifndef BMI088DRIVER_H
 #define BMI088DRIVER_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include "stdint.h"
 #include "main.h"
 
@@ -72,5 +77,9 @@ extern uint8_t bmi088_accel_init(void);
 extern uint8_t bmi088_gyro_init(void);
 
 extern void BMI088_read(float gyro[3], float accel[3], float *temperate);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

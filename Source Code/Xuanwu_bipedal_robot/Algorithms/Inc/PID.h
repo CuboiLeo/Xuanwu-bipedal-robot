@@ -1,5 +1,11 @@
+#ifndef PID_H
+#define PID_H
+
 #include "stdint.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct PID
 {
 	float ref_val;
@@ -23,3 +29,9 @@ typedef struct PID
 }PID_t;
 
 float PID(PID_t *PID, float ref_val, float meas_val);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
