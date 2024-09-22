@@ -137,15 +137,16 @@ void System_Monitor_Task(void *argument)
 {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(1000);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(100);
 	
     robot.initBatteryADC();
 		buzzer.Init();
 
     for(;;)
     {
-			float battery_voltage = robot.getBatteryVoltage();
-        if (battery_voltage < 30.0f ){
+		float battery_voltage = robot.getBatteryVoltage();
+        // Low battery voltage warning
+        if (battery_voltage < 22.2f ){
            buzzer.Beep();
         }
         

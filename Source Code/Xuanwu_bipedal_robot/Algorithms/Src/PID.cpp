@@ -1,25 +1,43 @@
 #include "PID.h"
 
-float PID(PID_t *PID, float ref_val, float meas_val)
+PID::PID(float kp, float ki, float kd, float kf, float i_out_max, float output_max)
 {
-	PID->ref_val = ref_val;
-	PID->meas_val = meas_val;
+	this->kp = kp;
+	this->ki = ki;
+	this->kd = kd;
+	this->kf = kf;
+	this->i_out_max = i_out_max;
+	this->output_max = output_max;
+	ref_val = 0.0f;
+	meas_val = 0.0f;
+	error = 0.0f;
+	prev_error = 0.0f;
+	p_out = 0.0f;
+	i_out = 0.0f;
+	d_out = 0.0f;
+	f_out = 0.0f;
+	output = 0.0f;
+}
 
-	PID->prev_error = PID->error;
-	PID->error = PID->ref_val - PID->meas_val;
-	
-	PID->p_out = PID->kp * PID->error;
-	PID->i_out += PID->ki * PID->error;
-	PID->d_out = PID->kd * (PID->error - PID->prev_error);
-	PID->f_out = PID->kf * PID->ref_val;
-	
-	PID->i_out = PID->i_out > PID->i_out_max ? PID->i_out_max : PID->i_out;
-	PID->i_out = PID->i_out < -PID->i_out_max ? -PID->i_out_max : PID->i_out;
-	
-	PID->output = PID->p_out + PID->i_out + PID->d_out + PID->f_out;
+float PID::compute(float ref_val, float meas_val) {
+    this->ref_val = ref_val;
+    this->meas_val = meas_val;
 
-	PID->output = PID->output > PID->output_max ? PID->output_max : PID->output;
-	PID->output = PID->output < -PID->output_max ? -PID->output_max : PID->output;
-	
-	return PID->output;
+    prev_error = error;
+    error = ref_val - meas_val;
+
+    p_out = kp * error;
+    i_out += ki * error;
+    d_out = kd * (error - prev_error);
+    f_out = kf * ref_val;
+
+    i_out = (i_out > i_out_max) ? i_out_max : i_out;
+	i_out = (i_out < -i_out_max) ? -i_out_max : i_out;
+
+    output = p_out + i_out + d_out + f_out;
+
+	output = (output > output_max) ? output_max : output;
+	output = (output < -output_max) ? -output_max : output;
+
+    return output;
 }

@@ -7,7 +7,7 @@ void Buzzer::Init() {
 }
 
 void Buzzer::Beep() {
-    __HAL_TIM_SetCompare(&htim12, TIM_CHANNEL_2, 50);
+    __HAL_TIM_SetCompare(&htim12, TIM_CHANNEL_2, 1000);
     osDelay(200);
     __HAL_TIM_SetCompare(&htim12, TIM_CHANNEL_2, 0);
 }

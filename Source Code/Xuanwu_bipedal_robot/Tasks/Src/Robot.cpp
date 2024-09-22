@@ -22,6 +22,10 @@ void Robot::initBatteryADC() const
 
 float Robot::getBatteryVoltage()
 {
-    battery_voltage = (battery_adc_val[0] * 3.3f) / 65535 * 11.0f;
+    //65535 is the maximum value of the ADC
+    //11.0 is the voltage divider factor (R1 = 100k, R2 = 10k)
+    //3.3 is the reference voltage of the ADC
+    //1.5 is a magic number that corrects the voltage
+    battery_voltage = (battery_adc_val[0]*3.3f/65535)*11.0f*1.5f;
     return battery_voltage;
 }
