@@ -41,8 +41,6 @@ private:
     float output;
 };
 
-#endif
-
 #ifdef __cplusplus
 }
 #endif

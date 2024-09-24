@@ -16,7 +16,7 @@ Buzzer buzzer;
 void Robot_Task(void *argument) {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(2);
 
     remote.Init(&REMOTE_UART);  // Initialize the remote
 
@@ -55,7 +55,7 @@ void Motor_Ctrl_Task(void *argument)
   /* USER CODE BEGIN Motor_Ctrl_Task */
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(2);
 
 	//float count = 0;
     can_bsp_init();
@@ -109,7 +109,7 @@ void IMU_Task(void *argument)
 {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(2);
 
     float gyro[3], accel[3], temperature;
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
@@ -137,7 +137,7 @@ void System_Monitor_Task(void *argument)
 {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(100);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(1000);
 	
     robot.initBatteryADC();
 		buzzer.Init();
