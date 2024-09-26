@@ -1,20 +1,46 @@
-clear; close all; clc;
-px = 0;
-py = 0.001;
-pz = -0.53999;
-a2 = 0.095;
-a3 = 0.09;
-a4 = 0.18;
-a5 = 0.38;
+clear; clc; close all;
 
-theta_1_1 = atan2(-py,-px)-atan2(sqrt(px^2+py^2-a2^2),a2)
-theta_1_2 = pi+atan2(-py,-px)+atan2(-a2,sqrt(px^2+py^2-a2^2))
-D = (px^2+py^2+pz^2-a2^2-a4^2-a5^2)/(2*a4*a5);
-theta_4_1 = atan2(sqrt(1-D^2),D)
-theta_4_2 = atan2(-sqrt(1-D^2),D)
+syms theta1 theta2 theta3 theta4;
+syms a1 a2 a3 a4 a5 alpha2 alpha3;
+% theta d a alpha
+dhparams = [theta1 0 a1 0;
+            theta2 0 a2 alpha2;
+            theta3 0 a3 alpha3;
+            theta4 0 a4 0;
+            0      0 a5 0];
+num_T_matrix = size(dhparams,1);
+T = sym(zeros(4, 4, num_T_matrix));
+T_05 = sym(eye(4));
+for i = 1:5
+    T(:,:,i) = [cos(dhparams (i,1)) -sin(dhparams(i,1)) 0 dhparams(i,3);
+        sin(dhparams(i,1))*cos(dhparams(i,4)) cos(dhparams(i,1))*cos(dhparams(i,4)) -sin(dhparams(i,4)) -dhparams(i,2)*sin(dhparams(i,4));
+        sin(dhparams(i,1))*sin(dhparams(i,4)) cos(dhparams(i,1))*sin(dhparams(i,4)) cos(dhparams(i,4)) dhparams(i,2)*cos(dhparams(i,4));
+        0 0 0 1];
+    T_05 = T_05*T(:,:,i);
+end
 
-theta_3_1 = atan2(py,sqrt(px^2+pz^2-a2^2))-atan2(a5*sin(theta_4_1),a4+a5*cos(theta_4_1))
-theta_3_2 = atan2(py,sqrt(px^2+pz^2-a2^2))-atan2(a5*sin(theta_4_2),a4+a5*cos(theta_4_2))
+T_05 = simplify(T_05);
+x = T_05(1,4);
+y = T_05(2,4);
+z = T_05(3,4);
+
+sym_X_act = [x;y;z];
+sym_theta = [theta1 theta2 theta3 theta4];
+sym_sub = [a1 a2 a3 a4 a5 alpha2 alpha3];
+val_sub = [-0.135 -0.095 -0.09 -0.18 -0.38 -pi/2 -pi/2];
+
+X_ref = [-0.23;0.0001;0.64];
+val_theta = [0;pi/2;0;0];
+
+for i = 1:1:50
+    val_X_act = vpa(subs(sym_X_act,[sym_theta sym_sub],[val_theta' val_sub]),2);
+    jacob = vpa(subs(jacobian(sym_X_act,sym_theta),[sym_theta sym_sub],[val_theta' val_sub]),2);
+    inv_jacob = pinv(jacob);
+    error_X = vpa(X_ref - val_X_act,2);
+    delta_theta = inv_jacob*error_X;
+    val_theta = val_theta + delta_theta
+end
 
 
-
+val_theta = mod(eval(val_theta) + pi, 2*pi) - pi
+val_X_act

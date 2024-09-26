@@ -1,6 +1,6 @@
 #include "Kinematics.h"
-//#include "User_Math.h"
-#include <cmath>
+// #include "User_Math.h"
+#include "math.h"
 Kinematics::Kinematics()
 {
       // Initialize inverse kinematics joint angles
@@ -64,16 +64,69 @@ void Kinematics::computeInverseKinematics(Robot *robot)
       Foot_Position left_foot = robot->getRefFootPosLeft();
       Foot_Position right_foot = robot->getRefFootPosRight();
 
-      // Inverse Kinematics for left leg
-      IK_left_leg_angles1.hip_yaw = (PI+atan2f(-left_foot.y, -left_foot.x) - atan2f(sqrtf(left_foot.x * left_foot.x + left_foot.y * left_foot.y - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a), robot->DH_Left_Leg[1].a));
-      IK_left_leg_angles2.hip_yaw = atan2f(-left_foot.y, -left_foot.x) + atan2f(-robot->DH_Left_Leg[1].a, sqrtf(left_foot.x * left_foot.x + left_foot.y * left_foot.y - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a));
+      // Abandoning the analytic solution for the inverse kinematics problem as it only uses three DOF of the robot and neglects the Hip Roll
+      
+      // // Inverse Kinematics for left leg
+      // IK_left_leg_angles1.hip_yaw = (PI + atan2f(-left_foot.y, -left_foot.x) - atan2f(sqrtf(left_foot.x * left_foot.x + left_foot.y * left_foot.y - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a), robot->DH_Left_Leg[1].a));
+      // IK_left_leg_angles2.hip_yaw = atan2f(-left_foot.y, -left_foot.x) + atan2f(-robot->DH_Left_Leg[1].a, sqrtf(left_foot.x * left_foot.x + left_foot.y * left_foot.y - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a));
 
-      IK_left_leg_angles1.knee_pitch = atan2f(sqrtf(1.0f - ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a)) * ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a))), ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a)));
-      IK_left_leg_angles2.knee_pitch = atan2f(-sqrtf(1.0f - ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a)) * ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a))), ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a)));
+      // IK_left_leg_angles1.knee_pitch = atan2f(sqrtf(1.0f - ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a)) * ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a))), ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a)));
+      // IK_left_leg_angles2.knee_pitch = atan2f(-sqrtf(1.0f - ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a)) * ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a))), ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a)));
 
-      IK_left_leg_angles1.hip_pitch = (-PI+atan2f(left_foot.y, sqrtf(left_foot.x * left_foot.x + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a)) - atan2f(robot->DH_Left_Leg[4].a * sin(IK_left_leg_angles1.knee_pitch), robot->DH_Left_Leg[3].a + robot->DH_Left_Leg[4].a * cos(IK_left_leg_angles1.knee_pitch)));
-      IK_left_leg_angles2.hip_pitch = PI+atan2f(left_foot.y, sqrtf(left_foot.x * left_foot.x + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a)) - atan2f(robot->DH_Left_Leg[4].a * sin(IK_left_leg_angles2.knee_pitch), robot->DH_Left_Leg[3].a + robot->DH_Left_Leg[4].a * cos(IK_left_leg_angles2.knee_pitch));
+      // IK_left_leg_angles1.hip_pitch = (-PI + atan2f(left_foot.y, sqrtf(left_foot.x * left_foot.x + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a)) - atan2f(robot->DH_Left_Leg[4].a * sin(IK_left_leg_angles1.knee_pitch), robot->DH_Left_Leg[3].a + robot->DH_Left_Leg[4].a * cos(IK_left_leg_angles1.knee_pitch)));
+      // IK_left_leg_angles2.hip_pitch = PI + atan2f(left_foot.y, sqrtf(left_foot.x * left_foot.x + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a)) - atan2f(robot->DH_Left_Leg[4].a * sin(IK_left_leg_angles2.knee_pitch), robot->DH_Left_Leg[3].a + robot->DH_Left_Leg[4].a * cos(IK_left_leg_angles2.knee_pitch));
 
+      // // Inverse Kinematics for right leg
+      // IK_right_leg_angles1.hip_yaw = (PI + atan2f(right_foot.y, right_foot.x) - atan2f(sqrtf(right_foot.x * right_foot.x + right_foot.y * right_foot.y - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a), robot->DH_Right_Leg[1].a));
+      // IK_right_leg_angles2.hip_yaw = atan2f(right_foot.y, right_foot.x) + atan2f(-robot->DH_Right_Leg[1].a, sqrtf(right_foot.x * right_foot.x + right_foot.y * right_foot.y - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a));
+
+      // IK_right_leg_angles1.knee_pitch = atan2f(sqrtf(1.0f - ((right_foot.x * right_foot.x + right_foot.y * right_foot.y + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a - robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[3].a - robot->DH_Right_Leg[4].a * robot->DH_Right_Leg[4].a) / (2 * robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[4].a)) * ((right_foot.x * right_foot.x + right_foot.y * right_foot.y + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a - robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[3].a - robot->DH_Right_Leg[4].a * robot->DH_Right_Leg[4].a) / (2 * robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[4].a))), ((right_foot.x * right_foot.x + right_foot.y * right_foot.y + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a - robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[3].a - robot->DH_Right_Leg[4].a * robot->DH_Right_Leg[4].a) / (2 * robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[4].a)));
+      // IK_right_leg_angles2.knee_pitch = atan2f(-sqrtf(1.0f - ((right_foot.x * right_foot.x + right_foot.y * right_foot.y + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a - robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[3].a - robot->DH_Right_Leg[4].a * robot->DH_Right_Leg[4].a) / (2 * robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[4].a)) * ((right_foot.x * right_foot.x + right_foot.y * right_foot.y + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a - robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[3].a - robot->DH_Right_Leg[4].a * robot->DH_Right_Leg[4].a) / (2 * robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[4].a))), ((right_foot.x * right_foot.x + right_foot.y * right_foot.y + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a - robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[3].a - robot->DH_Right_Leg[4].a * robot->DH_Right_Leg[4].a) / (2 * robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[4].a)));
+
+      // IK_right_leg_angles1.hip_pitch = (-PI + atan2f(right_foot.y, sqrtf(right_foot.x * right_foot.x + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a)) - atan2f(robot->DH_Right_Leg[4].a * sin(IK_right_leg_angles1.knee_pitch), robot->DH_Right_Leg[3].a + robot->DH_Right_Leg[4].a * cos(IK_right_leg_angles1.knee_pitch)));
+      // IK_right_leg_angles2.hip_pitch = PI + atan2f(right_foot.y, sqrtf(right_foot.x * right_foot.x + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a)) - atan2f(robot->DH_Right_Leg[4].a * sin(IK_right_leg_angles2.knee_pitch), robot->DH_Right_Leg[3].a + robot->DH_Right_Leg[4].a * cos(IK_right_leg_angles2.knee_pitch));
+
+      // // Select the closest solution to the current joint angles
+      // if (fabs(IK_left_leg_angles1.hip_yaw - robot->getActJointAnglesLeft().hip_yaw) < fabs(IK_left_leg_angles2.hip_yaw - robot->getActJointAnglesLeft().hip_yaw))
+      // {
+      //       IK_left_leg_angles_final.hip_yaw = IK_left_leg_angles1.hip_yaw;
+      // }
+      // else
+      // {
+      //       IK_left_leg_angles_final.hip_yaw = IK_left_leg_angles2.hip_yaw;
+      // }
+
+      // if (fabs(IK_left_leg_angles1.hip_pitch - robot->getActJointAnglesLeft().hip_pitch) < fabs(IK_left_leg_angles2.hip_pitch - robot->getActJointAnglesLeft().hip_pitch))
+      // {
+      //       IK_left_leg_angles_final.hip_pitch = IK_left_leg_angles1.hip_pitch;
+      //       IK_left_leg_angles_final.knee_pitch = IK_left_leg_angles1.knee_pitch;
+      // }
+      // else
+      // {
+      //       IK_left_leg_angles_final.hip_pitch = IK_left_leg_angles2.hip_pitch;
+      //       IK_left_leg_angles_final.knee_pitch = IK_left_leg_angles2.knee_pitch;
+      // }
+
+      // if (fabs(IK_right_leg_angles1.hip_yaw - robot->getActJointAnglesRight().hip_yaw) < fabs(IK_right_leg_angles2.hip_yaw - robot->getActJointAnglesRight().hip_yaw))
+      // {
+      //       IK_right_leg_angles_final.hip_yaw = IK_right_leg_angles1.hip_yaw;
+      // }
+      // else
+      // {
+      //       IK_right_leg_angles_final.hip_yaw = IK_right_leg_angles2.hip_yaw;
+      // }
+
+      // if (fabs(IK_right_leg_angles1.hip_pitch - robot->getActJointAnglesRight().hip_pitch) < fabs(IK_right_leg_angles2.hip_pitch - robot->getActJointAnglesRight().hip_pitch))
+      // {
+      //       IK_right_leg_angles_final.hip_pitch = IK_right_leg_angles1.hip_pitch;
+      //       IK_right_leg_angles_final.knee_pitch = IK_right_leg_angles1.knee_pitch;
+      // }
+      // else
+      // {
+      //       IK_right_leg_angles_final.hip_pitch = IK_right_leg_angles2.hip_pitch;
+      //       IK_right_leg_angles_final.knee_pitch = IK_right_leg_angles2.knee_pitch;
+      // }
       // Update the robot's joint angles
-      robot->setRefJointAnglesLeft(IK_left_leg_angles1);
+      robot->setRefJointAnglesLeft(IK_left_leg_angles_final);
+      robot->setRefJointAnglesRight(IK_right_leg_angles_final);
 }

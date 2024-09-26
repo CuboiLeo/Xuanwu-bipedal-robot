@@ -7,7 +7,7 @@ Motor::Motor()
   	motor_info[Left_Hip_Yaw].can_bus = 1;
 	motor_info[Left_Hip_Yaw].id = 0x01;
 	motor_info[Left_Hip_Yaw].ctrl.mode = 0; // 0: MIT, 1: Pos, 2: Vel
-	motor_info[Left_Hip_Yaw].range = 1.5f;
+	motor_info[Left_Hip_Yaw].range = 1.6f;
 
 	motor_info[Left_Hip_Roll].can_bus = 1;
 	motor_info[Left_Hip_Roll].id = 0x02;
@@ -27,7 +27,7 @@ Motor::Motor()
 	motor_info[Right_Hip_Yaw].can_bus = 2;
 	motor_info[Right_Hip_Yaw].id = 0x05;
 	motor_info[Right_Hip_Yaw].ctrl.mode = 0;
-	motor_info[Right_Hip_Yaw].range = 1.5f;
+	motor_info[Right_Hip_Yaw].range = 1.6f;
 
 	motor_info[Right_Hip_Roll].can_bus = 2;
 	motor_info[Right_Hip_Roll].id = 0x06;
@@ -50,8 +50,8 @@ Motor::Motor()
 void Motor::setAllJointsPos(Robot* robot)
 {
 	for (int i = 0; i < NUM_MOTORS; i++){
-		motor_info[i].ctrl.kp_set = 5;
-		motor_info[i].ctrl.kd_set = 1;
+		motor_info[i].ctrl.kp_set = 10;
+		motor_info[i].ctrl.kd_set = 2;
 	}
 
 	Joint_Angle ref_left_leg_angles = robot->getRefJointAnglesLeft();
