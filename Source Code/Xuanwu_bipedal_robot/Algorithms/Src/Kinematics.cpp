@@ -20,12 +20,10 @@ Foot_Position Kinematics::computeForwardKinematics(Joint_Angle joint_angles, con
       if (leg == LEFT_LEG)
       {
             dh_param = DH_Left_Leg;
-            joint_angles.hip_roll += LEFT_LEG_HIP_ROLL_OFFSET;
       }
       else if (leg == RIGHT_LEG)
       {
             dh_param = DH_Right_Leg;
-            joint_angles.hip_roll += RIGHT_LEG_HIP_ROLL_OFFSET;
       }
       else
       {
@@ -48,7 +46,7 @@ Joint_Angle Kinematics::computeInverseKinematics(const Foot_Position &ref_foot_p
       Eigen::Matrix<float, 3, 1> v_act_foot_pos(act_foot_pos.x, act_foot_pos.y, act_foot_pos.z);
 
       // Initialize the joint angle guess to be the current joint angles
-      Eigen::Matrix<float, 4, 1> v_ref_joint_angles(joint_angles.hip_yaw, joint_angles.hip_roll, joint_angles.hip_pitch, joint_angles.knee_pitch);
+      Eigen::Matrix<float, 4, 1> v_ref_joint_angles(joint_angles.hip_yaw, joint_angles.hip_roll+LEFT_LEG_HIP_ROLL_OFFSET, joint_angles.hip_pitch, joint_angles.knee_pitch);
 
       // Select the DH parameters based on the leg
       const DH_Parameter *dh_param;
@@ -117,7 +115,7 @@ Joint_Angle Kinematics::computeInverseKinematics(const Foot_Position &ref_foot_p
       }
 
       IK_left_leg_angles.hip_yaw = WRAP2_2PI(v_ref_joint_angles(0));
-      IK_left_leg_angles.hip_roll = WRAP2_2PI(v_ref_joint_angles(1));
+      IK_left_leg_angles.hip_roll = WRAP2_2PI(v_ref_joint_angles(1))-LEFT_LEG_HIP_ROLL_OFFSET;
       IK_left_leg_angles.hip_pitch = WRAP2_2PI(v_ref_joint_angles(2));
       IK_left_leg_angles.knee_pitch = WRAP2_2PI(v_ref_joint_angles(3));
 

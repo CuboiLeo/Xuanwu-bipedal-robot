@@ -8,7 +8,7 @@ Robot::Robot()
     act_right_leg_angles = {0.0f, 0.0f, 0.0f, 0.0f};
     ref_left_leg_angles = {0.0f, 0.0f, 0.0f, 0.0f};
     ref_right_leg_angles = {0.0f, 0.0f, 0.0f, 0.0f};
-    ref_left_foot_pos = {-0.23f, 0.001f, 0.63f};
+    ref_left_foot_pos = {-0.23f, 0.001f, 0.6499f};
     ref_right_foot_pos = {0.0f, 0.0f, 0.0f};
     act_left_foot_pos = {0.0f, 0.0f, 0.0f};
     act_right_foot_pos = {0.0f, 0.0f, 0.0f};
