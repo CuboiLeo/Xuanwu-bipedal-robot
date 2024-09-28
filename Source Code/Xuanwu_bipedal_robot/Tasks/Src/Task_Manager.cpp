@@ -13,38 +13,44 @@ Remote remote;
 IMU imu;
 Buzzer buzzer;
 
-void Robot_Task(void *argument) {
+void Robot_Task(void *argument)
+{
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
     const TickType_t TimeIncrement = pdMS_TO_TICKS(2);
 
-    remote.Init(&REMOTE_UART);  // Initialize the remote
+    remote.Init(&REMOTE_UART); // Initialize the remote
 
-    for (;;) {
+    for (;;)
+    {
         // Assign joint angles based on motor feedback
         Joint_Angle left_angles = {
             motor.getPos(Left_Hip_Yaw),
             motor.getPos(Left_Hip_Roll),
             motor.getPos(Left_Hip_Pitch),
-            motor.getPos(Left_Knee_Pitch)
-        };
+            motor.getPos(Left_Knee_Pitch)};
         Joint_Angle right_angles = {
             motor.getPos(Right_Hip_Yaw),
             motor.getPos(Right_Hip_Roll),
             motor.getPos(Right_Hip_Pitch),
-            motor.getPos(Right_Knee_Pitch)
-        };
+            motor.getPos(Right_Knee_Pitch)};
 
         // Update the robot's joint angles
         robot.setActJointAnglesLeft(left_angles);
         robot.setActJointAnglesRight(right_angles);
 
-        kinematics.computeForwardKinematics(&robot);
-        kinematics.computeInverseKinematics(&robot);
+        // Compute the robot's foot positions using forward kinematics
+        robot.setActFootPosLeft(kinematics.computeForwardKinematics(robot.getActJointAnglesLeft(), LEFT_LEG));
+        robot.setActFootPosRight(kinematics.computeForwardKinematics(robot.getActJointAnglesRight(), RIGHT_LEG));
 
-        if(motor.getSoftStartFlag() == motor.ALL_JOINTS_ZEROED_FLAG) {
-            motor.setAllJointsPos(&robot);
-        } 
+        // Compute the robot's joint angles using inverse kinematics
+        robot.setRefJointAnglesLeft(kinematics.computeInverseKinematics(robot.getRefFootPosLeft(), robot.getActFootPosLeft(), robot.getActJointAnglesLeft(), LEFT_LEG));
+        //robot.setRefJointAnglesRight(kinematics.computeInverseKinematics(robot.getRefFootPosRight(), robot.getActFootPosRight(), robot.getActJointAnglesRight(), RIGHT_LEG));
+
+        if (motor.getSoftStartFlag() == motor.ALL_JOINTS_ZEROED_FLAG)
+        {
+            //motor.setAllJointsPos(&robot);
+        }
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
@@ -52,12 +58,12 @@ void Robot_Task(void *argument) {
 
 void Motor_Ctrl_Task(void *argument)
 {
-  /* USER CODE BEGIN Motor_Ctrl_Task */
+    /* USER CODE BEGIN Motor_Ctrl_Task */
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
     const TickType_t TimeIncrement = pdMS_TO_TICKS(2);
 
-	//float count = 0;
+    // float count = 0;
     can_bsp_init();
     delay_init(480);
     osDelay(100);
@@ -65,39 +71,41 @@ void Motor_Ctrl_Task(void *argument)
     FDCAN2_PowerUp(GPIO_PIN_SET);
     osDelay(500);
     osDelay(500);
-    
+
     motor.resetJoints();
-	osDelay(500);
+    osDelay(500);
 
-  /* Infinite loop */
-    for(;;)
-    {   
-		uint8_t soft_start_flag = motor.getSoftStartFlag();    
-		if(soft_start_flag != motor.ALL_JOINTS_ZEROED_FLAG){
-        	soft_start_flag = motor.returnZeroPos();
+    /* Infinite loop */
+    for (;;)
+    {
+        uint8_t soft_start_flag = motor.getSoftStartFlag();
+        if (soft_start_flag != motor.ALL_JOINTS_ZEROED_FLAG)
+        {
+            soft_start_flag = motor.returnZeroPos();
             motor.setSoftStartFlag(soft_start_flag);
-        }		
+        }
 
-      	motor.createVirtualBoundary();
-		motor.sendAll();
-			
-      vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
+        motor.createVirtualBoundary();
+        motor.sendAll();
+
+        vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
-  /* USER CODE END Motor_Ctrl_Task */
+    /* USER CODE END Motor_Ctrl_Task */
 }
 
-
-void Debug_Task(void *argument) {
+void Debug_Task(void *argument)
+{
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
     const TickType_t TimeIncrement = pdMS_TO_TICKS(100);
-    
+
     HAL_UART_Init(&huart7);
 
-    for (;;) {
-//         printf("/*%f,%f,%f,%f,%f,%f*/\n",
-//                g_Robot.left_foot.x, g_Robot.left_foot.y, g_Robot.left_foot.z,
-//                g_Robot.right_foot.x, g_Robot.right_foot.y, g_Robot.right_foot.z);
+    for (;;)
+    {
+        //         printf("/*%f,%f,%f,%f,%f,%f*/\n",
+        //                g_Robot.left_foot.x, g_Robot.left_foot.y, g_Robot.left_foot.z,
+        //                g_Robot.right_foot.x, g_Robot.right_foot.y, g_Robot.right_foot.z);
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
@@ -113,23 +121,24 @@ void IMU_Task(void *argument)
 
     float gyro[3], accel[3], temperature;
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-    while(BMI088_init()) {
+    while (BMI088_init())
+    {
         // Waiting for sensor to initialize
     }
-    for(;;)
+    for (;;)
     {
-      osSemaphoreAcquire(imuBinarySem01Handle, osWaitForever);
+        osSemaphoreAcquire(imuBinarySem01Handle, osWaitForever);
 
-      // Read IMU data
-      BMI088_read(gyro, accel, &temperature);
-      // Keep the IMU at a constant temperature
-      imu.heatControl();
-      // Update IMU object with sensor values
-      imu.updateRaw(accel, gyro, temperature);
-      // Process IMU to update orientation
-      imu.processData();
-      
-      vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
+        // Read IMU data
+        BMI088_read(gyro, accel, &temperature);
+        // Keep the IMU at a constant temperature
+        imu.heatControl();
+        // Update IMU object with sensor values
+        imu.updateRaw(accel, gyro, temperature);
+        // Process IMU to update orientation
+        imu.processData();
+
+        vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
 }
 
@@ -138,65 +147,81 @@ void System_Monitor_Task(void *argument)
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
     const TickType_t TimeIncrement = pdMS_TO_TICKS(1000);
-	
-    robot.initBatteryADC();
-		buzzer.Init();
 
-    for(;;)
+    robot.initBatteryADC();
+    buzzer.Init();
+
+    for (;;)
     {
-		float battery_voltage = robot.getBatteryVoltage();
+        float battery_voltage = robot.getBatteryVoltage();
         // Low battery voltage warning
-        if (battery_voltage < 22.2f ){
-           buzzer.Beep();
+        if (battery_voltage < 22.2f)
+        {
+            buzzer.Beep();
         }
-        
+
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
 }
 
 void fdcan1_rx_callback(void)
 {
-	uint16_t rec_id;
-	uint8_t rx_data[8] = {0};
-	fdcanx_receive(&hfdcan1, &rec_id, rx_data);
-	switch (rec_id)
-	{
- 		case 0x11: dm4310_fbdata(&motor.motor_info[Left_Hip_Yaw], rx_data); break;
-		case 0x12: dm4310_fbdata(&motor.motor_info[Left_Hip_Roll], rx_data); break;
-		case 0x13: dm4310_fbdata(&motor.motor_info[Left_Hip_Pitch], rx_data); break;
-		case 0x14: dm4310_fbdata(&motor.motor_info[Left_Knee_Pitch], rx_data); break;
-	}
+    uint16_t rec_id;
+    uint8_t rx_data[8] = {0};
+    fdcanx_receive(&hfdcan1, &rec_id, rx_data);
+    switch (rec_id)
+    {
+    case 0x11:
+        dm4310_fbdata(&motor.motor_info[Left_Hip_Yaw], rx_data);
+        break;
+    case 0x12:
+        dm4310_fbdata(&motor.motor_info[Left_Hip_Roll], rx_data);
+        break;
+    case 0x13:
+        dm4310_fbdata(&motor.motor_info[Left_Hip_Pitch], rx_data);
+        break;
+    case 0x14:
+        dm4310_fbdata(&motor.motor_info[Left_Knee_Pitch], rx_data);
+        break;
+    }
 }
 
 void fdcan2_rx_callback(void)
 {
-	uint16_t rec_id;
-	uint8_t rx_data[8] = {0};
-	fdcanx_receive(&hfdcan2, &rec_id, rx_data);
-	switch (rec_id)
-	{
-		case 0x15: dm4310_fbdata(&motor.motor_info[Right_Hip_Yaw], rx_data); break;
-		case 0x16: dm4310_fbdata(&motor.motor_info[Right_Hip_Roll], rx_data); break;
-		case 0x17: dm4310_fbdata(&motor.motor_info[Right_Hip_Pitch], rx_data); break;
-		case 0x18: dm4310_fbdata(&motor.motor_info[Right_Knee_Pitch], rx_data); break;
-	}
+    uint16_t rec_id;
+    uint8_t rx_data[8] = {0};
+    fdcanx_receive(&hfdcan2, &rec_id, rx_data);
+    switch (rec_id)
+    {
+    case 0x15:
+        dm4310_fbdata(&motor.motor_info[Right_Hip_Yaw], rx_data);
+        break;
+    case 0x16:
+        dm4310_fbdata(&motor.motor_info[Right_Hip_Roll], rx_data);
+        break;
+    case 0x17:
+        dm4310_fbdata(&motor.motor_info[Right_Hip_Pitch], rx_data);
+        break;
+    case 0x18:
+        dm4310_fbdata(&motor.motor_info[Right_Knee_Pitch], rx_data);
+        break;
+    }
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    if(GPIO_Pin == ACC_INT_Pin)
+    if (GPIO_Pin == ACC_INT_Pin)
     {
         osSemaphoreRelease(imuBinarySem01Handle);
     }
-    else if(GPIO_Pin == GYRO_INT_Pin)
+    else if (GPIO_Pin == GYRO_INT_Pin)
     {
-
     }
 }
 
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
-    if(huart->Instance == REMOTE_UART.Instance)
+    if (huart->Instance == REMOTE_UART.Instance)
     {
         remote.processBuffer();
         // enable uart receive for next data frame

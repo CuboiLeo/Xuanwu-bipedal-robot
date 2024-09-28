@@ -1220,6 +1220,11 @@
               <FileType>1</FileType>
               <FilePath>..\Algorithms\Src\FusionOffset.c</FilePath>
             </File>
+            <File>
+              <FileName>User_Math.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Algorithms\Src\User_Math.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1913,12 +1918,6 @@
     <components>
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.6.0" condition="ARMv6_7_8-M Device">
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
-        <targetInfos>
-          <targetInfo name="Xuanwu_bipedal_robot"/>
-        </targetInfos>
-      </component>
-      <component Cclass="CMSIS" Cgroup="DSP" Cvariant="Source" Cvendor="ARM" Cversion="1.14.2" condition="CMSISCORE">
-        <package name="CMSIS-DSP" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="1.14.2"/>
         <targetInfos>
           <targetInfo name="Xuanwu_bipedal_robot"/>
         </targetInfos>

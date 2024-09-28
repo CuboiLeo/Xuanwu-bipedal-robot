@@ -1,132 +1,125 @@
 #include "Kinematics.h"
-// #include "User_Math.h"
-#include "math.h"
+#include <Eigen/Dense>
+#include <cmath>
+#include "User_Math.h"
+
 Kinematics::Kinematics()
 {
       // Initialize inverse kinematics joint angles
-      IK_left_leg_angles1 = {0.0f, 0.0f, 0.0f, 0.0f};
-      IK_left_leg_angles2 = {0.0f, 0.0f, 0.0f, 0.0f};
-      IK_left_leg_angles_final = {0.0f, 0.0f, 0.0f, 0.0f};
-      IK_right_leg_angles1 = {0.0f, 0.0f, 0.0f, 0.0f};
-      IK_right_leg_angles2 = {0.0f, 0.0f, 0.0f, 0.0f};
-      IK_right_leg_angles_final = {0.0f, 0.0f, 0.0f, 0.0f};
+      IK_left_leg_angles = {0.0f, 0.0f, 0.0f, 0.0f};
+      IK_right_leg_angles = {0.0f, 0.0f, 0.0f, 0.0f};
       // Initialize forward kinematics foot positions
       FK_left_foot_pos = {0.0f, 0.0f, 0.0f};
       FK_right_foot_pos = {0.0f, 0.0f, 0.0f};
 }
 
-void Kinematics::computeForwardKinematics(Robot *robot)
+Foot_Position Kinematics::computeForwardKinematics(Joint_Angle joint_angles, const int leg)
 {
-      /* Forward kinematics computation, the final transformation matrix is computed in MATLAB
-      T05 = T01*T12*T23*T34*T45
+      Foot_Position foot_pos;
+      const DH_Parameter *dh_param;
+      if (leg == LEFT_LEG)
+      {
+            dh_param = DH_Left_Leg;
+            joint_angles.hip_roll += LEFT_LEG_HIP_ROLL_OFFSET;
+      }
+      else if (leg == RIGHT_LEG)
+      {
+            dh_param = DH_Right_Leg;
+            joint_angles.hip_roll += RIGHT_LEG_HIP_ROLL_OFFSET;
+      }
+      else
+      {
+            // Invalid leg identifier
+            return foot_pos = {0.0f, 0.0f, 0.0f};
+      }
 
-      T01 = [cos(theta1), -sin(theta1), 0, robot->DH_Left_Leg[0].a]
-            [sin(theta1),  cos(theta1), 0,  0]
-            [          0,            0, 1,  0]
-            [          0,            0, 0,  1]
-      T12 = [            cos(theta2),            -sin(theta2),            0, robot->DH_Left_Leg[1].a]
-            [cos(robot->DH_Left_Leg[1].alpha)*sin(theta2), cos(robot->DH_Left_Leg[1].alpha)*cos(theta2), -sin(robot->DH_Left_Leg[1].alpha),  0]
-            [sin(robot->DH_Left_Leg[1].alpha)*sin(theta2), sin(robot->DH_Left_Leg[1].alpha)*cos(theta2),  cos(robot->DH_Left_Leg[1].alpha),  0]
-            [                      0,                       0,            0,  1]
-      T23 = [            cos(theta3),            -sin(theta3),            0, robot->DH_Left_Leg[2].a]
-            [cos(robot->DH_Left_Leg[2].alpha)*sin(theta3), cos(robot->DH_Left_Leg[2].alpha)*cos(theta3), -sin(robot->DH_Left_Leg[2].alpha),  0]
-            [sin(robot->DH_Left_Leg[2].alpha)*sin(theta3), sin(robot->DH_Left_Leg[2].alpha)*cos(theta3),  cos(robot->DH_Left_Leg[2].alpha),  0]
-            [                      0,                       0,            0,  1]
-      T34 = [cos(theta4), -sin(theta4), 0, robot->DH_Left_Leg[3].a]
-            [sin(theta4),  cos(theta4), 0,  0]
-            [          0,            0, 1,  0]
-            [          0,            0, 0,  1]
-      T45 = [1, 0, 0, robot->DH_Left_Leg[4].a]
-            [0, 1, 0,  0]
-            [0, 0, 1,  0]
-            [0, 0, 0,  1]
-      */
-      // Left Leg
-      Joint_Angle left_leg = robot->getActJointAnglesLeft();
-      Joint_Angle right_leg = robot->getActJointAnglesRight();
-      left_leg.hip_roll += PI / 2;
-      right_leg.hip_roll -= PI / 2;
-      FK_left_foot_pos.x = robot->DH_Left_Leg[0].a + robot->DH_Left_Leg[3].a * (cosf(left_leg.hip_pitch) * (cosf(left_leg.hip_yaw) * cosf(left_leg.hip_roll) - cosf(robot->DH_Left_Leg[1].alpha) * sinf(left_leg.hip_yaw) * sinf(left_leg.hip_roll)) - cosf(robot->DH_Left_Leg[2].alpha) * sinf(left_leg.hip_pitch) * (cosf(left_leg.hip_yaw) * sinf(left_leg.hip_roll) + cosf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_roll) * sinf(left_leg.hip_yaw)) + sinf(robot->DH_Left_Leg[1].alpha) * sinf(robot->DH_Left_Leg[2].alpha) * sinf(left_leg.hip_yaw) * sinf(left_leg.hip_pitch)) + robot->DH_Left_Leg[4].a * (cosf(left_leg.knee_pitch) * (cosf(left_leg.hip_pitch) * (cosf(left_leg.hip_yaw) * cosf(left_leg.hip_roll) - cosf(robot->DH_Left_Leg[1].alpha) * sinf(left_leg.hip_yaw) * sinf(left_leg.hip_roll)) - cosf(robot->DH_Left_Leg[2].alpha) * sinf(left_leg.hip_pitch) * (cosf(left_leg.hip_yaw) * sinf(left_leg.hip_roll) + cosf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_roll) * sinf(left_leg.hip_yaw)) + sinf(robot->DH_Left_Leg[1].alpha) * sinf(robot->DH_Left_Leg[2].alpha) * sinf(left_leg.hip_yaw) * sinf(left_leg.hip_pitch)) - sinf(left_leg.knee_pitch) * (sinf(left_leg.hip_pitch) * (cosf(left_leg.hip_yaw) * cosf(left_leg.hip_roll) - cosf(robot->DH_Left_Leg[1].alpha) * sinf(left_leg.hip_yaw) * sinf(left_leg.hip_roll)) + cosf(robot->DH_Left_Leg[2].alpha) * cosf(left_leg.hip_pitch) * (cosf(left_leg.hip_yaw) * sinf(left_leg.hip_roll) + cosf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_roll) * sinf(left_leg.hip_yaw)) - sinf(robot->DH_Left_Leg[1].alpha) * sinf(robot->DH_Left_Leg[2].alpha) * cosf(left_leg.hip_pitch) * sinf(left_leg.hip_yaw))) + robot->DH_Left_Leg[2].a * (cosf(left_leg.hip_yaw) * cosf(left_leg.hip_roll) - cosf(robot->DH_Left_Leg[1].alpha) * sinf(left_leg.hip_yaw) * sinf(left_leg.hip_roll)) + robot->DH_Left_Leg[1].a * cosf(left_leg.hip_yaw);
-      FK_left_foot_pos.y = robot->DH_Left_Leg[2].a * (cosf(left_leg.hip_roll) * sinf(left_leg.hip_yaw) + cosf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_yaw) * sinf(left_leg.hip_roll)) + robot->DH_Left_Leg[1].a * sinf(left_leg.hip_yaw) - robot->DH_Left_Leg[4].a * (sinf(left_leg.knee_pitch) * (sinf(left_leg.hip_pitch) * (cosf(left_leg.hip_roll) * sinf(left_leg.hip_yaw) + cosf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_yaw) * sinf(left_leg.hip_roll)) + cosf(robot->DH_Left_Leg[2].alpha) * cosf(left_leg.hip_pitch) * (sinf(left_leg.hip_yaw) * sinf(left_leg.hip_roll) - cosf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_yaw) * cosf(left_leg.hip_roll)) + sinf(robot->DH_Left_Leg[1].alpha) * sinf(robot->DH_Left_Leg[2].alpha) * cosf(left_leg.hip_yaw) * cosf(left_leg.hip_pitch)) + cosf(left_leg.knee_pitch) * (cosf(robot->DH_Left_Leg[2].alpha) * sinf(left_leg.hip_pitch) * (sinf(left_leg.hip_yaw) * sinf(left_leg.hip_roll) - cosf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_yaw) * cosf(left_leg.hip_roll)) - cosf(left_leg.hip_pitch) * (cosf(left_leg.hip_roll) * sinf(left_leg.hip_yaw) + cosf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_yaw) * sinf(left_leg.hip_roll)) + sinf(robot->DH_Left_Leg[1].alpha) * sinf(robot->DH_Left_Leg[2].alpha) * cosf(left_leg.hip_yaw) * sinf(left_leg.hip_pitch))) - robot->DH_Left_Leg[3].a * (cosf(robot->DH_Left_Leg[2].alpha) * sinf(left_leg.hip_pitch) * (sinf(left_leg.hip_yaw) * sinf(left_leg.hip_roll) - cosf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_yaw) * cosf(left_leg.hip_roll)) - cosf(left_leg.hip_pitch) * (cosf(left_leg.hip_roll) * sinf(left_leg.hip_yaw) + cosf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_yaw) * sinf(left_leg.hip_roll)) + sinf(robot->DH_Left_Leg[1].alpha) * sinf(robot->DH_Left_Leg[2].alpha) * cosf(left_leg.hip_yaw) * sinf(left_leg.hip_pitch));
-      FK_left_foot_pos.z = robot->DH_Left_Leg[4].a * (cosf(left_leg.knee_pitch) * (cosf(robot->DH_Left_Leg[1].alpha) * sinf(robot->DH_Left_Leg[2].alpha) * sinf(left_leg.hip_pitch) + sinf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_pitch) * sinf(left_leg.hip_roll) + cosf(robot->DH_Left_Leg[2].alpha) * sinf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_roll) * sinf(left_leg.hip_pitch)) + sinf(left_leg.knee_pitch) * (cosf(robot->DH_Left_Leg[1].alpha) * sinf(robot->DH_Left_Leg[2].alpha) * cosf(left_leg.hip_pitch) - sinf(robot->DH_Left_Leg[1].alpha) * sinf(left_leg.hip_roll) * sinf(left_leg.hip_pitch) + cosf(robot->DH_Left_Leg[2].alpha) * sinf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_roll) * cosf(left_leg.hip_pitch))) + robot->DH_Left_Leg[3].a * (cosf(robot->DH_Left_Leg[1].alpha) * sinf(robot->DH_Left_Leg[2].alpha) * sinf(left_leg.hip_pitch) + sinf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_pitch) * sinf(left_leg.hip_roll) + cosf(robot->DH_Left_Leg[2].alpha) * sinf(robot->DH_Left_Leg[1].alpha) * cosf(left_leg.hip_roll) * sinf(left_leg.hip_pitch)) + robot->DH_Left_Leg[2].a * sinf(robot->DH_Left_Leg[1].alpha) * sinf(left_leg.hip_roll);
+      foot_pos.x = dh_param[0].a + dh_param[3].a * (cosf(joint_angles.hip_pitch) * (cosf(joint_angles.hip_yaw) * cosf(joint_angles.hip_roll) - cosf(dh_param[1].alpha) * sinf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll)) - cosf(dh_param[2].alpha) * sinf(joint_angles.hip_pitch) * (cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll) + cosf(dh_param[1].alpha) * cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_yaw)) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * sinf(joint_angles.hip_yaw) * sinf(joint_angles.hip_pitch)) + dh_param[4].a * (cosf(joint_angles.knee_pitch) * (cosf(joint_angles.hip_pitch) * (cosf(joint_angles.hip_yaw) * cosf(joint_angles.hip_roll) - cosf(dh_param[1].alpha) * sinf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll)) - cosf(dh_param[2].alpha) * sinf(joint_angles.hip_pitch) * (cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll) + cosf(dh_param[1].alpha) * cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_yaw)) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * sinf(joint_angles.hip_yaw) * sinf(joint_angles.hip_pitch)) - sinf(joint_angles.knee_pitch) * (sinf(joint_angles.hip_pitch) * (cosf(joint_angles.hip_yaw) * cosf(joint_angles.hip_roll) - cosf(dh_param[1].alpha) * sinf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll)) + cosf(dh_param[2].alpha) * cosf(joint_angles.hip_pitch) * (cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll) + cosf(dh_param[1].alpha) * cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_yaw)) - sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(joint_angles.hip_pitch) * sinf(joint_angles.hip_yaw))) + dh_param[2].a * (cosf(joint_angles.hip_yaw) * cosf(joint_angles.hip_roll) - cosf(dh_param[1].alpha) * sinf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll)) + dh_param[1].a * cosf(joint_angles.hip_yaw);
+      foot_pos.y = dh_param[2].a * (cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_yaw) + cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll)) + dh_param[1].a * sinf(joint_angles.hip_yaw) - dh_param[4].a * (sinf(joint_angles.knee_pitch) * (sinf(joint_angles.hip_pitch) * (cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_yaw) + cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll)) + cosf(dh_param[2].alpha) * cosf(joint_angles.hip_pitch) * (sinf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll) - cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * cosf(joint_angles.hip_roll)) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(joint_angles.hip_yaw) * cosf(joint_angles.hip_pitch)) + cosf(joint_angles.knee_pitch) * (cosf(dh_param[2].alpha) * sinf(joint_angles.hip_pitch) * (sinf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll) - cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * cosf(joint_angles.hip_roll)) - cosf(joint_angles.hip_pitch) * (cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_yaw) + cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll)) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_pitch))) - dh_param[3].a * (cosf(dh_param[2].alpha) * sinf(joint_angles.hip_pitch) * (sinf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll) - cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * cosf(joint_angles.hip_roll)) - cosf(joint_angles.hip_pitch) * (cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_yaw) + cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll)) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_pitch));
+      foot_pos.z = dh_param[4].a * (cosf(joint_angles.knee_pitch) * (cosf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * sinf(joint_angles.hip_pitch) + sinf(dh_param[1].alpha) * cosf(joint_angles.hip_pitch) * sinf(joint_angles.hip_roll) + cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_pitch)) + sinf(joint_angles.knee_pitch) * (cosf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(joint_angles.hip_pitch) - sinf(dh_param[1].alpha) * sinf(joint_angles.hip_roll) * sinf(joint_angles.hip_pitch) + cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * cosf(joint_angles.hip_roll) * cosf(joint_angles.hip_pitch))) + dh_param[3].a * (cosf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * sinf(joint_angles.hip_pitch) + sinf(dh_param[1].alpha) * cosf(joint_angles.hip_pitch) * sinf(joint_angles.hip_roll) + cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_pitch)) + dh_param[2].a * sinf(dh_param[1].alpha) * sinf(joint_angles.hip_roll);
 
-      FK_right_foot_pos.x = robot->DH_Right_Leg[0].a + robot->DH_Right_Leg[3].a * (cosf(right_leg.hip_pitch) * (cosf(right_leg.hip_yaw) * cosf(right_leg.hip_roll) - cosf(robot->DH_Right_Leg[1].alpha) * sinf(right_leg.hip_yaw) * sinf(right_leg.hip_roll)) - cosf(robot->DH_Right_Leg[2].alpha) * sinf(right_leg.hip_pitch) * (cosf(right_leg.hip_yaw) * sinf(right_leg.hip_roll) + cosf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_roll) * sinf(right_leg.hip_yaw)) + sinf(robot->DH_Right_Leg[1].alpha) * sinf(robot->DH_Right_Leg[2].alpha) * sinf(right_leg.hip_yaw) * sinf(right_leg.hip_pitch)) + robot->DH_Right_Leg[4].a * (cosf(right_leg.knee_pitch) * (cosf(right_leg.hip_pitch) * (cosf(right_leg.hip_yaw) * cosf(right_leg.hip_roll) - cosf(robot->DH_Right_Leg[1].alpha) * sinf(right_leg.hip_yaw) * sinf(right_leg.hip_roll)) - cosf(robot->DH_Right_Leg[2].alpha) * sinf(right_leg.hip_pitch) * (cosf(right_leg.hip_yaw) * sinf(right_leg.hip_roll) + cosf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_roll) * sinf(right_leg.hip_yaw)) + sinf(robot->DH_Right_Leg[1].alpha) * sinf(robot->DH_Right_Leg[2].alpha) * sinf(right_leg.hip_yaw) * sinf(right_leg.hip_pitch)) - sinf(right_leg.knee_pitch) * (sinf(right_leg.hip_pitch) * (cosf(right_leg.hip_yaw) * cosf(right_leg.hip_roll) - cosf(robot->DH_Right_Leg[1].alpha) * sinf(right_leg.hip_yaw) * sinf(right_leg.hip_roll)) + cosf(robot->DH_Right_Leg[2].alpha) * cosf(right_leg.hip_pitch) * (cosf(right_leg.hip_yaw) * sinf(right_leg.hip_roll) + cosf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_roll) * sinf(right_leg.hip_yaw)) - sinf(robot->DH_Right_Leg[1].alpha) * sinf(robot->DH_Right_Leg[2].alpha) * cosf(right_leg.hip_pitch) * sinf(right_leg.hip_yaw))) + robot->DH_Right_Leg[2].a * (cosf(right_leg.hip_yaw) * cosf(right_leg.hip_roll) - cosf(robot->DH_Right_Leg[1].alpha) * sinf(right_leg.hip_yaw) * sinf(right_leg.hip_roll)) + robot->DH_Right_Leg[1].a * cosf(right_leg.hip_yaw);
-      FK_right_foot_pos.y = robot->DH_Right_Leg[2].a * (cosf(right_leg.hip_roll) * sinf(right_leg.hip_yaw) + cosf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_yaw) * sinf(right_leg.hip_roll)) + robot->DH_Right_Leg[1].a * sinf(right_leg.hip_yaw) - robot->DH_Right_Leg[4].a * (sinf(right_leg.knee_pitch) * (sinf(right_leg.hip_pitch) * (cosf(right_leg.hip_roll) * sinf(right_leg.hip_yaw) + cosf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_yaw) * sinf(right_leg.hip_roll)) + cosf(robot->DH_Right_Leg[2].alpha) * cosf(right_leg.hip_pitch) * (sinf(right_leg.hip_yaw) * sinf(right_leg.hip_roll) - cosf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_yaw) * cosf(right_leg.hip_roll)) + sinf(robot->DH_Right_Leg[1].alpha) * sinf(robot->DH_Right_Leg[2].alpha) * cosf(right_leg.hip_yaw) * cosf(right_leg.hip_pitch)) + cosf(right_leg.knee_pitch) * (cosf(robot->DH_Right_Leg[2].alpha) * sinf(right_leg.hip_pitch) * (sinf(right_leg.hip_yaw) * sinf(right_leg.hip_roll) - cosf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_yaw) * cosf(right_leg.hip_roll)) - cosf(right_leg.hip_pitch) * (cosf(right_leg.hip_roll) * sinf(right_leg.hip_yaw) + cosf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_yaw) * sinf(right_leg.hip_roll)) + sinf(robot->DH_Right_Leg[1].alpha) * sinf(robot->DH_Right_Leg[2].alpha) * cosf(right_leg.hip_yaw) * sinf(right_leg.hip_pitch))) - robot->DH_Right_Leg[3].a * (cosf(robot->DH_Right_Leg[2].alpha) * sinf(right_leg.hip_pitch) * (sinf(right_leg.hip_yaw) * sinf(right_leg.hip_roll) - cosf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_yaw) * cosf(right_leg.hip_roll)) - cosf(right_leg.hip_pitch) * (cosf(right_leg.hip_roll) * sinf(right_leg.hip_yaw) + cosf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_yaw) * sinf(right_leg.hip_roll)) + sinf(robot->DH_Right_Leg[1].alpha) * sinf(robot->DH_Right_Leg[2].alpha) * cosf(right_leg.hip_yaw) * sinf(right_leg.hip_pitch));
-      FK_right_foot_pos.z = robot->DH_Right_Leg[4].a * (cosf(right_leg.knee_pitch) * (cosf(robot->DH_Right_Leg[1].alpha) * sinf(robot->DH_Right_Leg[2].alpha) * sinf(right_leg.hip_pitch) + sinf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_pitch) * sinf(right_leg.hip_roll) + cosf(robot->DH_Right_Leg[2].alpha) * sinf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_roll) * sinf(right_leg.hip_pitch)) + sinf(right_leg.knee_pitch) * (cosf(robot->DH_Right_Leg[1].alpha) * sinf(robot->DH_Right_Leg[2].alpha) * cosf(right_leg.hip_pitch) - sinf(robot->DH_Right_Leg[1].alpha) * sinf(right_leg.hip_roll) * sinf(right_leg.hip_pitch) + cosf(robot->DH_Right_Leg[2].alpha) * sinf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_roll) * cosf(right_leg.hip_pitch))) + robot->DH_Right_Leg[3].a * (cosf(robot->DH_Right_Leg[1].alpha) * sinf(robot->DH_Right_Leg[2].alpha) * sinf(right_leg.hip_pitch) + sinf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_pitch) * sinf(right_leg.hip_roll) + cosf(robot->DH_Right_Leg[2].alpha) * sinf(robot->DH_Right_Leg[1].alpha) * cosf(right_leg.hip_roll) * sinf(right_leg.hip_pitch)) + robot->DH_Right_Leg[2].a * sinf(robot->DH_Right_Leg[1].alpha) * sinf(right_leg.hip_roll);
-
-      // Update the robot's foot positions
-      robot->setActFootPosLeft(FK_left_foot_pos);
-      robot->setActFootPosRight(FK_right_foot_pos);
+      // Return the foot positions
+      return foot_pos;
 }
 
-void Kinematics::computeInverseKinematics(Robot *robot)
+Joint_Angle Kinematics::computeInverseKinematics(const Foot_Position &ref_foot_pos, const Foot_Position &act_foot_pos, const Joint_Angle &joint_angles, const int leg)
 {
-      Foot_Position left_foot = robot->getRefFootPosLeft();
-      Foot_Position right_foot = robot->getRefFootPosRight();
+      // Initialize foot positions
+      Eigen::Matrix<float, 3, 1> v_ref_foot_pos(ref_foot_pos.x, ref_foot_pos.y, ref_foot_pos.z);
+      Eigen::Matrix<float, 3, 1> v_act_foot_pos(act_foot_pos.x, act_foot_pos.y, act_foot_pos.z);
 
-      // Abandoning the analytic solution for the inverse kinematics problem as it only uses three DOF of the robot and neglects the Hip Roll
-      
-      // // Inverse Kinematics for left leg
-      // IK_left_leg_angles1.hip_yaw = (PI + atan2f(-left_foot.y, -left_foot.x) - atan2f(sqrtf(left_foot.x * left_foot.x + left_foot.y * left_foot.y - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a), robot->DH_Left_Leg[1].a));
-      // IK_left_leg_angles2.hip_yaw = atan2f(-left_foot.y, -left_foot.x) + atan2f(-robot->DH_Left_Leg[1].a, sqrtf(left_foot.x * left_foot.x + left_foot.y * left_foot.y - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a));
+      // Initialize the joint angle guess to be the current joint angles
+      Eigen::Matrix<float, 4, 1> v_ref_joint_angles(joint_angles.hip_yaw, joint_angles.hip_roll, joint_angles.hip_pitch, joint_angles.knee_pitch);
 
-      // IK_left_leg_angles1.knee_pitch = atan2f(sqrtf(1.0f - ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a)) * ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a))), ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a)));
-      // IK_left_leg_angles2.knee_pitch = atan2f(-sqrtf(1.0f - ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a)) * ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a))), ((left_foot.x * left_foot.x + left_foot.y * left_foot.y + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a - robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[3].a - robot->DH_Left_Leg[4].a * robot->DH_Left_Leg[4].a) / (2 * robot->DH_Left_Leg[3].a * robot->DH_Left_Leg[4].a)));
+      // Select the DH parameters based on the leg
+      const DH_Parameter *dh_param;
+      if (leg == LEFT_LEG)
+      {
+            dh_param = DH_Left_Leg;
+      }
+      else if (leg == RIGHT_LEG)
+      {
+            dh_param = DH_Right_Leg;
+      }
+      else
+      {
+            // Invalid leg identifier
+            return IK_left_leg_angles = {0.0f, 0.0f, 0.0f, 0.0f};
+      }
 
-      // IK_left_leg_angles1.hip_pitch = (-PI + atan2f(left_foot.y, sqrtf(left_foot.x * left_foot.x + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a)) - atan2f(robot->DH_Left_Leg[4].a * sin(IK_left_leg_angles1.knee_pitch), robot->DH_Left_Leg[3].a + robot->DH_Left_Leg[4].a * cos(IK_left_leg_angles1.knee_pitch)));
-      // IK_left_leg_angles2.hip_pitch = PI + atan2f(left_foot.y, sqrtf(left_foot.x * left_foot.x + left_foot.z * left_foot.z - robot->DH_Left_Leg[1].a * robot->DH_Left_Leg[1].a)) - atan2f(robot->DH_Left_Leg[4].a * sin(IK_left_leg_angles2.knee_pitch), robot->DH_Left_Leg[3].a + robot->DH_Left_Leg[4].a * cos(IK_left_leg_angles2.knee_pitch));
+      // Initialize the Jacobian and Inverse Jacobian matrix
+      Eigen::Matrix<float, 3, 4> m_jacobian;
+      Eigen::Matrix<float, 4, 3> m_inv_jacobian;
 
-      // // Inverse Kinematics for right leg
-      // IK_right_leg_angles1.hip_yaw = (PI + atan2f(right_foot.y, right_foot.x) - atan2f(sqrtf(right_foot.x * right_foot.x + right_foot.y * right_foot.y - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a), robot->DH_Right_Leg[1].a));
-      // IK_right_leg_angles2.hip_yaw = atan2f(right_foot.y, right_foot.x) + atan2f(-robot->DH_Right_Leg[1].a, sqrtf(right_foot.x * right_foot.x + right_foot.y * right_foot.y - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a));
+      Eigen::Matrix<float, 3, 1> v_foot_pos_error = v_ref_foot_pos - v_act_foot_pos;
+      Eigen::Matrix<float, 4, 1> v_delta_joint_angles;
+			
+			IK_iteration_count = 0;
+			IK_epsilon = 1.0f;
+			
+      // Newton-Raphson method for inverse kinematics
+      while (IK_epsilon > TOLERANCE && v_foot_pos_error.norm() > 0.01 && IK_iteration_count < MAX_ITERATIONS)
+      {
+            m_jacobian(0, 0) = dh_param[4].a * (sinf(v_ref_joint_angles(3)) * (sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + cosf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * (sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1))) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(2))) + cosf(v_ref_joint_angles(3)) * (cosf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) * (sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1))) - cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(2)))) - dh_param[1].a * sinf(v_ref_joint_angles(0)) - dh_param[2].a * (cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + dh_param[3].a * (cosf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) * (sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1))) - cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(2)));
+            m_jacobian(0, 1) = -dh_param[2].a * (cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0))) - dh_param[3].a * (cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0))) + cosf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)))) - dh_param[4].a * (cosf(v_ref_joint_angles(3)) * (cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0))) + cosf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)))) - sinf(v_ref_joint_angles(3)) * (sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0))) - cosf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)))));
+            m_jacobian(0, 2) = -dh_param[4].a * (cosf(v_ref_joint_angles(3)) * (sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + cosf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0))) - sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * sinf(v_ref_joint_angles(0))) + sinf(v_ref_joint_angles(3)) * (cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) - cosf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0))) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(2)))) - dh_param[3].a * (sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + cosf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0))) - sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * sinf(v_ref_joint_angles(0)));
+            m_jacobian(0, 3) = -dh_param[4].a * (cosf(v_ref_joint_angles(3)) * (sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + cosf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0))) - sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * sinf(v_ref_joint_angles(0))) + sinf(v_ref_joint_angles(3)) * (cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) - cosf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0))) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(2))));
+            m_jacobian(1, 0) = dh_param[3].a * (cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) - cosf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0))) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(2))) + dh_param[4].a * (cosf(v_ref_joint_angles(3)) * (cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) - cosf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0))) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(2))) - sinf(v_ref_joint_angles(3)) * (sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + cosf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0))) - sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * sinf(v_ref_joint_angles(0)))) + dh_param[2].a * (cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + dh_param[1].a * cosf(v_ref_joint_angles(0));
+            m_jacobian(1, 1) = -dh_param[2].a * (sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1))) - dh_param[3].a * (cosf(v_ref_joint_angles(2)) * (sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1))) + cosf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)))) - dh_param[4].a * (cosf(v_ref_joint_angles(3)) * (cosf(v_ref_joint_angles(2)) * (sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1))) + cosf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)))) - sinf(v_ref_joint_angles(3)) * (sinf(v_ref_joint_angles(2)) * (sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1))) - cosf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)))));
+            m_jacobian(1, 2) = -dh_param[3].a * (sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + cosf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * (sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1))) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(2))) - dh_param[4].a * (cosf(v_ref_joint_angles(3)) * (sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + cosf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * (sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1))) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(2))) - sinf(v_ref_joint_angles(3)) * (cosf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) * (sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1))) - cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(2))));
+            m_jacobian(1, 3) = -dh_param[4].a * (cosf(v_ref_joint_angles(3)) * (sinf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + cosf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) * (sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1))) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(2))) - sinf(v_ref_joint_angles(3)) * (cosf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) * (sinf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1)) - cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * cosf(v_ref_joint_angles(1))) - cosf(v_ref_joint_angles(2)) * (cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(0)) + cosf(dh_param[1].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(1))) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(0)) * sinf(v_ref_joint_angles(2))));
+            m_jacobian(2, 0) = 0;
+            m_jacobian(2, 1) = dh_param[4].a * (cosf(v_ref_joint_angles(3)) * (sinf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * cosf(v_ref_joint_angles(2)) - cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * sinf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(2))) - sinf(v_ref_joint_angles(3)) * (sinf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(2)) + cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * cosf(v_ref_joint_angles(2)) * sinf(v_ref_joint_angles(1)))) + dh_param[3].a * (sinf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * cosf(v_ref_joint_angles(2)) - cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * sinf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(2))) + dh_param[2].a * sinf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1));
+            m_jacobian(2, 2) = dh_param[4].a * (cosf(v_ref_joint_angles(3)) * (cosf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) - sinf(dh_param[1].alpha) * sinf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(2)) + cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * cosf(v_ref_joint_angles(2))) - sinf(v_ref_joint_angles(3)) * (cosf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) + sinf(dh_param[1].alpha) * cosf(v_ref_joint_angles(2)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(2)))) + dh_param[3].a * (cosf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) - sinf(dh_param[1].alpha) * sinf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(2)) + cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * cosf(v_ref_joint_angles(2)));
+            m_jacobian(2, 3) = dh_param[4].a * (cosf(v_ref_joint_angles(3)) * (cosf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(v_ref_joint_angles(2)) - sinf(dh_param[1].alpha) * sinf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(2)) + cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * cosf(v_ref_joint_angles(2))) - sinf(v_ref_joint_angles(3)) * (cosf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * sinf(v_ref_joint_angles(2)) + sinf(dh_param[1].alpha) * cosf(v_ref_joint_angles(2)) * sinf(v_ref_joint_angles(1)) + cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * cosf(v_ref_joint_angles(1)) * sinf(v_ref_joint_angles(2))));
 
-      // IK_right_leg_angles1.knee_pitch = atan2f(sqrtf(1.0f - ((right_foot.x * right_foot.x + right_foot.y * right_foot.y + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a - robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[3].a - robot->DH_Right_Leg[4].a * robot->DH_Right_Leg[4].a) / (2 * robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[4].a)) * ((right_foot.x * right_foot.x + right_foot.y * right_foot.y + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a - robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[3].a - robot->DH_Right_Leg[4].a * robot->DH_Right_Leg[4].a) / (2 * robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[4].a))), ((right_foot.x * right_foot.x + right_foot.y * right_foot.y + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a - robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[3].a - robot->DH_Right_Leg[4].a * robot->DH_Right_Leg[4].a) / (2 * robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[4].a)));
-      // IK_right_leg_angles2.knee_pitch = atan2f(-sqrtf(1.0f - ((right_foot.x * right_foot.x + right_foot.y * right_foot.y + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a - robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[3].a - robot->DH_Right_Leg[4].a * robot->DH_Right_Leg[4].a) / (2 * robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[4].a)) * ((right_foot.x * right_foot.x + right_foot.y * right_foot.y + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a - robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[3].a - robot->DH_Right_Leg[4].a * robot->DH_Right_Leg[4].a) / (2 * robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[4].a))), ((right_foot.x * right_foot.x + right_foot.y * right_foot.y + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a - robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[3].a - robot->DH_Right_Leg[4].a * robot->DH_Right_Leg[4].a) / (2 * robot->DH_Right_Leg[3].a * robot->DH_Right_Leg[4].a)));
+            m_inv_jacobian = m_jacobian.completeOrthogonalDecomposition().pseudoInverse();
 
-      // IK_right_leg_angles1.hip_pitch = (-PI + atan2f(right_foot.y, sqrtf(right_foot.x * right_foot.x + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a)) - atan2f(robot->DH_Right_Leg[4].a * sin(IK_right_leg_angles1.knee_pitch), robot->DH_Right_Leg[3].a + robot->DH_Right_Leg[4].a * cos(IK_right_leg_angles1.knee_pitch)));
-      // IK_right_leg_angles2.hip_pitch = PI + atan2f(right_foot.y, sqrtf(right_foot.x * right_foot.x + right_foot.z * right_foot.z - robot->DH_Right_Leg[1].a * robot->DH_Right_Leg[1].a)) - atan2f(robot->DH_Right_Leg[4].a * sin(IK_right_leg_angles2.knee_pitch), robot->DH_Right_Leg[3].a + robot->DH_Right_Leg[4].a * cos(IK_right_leg_angles2.knee_pitch));
+            IK_left_leg_angles.hip_yaw = v_ref_joint_angles(0);
+            IK_left_leg_angles.hip_roll = v_ref_joint_angles(1);
+            IK_left_leg_angles.hip_pitch = v_ref_joint_angles(2);
+            IK_left_leg_angles.knee_pitch = v_ref_joint_angles(3);
 
-      // // Select the closest solution to the current joint angles
-      // if (fabs(IK_left_leg_angles1.hip_yaw - robot->getActJointAnglesLeft().hip_yaw) < fabs(IK_left_leg_angles2.hip_yaw - robot->getActJointAnglesLeft().hip_yaw))
-      // {
-      //       IK_left_leg_angles_final.hip_yaw = IK_left_leg_angles1.hip_yaw;
-      // }
-      // else
-      // {
-      //       IK_left_leg_angles_final.hip_yaw = IK_left_leg_angles2.hip_yaw;
-      // }
+            FK_left_foot_pos = computeForwardKinematics(IK_left_leg_angles, leg);
+            v_act_foot_pos = {FK_left_foot_pos.x, FK_left_foot_pos.y, FK_left_foot_pos.z};
+            v_foot_pos_error = v_ref_foot_pos - v_act_foot_pos;
+            v_delta_joint_angles = m_inv_jacobian * v_foot_pos_error;
 
-      // if (fabs(IK_left_leg_angles1.hip_pitch - robot->getActJointAnglesLeft().hip_pitch) < fabs(IK_left_leg_angles2.hip_pitch - robot->getActJointAnglesLeft().hip_pitch))
-      // {
-      //       IK_left_leg_angles_final.hip_pitch = IK_left_leg_angles1.hip_pitch;
-      //       IK_left_leg_angles_final.knee_pitch = IK_left_leg_angles1.knee_pitch;
-      // }
-      // else
-      // {
-      //       IK_left_leg_angles_final.hip_pitch = IK_left_leg_angles2.hip_pitch;
-      //       IK_left_leg_angles_final.knee_pitch = IK_left_leg_angles2.knee_pitch;
-      // }
+            if (v_ref_joint_angles.norm() > 0)
+            {
+                  IK_epsilon = fabs(v_delta_joint_angles.norm()) / fabs(v_ref_joint_angles.norm());
+            }
+            else
+            {
+                  IK_epsilon = v_delta_joint_angles.norm(); // Directly use the delta norm when the denominator is zero
+            }
+            v_ref_joint_angles += v_delta_joint_angles;
+            IK_iteration_count++;
+      }
 
-      // if (fabs(IK_right_leg_angles1.hip_yaw - robot->getActJointAnglesRight().hip_yaw) < fabs(IK_right_leg_angles2.hip_yaw - robot->getActJointAnglesRight().hip_yaw))
-      // {
-      //       IK_right_leg_angles_final.hip_yaw = IK_right_leg_angles1.hip_yaw;
-      // }
-      // else
-      // {
-      //       IK_right_leg_angles_final.hip_yaw = IK_right_leg_angles2.hip_yaw;
-      // }
+      IK_left_leg_angles.hip_yaw = WRAP2_2PI(v_ref_joint_angles(0));
+      IK_left_leg_angles.hip_roll = WRAP2_2PI(v_ref_joint_angles(1));
+      IK_left_leg_angles.hip_pitch = WRAP2_2PI(v_ref_joint_angles(2));
+      IK_left_leg_angles.knee_pitch = WRAP2_2PI(v_ref_joint_angles(3));
 
-      // if (fabs(IK_right_leg_angles1.hip_pitch - robot->getActJointAnglesRight().hip_pitch) < fabs(IK_right_leg_angles2.hip_pitch - robot->getActJointAnglesRight().hip_pitch))
-      // {
-      //       IK_right_leg_angles_final.hip_pitch = IK_right_leg_angles1.hip_pitch;
-      //       IK_right_leg_angles_final.knee_pitch = IK_right_leg_angles1.knee_pitch;
-      // }
-      // else
-      // {
-      //       IK_right_leg_angles_final.hip_pitch = IK_right_leg_angles2.hip_pitch;
-      //       IK_right_leg_angles_final.knee_pitch = IK_right_leg_angles2.knee_pitch;
-      // }
-      // Update the robot's joint angles
-      robot->setRefJointAnglesLeft(IK_left_leg_angles_final);
-      robot->setRefJointAnglesRight(IK_right_leg_angles_final);
+      return IK_left_leg_angles;
 }

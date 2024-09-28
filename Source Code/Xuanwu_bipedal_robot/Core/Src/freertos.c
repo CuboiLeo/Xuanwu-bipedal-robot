@@ -87,7 +87,7 @@ osThreadId_t System_MonitorHandle;
 const osThreadAttr_t System_Monitor_attributes = {
   .name = "System_Monitor",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityHigh,
+  .priority = (osPriority_t) osPriorityAboveNormal,
 };
 
 /* Private function prototypes -----------------------------------------------*/
