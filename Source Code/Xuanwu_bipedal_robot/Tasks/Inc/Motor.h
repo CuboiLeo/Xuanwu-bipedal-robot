@@ -26,6 +26,7 @@ public:
     void enableAll(void);
     uint8_t returnZeroPos(void);
     void createVirtualBoundary(void);
+    bool checkJointsOverRange(uint8_t leg);
     float getPos(int motor) const { return motor_info[motor].para.pos; };
     uint8_t getSoftStartFlag(void) const { return soft_start_flag; };
     void setSoftStartFlag(const uint8_t& flag) { soft_start_flag = flag; };

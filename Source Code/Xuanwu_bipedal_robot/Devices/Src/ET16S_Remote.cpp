@@ -8,6 +8,20 @@ Remote::Remote()
     {
         channel_val[i] = 0;
     }
+    left_stick.x = 0;
+    left_stick.y = 0;
+    right_stick.x = 0;
+    right_stick.y = 0;
+    switch_sa = 0;
+    switch_sb = 0;
+    // switch_sc = 0;
+    switch_sd = 0;
+    switch_se = 0;
+    switch_sf = 0;
+    switch_sg = 0;
+    switch_sh = 0;
+    left_dial = 0;
+    right_dial = 0;
 }
 
 void Remote::Init(UART_HandleTypeDef *huart)
@@ -37,5 +51,35 @@ void Remote::processBuffer(void)
         channel_val[13] = ((remote_buffer[18] >> 7 | remote_buffer[19] << 1 | remote_buffer[20] << 9) & 0x07FF) - 1024;
         channel_val[14] = ((remote_buffer[20] >> 2 | remote_buffer[21] << 6) & 0x07FF) - 1024;
         channel_val[15] = ((remote_buffer[21] >> 5 | remote_buffer[22] << 3) & 0x07FF) - 1024;
+
+        left_stick.x = channel_val[3];
+        left_stick.y = channel_val[2];
+        right_stick.x = channel_val[0];
+        right_stick.y = channel_val[1];
+        switch_sa = channel_val[4] / -CHANNEL_MAX_VALUE;
+        switch_sb = channel_val[5] / -CHANNEL_MAX_VALUE;
+        //switch_sc = channel_val[6] / -CHANNEL_MAX_VALUE;
+        switch_sd = channel_val[7] / -CHANNEL_MAX_VALUE;
+        switch_se = channel_val[8] / -CHANNEL_MAX_VALUE;
+        switch_sf = channel_val[9] / -CHANNEL_MAX_VALUE;
+        switch_sg = channel_val[10] / -CHANNEL_MAX_VALUE;
+        switch_sh = channel_val[11] / -CHANNEL_MAX_VALUE;
+        left_dial = channel_val[12] * -1;
+        right_dial = channel_val[13] * -1;
+
+        watchdog = 50;
+    }
+}
+
+void Remote::checkWatchdog(UART_HandleTypeDef *huart)
+{
+    if(watchdog > 0)
+    {
+        watchdog--;
+    }
+    else
+    {
+        HAL_UARTEx_ReceiveToIdle_DMA(huart, remote_buffer, REMOTE_BUFFER_SIZE); // enable uart receive
+        __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT); // disable half transfer interrupt
     }
 }

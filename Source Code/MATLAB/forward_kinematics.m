@@ -23,6 +23,7 @@ T_05 = simplify(T_05);
 x = T_05(1,4)
 y = T_05(2,4)
 z = T_05(3,4)
+yaw = atan2(T_05(2,1), T_05(1,1))
 %T_05 = subs(T_05,{theta1 theta2 theta3 theta4 a1 a2 a3 a4 a5 alpha2 alpha3},{0 pi/2 0 0 -0.135 -0.095 -0.09 -0.18 -0.38 -pi/2 -pi/2})
 
 

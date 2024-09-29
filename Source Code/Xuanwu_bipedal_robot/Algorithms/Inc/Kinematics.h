@@ -28,6 +28,9 @@ extern "C"
 
             uint8_t IK_iteration_count = 0;
             float IK_epsilon = 1.0f;
+            uint32_t prev_tick = 0;
+            uint32_t curr_tick = 0;
+            float dt = 0.0f;
       };
 
       /* Forward kinematics computation, the final transformation matrix is computed in MATLAB

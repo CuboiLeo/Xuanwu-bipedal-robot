@@ -127,6 +127,50 @@ void Motor::createVirtualBoundary(void)
 	}
 }
 
+bool Motor::checkJointsOverRange(uint8_t leg)
+{
+	bool over_range = false;
+	if (leg == LEFT_LEG)
+	{
+		if (fabs(motor_info[Left_Hip_Yaw].para.pos) > motor_info[Left_Hip_Yaw].range)
+		{
+			over_range = true;
+		}
+		else if (fabs(motor_info[Left_Hip_Roll].para.pos) > motor_info[Left_Hip_Roll].range)
+		{
+			over_range = true;
+		}
+		else if (fabs(motor_info[Left_Hip_Pitch].para.pos) > motor_info[Left_Hip_Pitch].range)
+		{
+			over_range = true;
+		}
+		else if (fabs(motor_info[Left_Knee_Pitch].para.pos) > motor_info[Left_Knee_Pitch].range)
+		{
+			over_range = true;
+		}
+	}
+	else if (leg == RIGHT_LEG)
+	{
+		if (fabs(motor_info[Right_Hip_Yaw].para.pos) > motor_info[Right_Hip_Yaw].range)
+		{
+			over_range = true;
+		}
+		else if (fabs(motor_info[Right_Hip_Roll].para.pos) > motor_info[Right_Hip_Roll].range)
+		{
+			over_range = true;
+		}
+		else if (fabs(motor_info[Right_Hip_Pitch].para.pos) > motor_info[Right_Hip_Pitch].range)
+		{
+			over_range = true;
+		}
+		else if (fabs(motor_info[Right_Knee_Pitch].para.pos) > motor_info[Right_Knee_Pitch].range)
+		{
+			over_range = true;
+		}
+	}
+	return over_range;
+}
+
 void Motor::resetJoints(void)
 {
   	disableAll();

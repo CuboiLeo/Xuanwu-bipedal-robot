@@ -5,7 +5,8 @@
 extern "C" {
 #endif
 
-extern void Debug_Task(void const * argument);
+#include <cstring>
+#include <cstdio>
 
 #ifdef __cplusplus
 }

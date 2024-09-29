@@ -5,6 +5,7 @@
 #include "ET16S_Remote.h"
 #include "IMU.h"
 #include "Onboard_Buzzer.h"
+#include "debug.h"
 
 Robot robot;
 Kinematics kinematics;
@@ -23,6 +24,7 @@ void Robot_Task(void *argument)
 
     for (;;)
     {
+        remote.checkWatchdog(&REMOTE_UART);
         // Assign joint angles based on motor feedback
         Joint_Angle left_angles = {
             motor.getPos(Left_Hip_Yaw),
@@ -39,13 +41,24 @@ void Robot_Task(void *argument)
         robot.setActJointAnglesLeft(left_angles);
         robot.setActJointAnglesRight(right_angles);
 
+        left_angles.hip_roll += LEFT_LEG_HIP_ROLL_OFFSET;
+        right_angles.hip_roll += RIGHT_LEG_HIP_ROLL_OFFSET;
         // Compute the robot's foot positions using forward kinematics
-        robot.setActFootPosLeft(kinematics.computeForwardKinematics(robot.getActJointAnglesLeft(), LEFT_LEG));
-        robot.setActFootPosRight(kinematics.computeForwardKinematics(robot.getActJointAnglesRight(), RIGHT_LEG));
+        robot.setActFootPosLeft(kinematics.computeForwardKinematics(left_angles, LEFT_LEG));
+
+        if (motor.checkJointsOverRange(LEFT_LEG) == false)
+        {
+            Foot_Position ref_left_foot_pos;
+            ref_left_foot_pos = robot.getRefFootPosLeft();
+            ref_left_foot_pos.x += remote.getLeftStickX() / remote.CHANNEL_MAX_VALUE * 0.0001f;
+            ref_left_foot_pos.y += remote.getLeftStickY() / remote.CHANNEL_MAX_VALUE * 0.0001f;
+            ref_left_foot_pos.z -= remote.getRightStickY() / remote.CHANNEL_MAX_VALUE * 0.0001f;
+            robot.setRefFootPosLeft(ref_left_foot_pos);
+        }
 
         // Compute the robot's joint angles using inverse kinematics
         robot.setRefJointAnglesLeft(kinematics.computeInverseKinematics(robot.getRefFootPosLeft(), robot.getActFootPosLeft(), robot.getActJointAnglesLeft(), LEFT_LEG));
-        //robot.setRefJointAnglesRight(kinematics.computeInverseKinematics(robot.getRefFootPosRight(), robot.getActFootPosRight(), robot.getActJointAnglesRight(), RIGHT_LEG));
+        // robot.setRefJointAnglesRight(kinematics.computeInverseKinematics(robot.getRefFootPosRight(), robot.getActFootPosRight(), robot.getActJointAnglesRight(), RIGHT_LEG));
 
         if (motor.getSoftStartFlag() == motor.ALL_JOINTS_ZEROED_FLAG)
         {
@@ -103,9 +116,15 @@ void Debug_Task(void *argument)
 
     for (;;)
     {
-        //         printf("/*%f,%f,%f,%f,%f,%f*/\n",
-        //                g_Robot.left_foot.x, g_Robot.left_foot.y, g_Robot.left_foot.z,
-        //                g_Robot.right_foot.x, g_Robot.right_foot.y, g_Robot.right_foot.z);
+        char buffer[128]; // Adjust the size based on the data you need to print
+
+        // Format the string using sprintf
+        sprintf(buffer, "/*%f, %f, %f, %f, %f, %f*/\n",
+                robot.getRefFootPosLeft().x, robot.getRefFootPosLeft().y, robot.getRefFootPosLeft().z,
+                robot.getActFootPosLeft().x, robot.getActFootPosLeft().y, robot.getActFootPosLeft().z);
+
+        // Transmit the formatted string over UART
+        HAL_UART_Transmit(&huart7, (uint8_t *)buffer, strlen(buffer), 0xFFFF);
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }

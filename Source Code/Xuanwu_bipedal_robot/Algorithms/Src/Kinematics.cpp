@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include "User_Math.h"
+#include "main.h"
 
 Kinematics::Kinematics()
 {
@@ -15,6 +16,8 @@ Kinematics::Kinematics()
 
 Foot_Position Kinematics::computeForwardKinematics(Joint_Angle joint_angles, const int leg)
 {
+      prev_tick = curr_tick;
+      curr_tick = HAL_GetTick();
       Foot_Position foot_pos;
       const DH_Parameter *dh_param;
       if (leg == LEFT_LEG)
@@ -35,6 +38,7 @@ Foot_Position Kinematics::computeForwardKinematics(Joint_Angle joint_angles, con
       foot_pos.y = dh_param[2].a * (cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_yaw) + cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll)) + dh_param[1].a * sinf(joint_angles.hip_yaw) - dh_param[4].a * (sinf(joint_angles.knee_pitch) * (sinf(joint_angles.hip_pitch) * (cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_yaw) + cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll)) + cosf(dh_param[2].alpha) * cosf(joint_angles.hip_pitch) * (sinf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll) - cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * cosf(joint_angles.hip_roll)) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(joint_angles.hip_yaw) * cosf(joint_angles.hip_pitch)) + cosf(joint_angles.knee_pitch) * (cosf(dh_param[2].alpha) * sinf(joint_angles.hip_pitch) * (sinf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll) - cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * cosf(joint_angles.hip_roll)) - cosf(joint_angles.hip_pitch) * (cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_yaw) + cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll)) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_pitch))) - dh_param[3].a * (cosf(dh_param[2].alpha) * sinf(joint_angles.hip_pitch) * (sinf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll) - cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * cosf(joint_angles.hip_roll)) - cosf(joint_angles.hip_pitch) * (cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_yaw) + cosf(dh_param[1].alpha) * cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_roll)) + sinf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(joint_angles.hip_yaw) * sinf(joint_angles.hip_pitch));
       foot_pos.z = dh_param[4].a * (cosf(joint_angles.knee_pitch) * (cosf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * sinf(joint_angles.hip_pitch) + sinf(dh_param[1].alpha) * cosf(joint_angles.hip_pitch) * sinf(joint_angles.hip_roll) + cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_pitch)) + sinf(joint_angles.knee_pitch) * (cosf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * cosf(joint_angles.hip_pitch) - sinf(dh_param[1].alpha) * sinf(joint_angles.hip_roll) * sinf(joint_angles.hip_pitch) + cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * cosf(joint_angles.hip_roll) * cosf(joint_angles.hip_pitch))) + dh_param[3].a * (cosf(dh_param[1].alpha) * sinf(dh_param[2].alpha) * sinf(joint_angles.hip_pitch) + sinf(dh_param[1].alpha) * cosf(joint_angles.hip_pitch) * sinf(joint_angles.hip_roll) + cosf(dh_param[2].alpha) * sinf(dh_param[1].alpha) * cosf(joint_angles.hip_roll) * sinf(joint_angles.hip_pitch)) + dh_param[2].a * sinf(dh_param[1].alpha) * sinf(joint_angles.hip_roll);
 
+      dt = (curr_tick - prev_tick) / 1000.0f;
       // Return the foot positions
       return foot_pos;
 }

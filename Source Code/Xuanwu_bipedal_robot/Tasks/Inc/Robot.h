@@ -9,6 +9,7 @@ extern "C"
 #include "stdint.h"
 #include "User_Math.h"
 #include "Robot_Types.h"
+
     // Number of joints per leg, end effector counts
     static constexpr int NUM_JOINTS = 5;
 
