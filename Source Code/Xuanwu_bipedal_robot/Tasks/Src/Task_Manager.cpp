@@ -6,6 +6,7 @@
 #include "IMU.h"
 #include "Onboard_Buzzer.h"
 #include "debug.h"
+#include <algorithm>
 
 Robot robot;
 Kinematics kinematics;
@@ -50,9 +51,10 @@ void Robot_Task(void *argument)
         {
             Foot_Position ref_left_foot_pos;
             ref_left_foot_pos = robot.getRefFootPosLeft();
-            ref_left_foot_pos.x += remote.getLeftStickX() / remote.CHANNEL_MAX_VALUE * 0.0001f;
+            ref_left_foot_pos.x -= remote.getLeftStickX() / remote.CHANNEL_MAX_VALUE * 0.0001f;
             ref_left_foot_pos.y += remote.getLeftStickY() / remote.CHANNEL_MAX_VALUE * 0.0001f;
             ref_left_foot_pos.z -= remote.getRightStickY() / remote.CHANNEL_MAX_VALUE * 0.0001f;
+            ref_left_foot_pos.z = std::min(ref_left_foot_pos.z, kinematics.MAX_Z);
             robot.setRefFootPosLeft(ref_left_foot_pos);
         }
 

@@ -14,7 +14,9 @@ extern "C"
       {
       public:
             static constexpr uint8_t MAX_ITERATIONS = 50;
-            static constexpr float TOLERANCE = 0.005f;
+            static constexpr float UPDATE_TOLERANCE = 0.005f;
+            static constexpr float ERROR_TOLERANCE = 0.005f;
+            static constexpr float MAX_Z = 0.6499f;
             Kinematics();
             Foot_Position computeForwardKinematics(Joint_Angle joint_angles, const int leg);
             Joint_Angle computeInverseKinematics(const Foot_Position &ref_foot_pos, const Foot_Position &act_foot_pos, const Joint_Angle &joint_angles, int leg);
@@ -28,9 +30,6 @@ extern "C"
 
             uint8_t IK_iteration_count = 0;
             float IK_epsilon = 1.0f;
-            uint32_t prev_tick = 0;
-            uint32_t curr_tick = 0;
-            float dt = 0.0f;
       };
 
       /* Forward kinematics computation, the final transformation matrix is computed in MATLAB
