@@ -7,6 +7,7 @@
 #include "Onboard_Buzzer.h"
 #include "debug.h"
 #include <algorithm>
+#include "Dynamics.h"
 
 Robot robot;
 Kinematics kinematics;
@@ -14,6 +15,7 @@ Motor motor;
 Remote remote;
 IMU imu;
 Buzzer buzzer;
+Dynamics dynamics;
 
 void Robot_Task(void *argument)
 {
@@ -44,22 +46,25 @@ void Robot_Task(void *argument)
 
         left_angles.hip_roll += LEFT_LEG_HIP_ROLL_OFFSET;
         right_angles.hip_roll += RIGHT_LEG_HIP_ROLL_OFFSET;
-        // Compute the robot's foot positions using forward kinematics
-        robot.setActFootPosLeft(kinematics.computeForwardKinematics(left_angles, LEFT_LEG));
+        robot.setCoMPos(dynamics.computeCenterOfMass(left_angles, right_angles, imu.getRotationMatrix()));
+        robot.setZMPPos(dynamics.computeZeroMomentPoint(imu.getAccel(), imu.getGyro(), imu.getGyroDot(), imu.getRotationMatrix()));
 
-        if (motor.checkJointsOverRange(LEFT_LEG) == false)
-        {
-            Foot_Position ref_left_foot_pos;
-            ref_left_foot_pos = robot.getRefFootPosLeft();
-            ref_left_foot_pos.x -= remote.getLeftStickX() / remote.CHANNEL_MAX_VALUE * 0.0001f;
-            ref_left_foot_pos.y += remote.getLeftStickY() / remote.CHANNEL_MAX_VALUE * 0.0001f;
-            ref_left_foot_pos.z -= remote.getRightStickY() / remote.CHANNEL_MAX_VALUE * 0.0001f;
-            ref_left_foot_pos.z = std::min(ref_left_foot_pos.z, kinematics.MAX_Z);
-            robot.setRefFootPosLeft(ref_left_foot_pos);
-        }
+        // Compute the robot's foot positions using forward kinematics
+        // robot.setActFootPosLeft(kinematics.computeForwardKinematics(left_angles, LEFT_LEG));
+
+        // if (motor.checkJointsOverRange(LEFT_LEG) == false)
+        // {
+        //     Foot_Position ref_left_foot_pos;
+        //     ref_left_foot_pos = robot.getRefFootPosLeft();
+        //     ref_left_foot_pos.x -= remote.getLeftStickX() / remote.CHANNEL_MAX_VALUE * 0.0001f;
+        //     ref_left_foot_pos.y += remote.getLeftStickY() / remote.CHANNEL_MAX_VALUE * 0.0001f;
+        //     ref_left_foot_pos.z -= remote.getRightStickY() / remote.CHANNEL_MAX_VALUE * 0.0001f;
+        //     ref_left_foot_pos.z = std::min(ref_left_foot_pos.z, kinematics.MAX_Z);
+        //     robot.setRefFootPosLeft(ref_left_foot_pos);
+        // }
 
         // Compute the robot's joint angles using inverse kinematics
-        robot.setRefJointAnglesLeft(kinematics.computeInverseKinematics(robot.getRefFootPosLeft(), robot.getActFootPosLeft(), robot.getActJointAnglesLeft(), LEFT_LEG));
+        // robot.setRefJointAnglesLeft(kinematics.computeInverseKinematics(robot.getRefFootPosLeft(), robot.getActFootPosLeft(), robot.getActJointAnglesLeft(), LEFT_LEG));
         // robot.setRefJointAnglesRight(kinematics.computeInverseKinematics(robot.getRefFootPosRight(), robot.getActFootPosRight(), robot.getActJointAnglesRight(), RIGHT_LEG));
 
         if (motor.getSoftStartFlag() == motor.ALL_JOINTS_ZEROED_FLAG)

@@ -1166,14 +1166,9 @@
           <GroupName>Tasks</GroupName>
           <Files>
             <File>
-              <FileName>IMU.cpp</FileName>
+              <FileName>Task_Manager.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\Tasks\Src\IMU.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>Debug.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Tasks\Src\Debug.cpp</FilePath>
+              <FilePath>..\Tasks\Src\Task_Manager.cpp</FilePath>
             </File>
             <File>
               <FileName>Robot.cpp</FileName>
@@ -1181,14 +1176,19 @@
               <FilePath>..\Tasks\Src\Robot.cpp</FilePath>
             </File>
             <File>
+              <FileName>IMU.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Tasks\Src\IMU.cpp</FilePath>
+            </File>
+            <File>
               <FileName>Motor.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\Tasks\Src\Motor.cpp</FilePath>
             </File>
             <File>
-              <FileName>Task_Manager.cpp</FileName>
+              <FileName>Debug.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\Tasks\Src\Task_Manager.cpp</FilePath>
+              <FilePath>..\Tasks\Src\Debug.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -1201,9 +1201,19 @@
               <FilePath>..\Algorithms\Src\Kinematics.cpp</FilePath>
             </File>
             <File>
+              <FileName>Dynamics.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Algorithms\Src\Dynamics.cpp</FilePath>
+            </File>
+            <File>
               <FileName>PID.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\Algorithms\Src\PID.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>User_Math.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Algorithms\Src\User_Math.cpp</FilePath>
             </File>
             <File>
               <FileName>FusionAhrs.c</FileName>
@@ -1220,16 +1230,21 @@
               <FileType>1</FileType>
               <FilePath>..\Algorithms\Src\FusionOffset.c</FilePath>
             </File>
-            <File>
-              <FileName>User_Math.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Algorithms\Src\User_Math.cpp</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Devices</GroupName>
           <Files>
+            <File>
+              <FileName>ET16S_Remote.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Devices\Src\ET16S_Remote.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Onboard_Buzzer.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Devices\Src\Onboard_Buzzer.cpp</FilePath>
+            </File>
             <File>
               <FileName>BMI088driver.c</FileName>
               <FileType>1</FileType>
@@ -1241,19 +1256,9 @@
               <FilePath>..\Devices\Src\BMI088Middleware.c</FilePath>
             </File>
             <File>
-              <FileName>ET16S_Remote.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Devices\Src\ET16S_Remote.cpp</FilePath>
-            </File>
-            <File>
               <FileName>DM4310driver.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Devices\Src\DM4310driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>Onboard_Buzzer.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Devices\Src\Onboard_Buzzer.cpp</FilePath>
             </File>
           </Files>
         </Group>

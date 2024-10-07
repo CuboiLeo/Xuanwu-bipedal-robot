@@ -12,7 +12,7 @@ struct Joint_Angle { // Joint angles in radians
     float knee_pitch;
 };
 
-struct Foot_Position { // Foot position wrt Central Connector Module in meters
+struct Direction_Vector { // Direction_Vector in m, m/s, m/s^2
     float x;
     float y;
     float z;

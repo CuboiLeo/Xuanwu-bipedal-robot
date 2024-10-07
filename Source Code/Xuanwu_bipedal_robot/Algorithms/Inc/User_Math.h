@@ -1,11 +1,6 @@
 #ifndef USER_MATH_H
 #define USER_MATH_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 #include "math.h"
 
 #define PI (3.14159265358979323846f)
@@ -13,10 +8,6 @@ extern "C"
 #define RAD2DEG (180.0f / PI)
 #define GRAVITY (9.81f)
 
-    extern float WRAP2_2PI(float x);
-
-#ifdef __cplusplus
-}
-#endif
+extern float WRAP2_2PI(float x);
 
 #endif

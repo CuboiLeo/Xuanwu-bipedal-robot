@@ -14,9 +14,9 @@ Kinematics::Kinematics()
       FK_right_foot_pos = {0.0f, 0.0f, 0.0f};
 }
 
-Foot_Position Kinematics::computeForwardKinematics(Joint_Angle joint_angles, const int leg)
+Direction_Vector Kinematics::computeForwardKinematics(Joint_Angle joint_angles, const int leg)
 {
-      Foot_Position foot_pos;
+      Direction_Vector foot_pos;
       const DH_Parameter *dh_param;
       if (leg == LEFT_LEG)
       {
@@ -40,7 +40,7 @@ Foot_Position Kinematics::computeForwardKinematics(Joint_Angle joint_angles, con
       return foot_pos;
 }
 
-Joint_Angle Kinematics::computeInverseKinematics(const Foot_Position &ref_foot_pos, const Foot_Position &act_foot_pos, const Joint_Angle &joint_angles, const int leg)
+Joint_Angle Kinematics::computeInverseKinematics(const Direction_Vector &ref_foot_pos, const Direction_Vector &act_foot_pos, const Joint_Angle &joint_angles, const int leg)
 {
       // Initialize foot positions
       Eigen::Matrix<float, 3, 1> v_ref_foot_pos(ref_foot_pos.x, ref_foot_pos.y, ref_foot_pos.z);

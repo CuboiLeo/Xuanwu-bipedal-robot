@@ -6,11 +6,12 @@
 #include "User_Math.h"
 
 IMU::IMU() {
-    ax = ay = az = 0;
-    gx = gy = gz = 0;
-    yaw_rad = pitch_rad = roll_rad = 0;
-    yaw_deg = pitch_deg = roll_deg = 0;
+    accel = {0.0f, 0.0f, 0.0f};
+    gyro = {0.0f, 0.0f, 0.0f};
+    euler_rad = {0.0f, 0.0f, 0.0f};
+    euler_deg = {0.0f, 0.0f, 0.0f};
     temp = 0;
+    rotation_matrix = {1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f};
     FusionAhrsInitialise(&IMU_AHRS);
 }
 
@@ -23,34 +24,27 @@ void IMU::heatControl() {
 }
 
 void IMU::updateRaw(const float accel[3], const float gyro[3], float temperature) {
-    ax = accel[0];
-    ay = accel[1];
-    az = accel[2];
-
-    gx = gyro[0];
-    gy = gyro[1];
-    gz = gyro[2];
+    prev_gyro = this->gyro;
+    this->accel = {accel[0], accel[1], accel[2]};
+    this->gyro = {gyro[0], gyro[1], gyro[2]};
+    gyro_dot = {(this->gyro.axis.x - prev_gyro.axis.x) / IMU_TASK_PERIOD, (this->gyro.axis.y - prev_gyro.axis.y) / IMU_TASK_PERIOD, (this->gyro.axis.z - prev_gyro.axis.z) / IMU_TASK_PERIOD};
 
     temp = temperature;
 }
 
 void IMU::processData() {
     // Normalize accelerometer and convert gyroscope to degrees per second
-    FusionVector Accel = { ax / GRAVITY, ay / GRAVITY, az / GRAVITY };
-    FusionVector Gyro = { gx * RAD2DEG, gy * RAD2DEG, gz * RAD2DEG };
+    FusionVector Accel = {accel.axis.x / GRAVITY, accel.axis.y / GRAVITY, accel.axis.z / GRAVITY};
+    FusionVector Gyro = {gyro.axis.x * RAD2DEG, gyro.axis.y * RAD2DEG, gyro.axis.z * RAD2DEG};
 
     // Update the AHRS system (no magnetometer)
-    FusionAhrsUpdateNoMagnetometer(&IMU_AHRS, Gyro, Accel, 0.001f);
+    FusionAhrsUpdateNoMagnetometer(&IMU_AHRS, Gyro, Accel, IMU_TASK_PERIOD);
 
     // Get the Euler angles from the AHRS quaternion
-    FusionEuler IMU_Euler = FusionQuaternionToEuler(FusionAhrsGetQuaternion(&IMU_AHRS));
+    euler_deg = FusionQuaternionToEuler(FusionAhrsGetQuaternion(&IMU_AHRS));
+    // convert to radians
+    euler_rad = {euler_deg.angle.roll*DEG2RAD, euler_deg.angle.pitch*DEG2RAD, euler_deg.angle.yaw*DEG2RAD};
 
-    // Update the Euler angles in both degrees and radians
-    yaw_deg = IMU_Euler.angle.yaw;
-    pitch_deg = IMU_Euler.angle.pitch;
-    roll_deg = IMU_Euler.angle.roll;
-
-    yaw_rad = yaw_deg * DEG2RAD;
-    pitch_rad = pitch_deg * DEG2RAD;
-    roll_rad = roll_deg * DEG2RAD;
+    // Update the rotation matrix
+    rotation_matrix = FusionQuaternionToMatrix(FusionAhrsGetQuaternion(&IMU_AHRS));
 }

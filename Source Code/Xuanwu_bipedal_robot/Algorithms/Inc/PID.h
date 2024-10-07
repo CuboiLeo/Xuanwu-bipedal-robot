@@ -3,9 +3,6 @@
 
 #include "stdint.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 class PID {
 public:
     PID(float kp = 0.0f, float ki = 0.0f, float kd = 0.0f, float kf = 0.0f, float i_out_max = 0.0f, float output_max = 0.0f);
@@ -40,9 +37,5 @@ private:
     float output_max;
     float output;
 };
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
