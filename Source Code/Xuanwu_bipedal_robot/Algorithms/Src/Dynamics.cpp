@@ -55,8 +55,8 @@ Direction_Vector Dynamics::computeCenterOfMass(const Joint_Angle &joint_angles_l
     CoM_body_frame.z = (CoM_center_part.z * MASS_CENTER_PART + CoM_left_hip_roll_part.z * MASS_HIP_ROLL_PART + CoM_left_hip_pitch_part.z * MASS_HIP_PITCH_PART + CoM_left_knee_pitch_part.z * MASS_KNEE_PITCH_PART + CoM_left_foot_part.z * MASS_FOOT_PART + CoM_right_hip_roll_part.z * MASS_HIP_ROLL_PART + CoM_right_hip_pitch_part.z * MASS_HIP_PITCH_PART + CoM_right_knee_pitch_part.z * MASS_KNEE_PITCH_PART + CoM_right_foot_part.z * MASS_FOOT_PART) / (MASS_CENTER_PART + 2 * MASS_HIP_ROLL_PART + 2 * MASS_HIP_PITCH_PART + 2 * MASS_KNEE_PITCH_PART + 2 * MASS_FOOT_PART);
 
     // Rotate the center of mass of the robot from body frame to world frame
-    CoM_world_frame.y = CoM_body_frame.x * rotation_matrix.array[0][0] + CoM_body_frame.y * rotation_matrix.array[0][1] + CoM_body_frame.z * rotation_matrix.array[0][2];
-    CoM_world_frame.x = CoM_body_frame.x * rotation_matrix.array[1][0] + CoM_body_frame.y * rotation_matrix.array[1][1] + CoM_body_frame.z * rotation_matrix.array[1][2];
+    CoM_world_frame.x = -(CoM_body_frame.x * rotation_matrix.array[0][0] + CoM_body_frame.y * rotation_matrix.array[0][1] + CoM_body_frame.z * rotation_matrix.array[0][2]);
+    CoM_world_frame.y = -(CoM_body_frame.x * rotation_matrix.array[1][0] + CoM_body_frame.y * rotation_matrix.array[1][1] + CoM_body_frame.z * rotation_matrix.array[1][2]);
     CoM_world_frame.z = CoM_body_frame.x * rotation_matrix.array[2][0] + CoM_body_frame.y * rotation_matrix.array[2][1] + CoM_body_frame.z * rotation_matrix.array[2][2];
 
     return CoM_world_frame;
@@ -82,8 +82,8 @@ Direction_Vector Dynamics::computeZeroMomentPoint(const FusionVector &accel, con
     CoM_accel_world_frame = {v_CoM_accel_world_frame(0), v_CoM_accel_world_frame(1), v_CoM_accel_world_frame(2)};
     
     // Compute the zero moment point of the robot
-    ZMP_world_frame.x = CoM_world_frame.x - (CoM_world_frame.z / GRAVITY) * CoM_accel_world_frame.x;
-    ZMP_world_frame.y = CoM_world_frame.y - (CoM_world_frame.z / GRAVITY) * CoM_accel_world_frame.y;
+    ZMP_world_frame.y = CoM_world_frame.x - ((-ROBOT_HEIGHT+CoM_world_frame.z) / GRAVITY) * CoM_accel_world_frame.x;
+    ZMP_world_frame.x = CoM_world_frame.y - ((-ROBOT_HEIGHT+CoM_world_frame.z) / GRAVITY) * CoM_accel_world_frame.y;
     ZMP_world_frame.z = 0.0f;
 
     return ZMP_world_frame;

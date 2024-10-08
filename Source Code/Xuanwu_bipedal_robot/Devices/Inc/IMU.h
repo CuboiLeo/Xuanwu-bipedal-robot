@@ -26,6 +26,7 @@ public:
 private:
     float static constexpr DESIRED_TEMP = 40.0f;
     float static constexpr MAX_OUTPUT = 500;
+    float static constexpr FILTER_COEFFICIENT = 0.01f;
     FusionVector accel;           // Accelerometer values in m/s^2
     FusionVector prev_gyro;
     FusionVector gyro;            // Gyroscope values in rad/s

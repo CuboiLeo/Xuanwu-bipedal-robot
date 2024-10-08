@@ -43,11 +43,11 @@ Direction_Vector Kinematics::computeForwardKinematics(Joint_Angle joint_angles, 
 Joint_Angle Kinematics::computeInverseKinematics(const Direction_Vector &ref_foot_pos, const Direction_Vector &act_foot_pos, const Joint_Angle &joint_angles, const int leg)
 {
       // Initialize foot positions
-      Eigen::Matrix<float, 3, 1> v_ref_foot_pos(ref_foot_pos.x, ref_foot_pos.y, ref_foot_pos.z);
-      Eigen::Matrix<float, 3, 1> v_act_foot_pos(act_foot_pos.x, act_foot_pos.y, act_foot_pos.z);
+      Eigen::Vector3f v_ref_foot_pos(ref_foot_pos.x, ref_foot_pos.y, ref_foot_pos.z);
+      Eigen::Vector3f v_act_foot_pos(act_foot_pos.x, act_foot_pos.y, act_foot_pos.z);
 
       // Initialize the joint angle guess to be the current joint angles
-      Eigen::Matrix<float, 4, 1> v_ref_joint_angles(joint_angles.hip_yaw, joint_angles.hip_roll + LEFT_LEG_HIP_ROLL_OFFSET, joint_angles.hip_pitch, joint_angles.knee_pitch);
+      Eigen::Vector4f v_ref_joint_angles(joint_angles.hip_yaw, joint_angles.hip_roll + LEFT_LEG_HIP_ROLL_OFFSET, joint_angles.hip_pitch, joint_angles.knee_pitch);
 
       // Select the DH parameters based on the leg
       const DH_Parameter *dh_param;
@@ -66,11 +66,11 @@ Joint_Angle Kinematics::computeInverseKinematics(const Direction_Vector &ref_foo
       }
 
       // Initialize the Jacobian and Inverse Jacobian matrix
-      Eigen::Matrix<float, 3, 3> m_jacobian;
-      Eigen::Matrix<float, 3, 3> m_inv_jacobian;
+      Eigen::Matrix3f m_jacobian;
+      Eigen::Matrix3f m_inv_jacobian;
 
-      Eigen::Matrix<float, 3, 1> v_foot_pos_error = v_ref_foot_pos - v_act_foot_pos;
-      Eigen::Matrix<float, 3, 1> v_delta_joint_angles;
+      Eigen::Vector3f v_foot_pos_error = v_ref_foot_pos - v_act_foot_pos;
+      Eigen::Vector3f v_delta_joint_angles;
 
       IK_iteration_count = 0;
       IK_epsilon = 1.0f;

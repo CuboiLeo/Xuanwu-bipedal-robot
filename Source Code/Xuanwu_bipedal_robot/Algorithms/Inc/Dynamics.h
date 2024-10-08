@@ -28,6 +28,9 @@ private:
     static constexpr float COM_KNEE_PITCH_Z_OFFSET = 0.05f; // distance in z from the center connector module coordinate to the center of mass of the Knee Pitch part
     static constexpr float COM_FOOT_Z_OFFSET = 0.24f;       // distance in z from the center connector module coordinate to the center of mass of the foot
 
+    // Total height of the robot (m)
+    static constexpr float ROBOT_HEIGHT = 0.65f; // height of the robot from the ground to the center of mass of center connector module (IMU)
+
     Direction_Vector CoM_center_part;           // center of mass of the center part
     Direction_Vector CoM_left_hip_roll_part;    // center of mass of the left hip roll part
     Direction_Vector CoM_left_hip_pitch_part;   // center of mass of the left hip pitch part
