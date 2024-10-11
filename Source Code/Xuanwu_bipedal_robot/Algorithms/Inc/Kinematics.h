@@ -11,10 +11,18 @@ public:
       static constexpr uint8_t MAX_ITERATIONS = 50;
       static constexpr float UPDATE_TOLERANCE = 0.005f;
       static constexpr float ERROR_TOLERANCE = 0.005f;
-      static constexpr float MAX_Z = 0.6499f;
+      static constexpr float MAX_X = 0.2299f;
+      static constexpr float MAX_Y = 0.0001f;
+      static constexpr float MAX_Z = 0.6399f;
+      static constexpr float STEP_SIZE = 0.15f;
+      static constexpr float STEP_HEIGHT = 0.03f;
+      static constexpr float SINGLE_STANCE_PERIOD = 0.8f;
+      static constexpr float DOUBLE_STANCE_PERIOD = 0.2f;
+
       Kinematics();
       Direction_Vector computeForwardKinematics(Joint_Angle joint_angles, const int leg);
-      Joint_Angle computeInverseKinematics(const Direction_Vector &ref_foot_pos, const Direction_Vector &act_foot_pos, const Joint_Angle &joint_angles, int leg);
+      Joint_Angle computeInverseKinematics(const Direction_Vector &ref_foot_pos, const Direction_Vector &act_foot_pos, const Joint_Angle &joint_angles, const int leg);
+      Direction_Vector generateTrajectory(const Direction_Vector &ref_robot_vel, const int leg);
 
 private:
       Joint_Angle IK_left_leg_angles;
@@ -25,6 +33,15 @@ private:
 
       uint8_t IK_iteration_count = 0;
       float IK_epsilon = 1.0f;
+
+      float y_deviation = 0.0f;
+      float z_deviation = 0.0f;
+      float left_foot_phase = 0.0f;
+      float right_foot_phase = 0.0f;
+      float double_stance_phase = 0.0f;
+      bool left_foot_swing_flag = false;
+      bool right_foot_swing_flag = false;
+      bool double_stance_flag = false;
 };
 
 /* Forward kinematics computation, the final transformation matrix is computed in MATLAB
