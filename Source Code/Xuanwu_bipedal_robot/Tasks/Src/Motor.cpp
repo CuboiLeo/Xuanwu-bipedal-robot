@@ -50,7 +50,7 @@ Motor::Motor()
 void Motor::setAllJointsPos(Robot* robot)
 {
 	for (int i = 0; i < NUM_MOTORS; i++){
-		motor_info[i].ctrl.kp_set = 10;
+		motor_info[i].ctrl.kp_set = 15;
 		motor_info[i].ctrl.kd_set = 2;
 	}
 

@@ -13,7 +13,7 @@ public:
       static constexpr float ERROR_TOLERANCE = 0.005f;
       static constexpr float MAX_X = 0.2299f;
       static constexpr float MAX_Y = 0.0001f;
-      static constexpr float MAX_Z = 0.6399f;
+      static constexpr float MAX_Z = 0.6499f;
       static constexpr float STEP_SIZE = 0.15f;
       static constexpr float STEP_HEIGHT = 0.03f;
       static constexpr float SINGLE_STANCE_PERIOD = 0.8f;

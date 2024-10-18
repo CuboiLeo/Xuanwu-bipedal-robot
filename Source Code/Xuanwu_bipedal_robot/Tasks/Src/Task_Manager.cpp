@@ -124,8 +124,8 @@ void Debug_Task(void *argument)
         char buffer[128]; // Adjust the size based on the data you need to print
 
         // Format the string using sprintf
-        sprintf(buffer, "/*%f, %f*/\n",
-                robot.getZMPPos().x, robot.getZMPPos().y);
+        sprintf(buffer, "/*%f, %f, %f, %f*/\n",
+                robot.getRefFootPosLeft().y, robot.getActFootPosLeft().y,robot.getRefFootPosLeft().z, robot.getActFootPosLeft().z);
 
         // Transmit the formatted string over UART
         HAL_UART_Transmit(&huart7, (uint8_t *)buffer, strlen(buffer), 0xFFFF);
