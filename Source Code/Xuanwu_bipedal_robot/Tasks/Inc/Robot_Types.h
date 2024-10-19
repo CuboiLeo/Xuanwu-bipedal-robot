@@ -18,6 +18,11 @@ struct Direction_Vector { // Direction_Vector in m, m/s, m/s^2
     float z;
 };
 
+struct Direction_Vector_Two { // Direction_Vector_Two in m, m/s, m/s^2
+    Direction_Vector left;
+    Direction_Vector right;
+};
+
 struct DH_Parameter {
         float a;      // Link length
         float alpha;  // Link twist

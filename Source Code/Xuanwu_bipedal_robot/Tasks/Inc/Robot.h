@@ -59,12 +59,16 @@ public:
     void setActFootPosRight(const Direction_Vector &position) { act_right_foot_pos = position; };
 
     // Public interface for interacting with CoM position
-    Direction_Vector getCoMPos() const { return CoM_pos; };
-    void setCoMPos(const Direction_Vector &position) { CoM_pos = position; };
+    Direction_Vector getActCoMPos() const { return act_CoM_pos; };
+    void setActCoMPos(const Direction_Vector &position) { act_CoM_pos = position; };
+    Direction_Vector getRefCoMPos() const { return ref_CoM_pos; };
+    void setRefCoMPos(const Direction_Vector &position) { ref_CoM_pos = position; };
 
     // Public interface for interacting with ZMP position
-    Direction_Vector getZMPPos() const { return ZMP_pos; };
-    void setZMPPos(const Direction_Vector &position) { ZMP_pos = position; };
+    Direction_Vector getActZMPPos() const { return act_ZMP_pos; };
+    void setActZMPPos(const Direction_Vector &position) { act_ZMP_pos = position; };
+    Direction_Vector getRefZMPPos() const { return ref_ZMP_pos; };
+    void setRefZMPPos(const Direction_Vector &position) { ref_ZMP_pos = position; };
 
     // Public interface for interacting with robot velocity
     Direction_Vector getRefRobotVel() const { return ref_robot_vel; };
@@ -86,8 +90,10 @@ private:
     Direction_Vector act_left_foot_pos;  // Actual left foot position through forward kinematics
     Direction_Vector act_right_foot_pos; // Actual right foot position through forward kinematics
 
-    Direction_Vector CoM_pos; // Center of Mass position
-    Direction_Vector ZMP_pos; // Zero Moment Point position
+    Direction_Vector ref_CoM_pos; // Reference Center of Mass position
+    Direction_Vector act_CoM_pos; // Center of Mass position
+    Direction_Vector ref_ZMP_pos; // Reference Zero Moment Point position
+    Direction_Vector act_ZMP_pos; // Zero Moment Point position
 
     Direction_Vector ref_robot_vel; // Reference robot velocity
 

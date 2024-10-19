@@ -50,8 +50,8 @@ Motor::Motor()
 void Motor::setAllJointsPos(Robot* robot)
 {
 	for (int i = 0; i < NUM_MOTORS; i++){
-		motor_info[i].ctrl.kp_set = 15;
-		motor_info[i].ctrl.kd_set = 2;
+		motor_info[i].ctrl.kp_set = 20;
+		motor_info[i].ctrl.kd_set = 1;
 	}
 
 	Joint_Angle ref_left_leg_angles = robot->getRefJointAnglesLeft();
@@ -73,7 +73,7 @@ uint8_t Motor::returnZeroPos(void)
 	for(int i = 0; i < NUM_MOTORS; i++)
 	{
 		motor_info[i].ctrl.pos_set = 0;
-		motor_info[i].ctrl.kp_set = 2;
+		motor_info[i].ctrl.kp_set = 5;
 		motor_info[i].ctrl.kd_set = 1;
 
 		if(fabs(motor_info[i].para.pos - motor_info[i].ctrl.pos_set) < 0.2f)
@@ -113,16 +113,16 @@ void Motor::createVirtualBoundary(void)
 			motor_info[i].ctrl.pos_set = motor_info[i].range - 0.1f;
 			motor_info[i].ctrl.vel_set = 0;
 			motor_info[i].ctrl.tor_set = 0;
-			motor_info[i].ctrl.kp_set = 3;
-			motor_info[i].ctrl.kd_set = 1;
+			motor_info[i].ctrl.kp_set = 10;
+			motor_info[i].ctrl.kd_set = 2;
 		}
 		else if(motor_info[i].para.pos < -motor_info[i].range)
 		{
 			motor_info[i].ctrl.pos_set = -motor_info[i].range + 0.1f;
 			motor_info[i].ctrl.vel_set = 0;
 			motor_info[i].ctrl.tor_set = 0;
-			motor_info[i].ctrl.kp_set = 3;
-			motor_info[i].ctrl.kd_set = 1;
+			motor_info[i].ctrl.kp_set = 10;
+			motor_info[i].ctrl.kd_set = 2;
 		}
 	}
 }

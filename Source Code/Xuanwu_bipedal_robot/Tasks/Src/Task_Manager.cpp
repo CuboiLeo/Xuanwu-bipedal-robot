@@ -8,6 +8,7 @@
 #include "debug.h"
 #include <algorithm>
 #include "Dynamics.h"
+#include "Controls.h"
 
 Robot robot;
 Kinematics kinematics;
@@ -16,6 +17,7 @@ Remote remote;
 IMU imu;
 Buzzer buzzer;
 Dynamics dynamics;
+Controls controls;
 
 void Robot_Task(void *argument)
 {
@@ -46,18 +48,23 @@ void Robot_Task(void *argument)
 
         left_angles.hip_roll += LEFT_LEG_HIP_ROLL_OFFSET;
         right_angles.hip_roll += RIGHT_LEG_HIP_ROLL_OFFSET;
-        robot.setCoMPos(dynamics.computeCenterOfMass(left_angles, right_angles, imu.getRotationMatrix()));
-        robot.setZMPPos(dynamics.computeZeroMomentPoint(imu.getAccel(), imu.getGyro(), imu.getGyroDot(), imu.getRotationMatrix()));
+        robot.setActCoMPos(dynamics.computeCenterOfMass(left_angles, right_angles, imu.getRotationMatrix()));
+        robot.setActZMPPos(dynamics.computeZeroMomentPoint(imu.getAccel(), imu.getGyro(), imu.getGyroDot(), imu.getRotationMatrix()));
 
         // Compute the robot's foot positions using forward kinematics
         robot.setActFootPosLeft(kinematics.computeForwardKinematics(left_angles, LEFT_LEG));
         robot.setActFootPosRight(kinematics.computeForwardKinematics(right_angles, RIGHT_LEG));
 
+        // Adjust the robot's CoM position
+        // Direction_Vector_Two ref_foot_pos = controls.controlCoMPos(robot.getRefCoMPos(), robot.getActCoMPos(), robot.getRefFootPosLeft(), robot.getRefFootPosRight());
+        // robot.setRefFootPosLeft(ref_foot_pos.left);
+        // robot.setRefFootPosRight(ref_foot_pos.right);
+
         // Update the robot's velocity
         Direction_Vector ref_robot_vel = {remote.getLeftStickX() / remote.CHANNEL_MAX_VALUE * 0.1f, remote.getLeftStickY() / remote.CHANNEL_MAX_VALUE * 0.1f, 0.0f};
         robot.setRefRobotVel(ref_robot_vel);
 
-        // Update the robot's reference foot positions
+        //Update the robot's reference foot positions
         robot.setRefFootPosLeft(kinematics.generateTrajectory(ref_robot_vel, LEFT_LEG));
         robot.setRefFootPosRight(kinematics.generateTrajectory(ref_robot_vel, RIGHT_LEG));
 				

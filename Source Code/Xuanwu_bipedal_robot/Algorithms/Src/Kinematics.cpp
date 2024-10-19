@@ -37,14 +37,18 @@ Direction_Vector Kinematics::generateTrajectory(const Direction_Vector &ref_robo
                   if (double_stance_flag)
                   {
                         double_stance_phase += ROBOT_TASK_PERIOD;
+                        x_deviation = double_stance_phase * 0.1f;
                         if (double_stance_phase >= DOUBLE_STANCE_PERIOD)
                         {
                               right_foot_swing_flag = true;
                               left_foot_swing_flag = false;
                               double_stance_flag = false;
                               double_stance_phase = 0.0f;
+                              left_foot_phase = 0.0f;
+                              right_foot_phase = 0.0f;
+                              x_deviation = 0.0f;
                         }
-                        return {-MAX_X, MAX_Y, MAX_Z};
+                        return {-MAX_X + x_deviation, MAX_Y, MAX_Z};
                   }
                   else
                   {
@@ -79,14 +83,18 @@ Direction_Vector Kinematics::generateTrajectory(const Direction_Vector &ref_robo
                   if (double_stance_flag)
                   {
                         double_stance_phase += ROBOT_TASK_PERIOD;
+                        x_deviation = double_stance_phase * 0.2f;
                         if (double_stance_phase >= DOUBLE_STANCE_PERIOD)
                         {
                               left_foot_swing_flag = true;
                               right_foot_swing_flag = false;
                               double_stance_flag = false;
                               double_stance_phase = 0.0f;
+                              left_foot_phase = 0.0f;
+                              right_foot_phase = 0.0f;
+                              x_deviation = 0.0f;
                         }
-                        return {MAX_X, MAX_Y, MAX_Z};
+                        return {MAX_X - x_deviation, MAX_Y, MAX_Z};
                   }
                   else
                   {
@@ -169,7 +177,7 @@ Joint_Angle Kinematics::computeInverseKinematics(const Direction_Vector &ref_foo
             m_jacobian(2, 1) = dh_param[4].a * (cos(v_ref_joint_angles(3)) * (cos(dh_param[1].alpha) * sin(dh_param[2].alpha) * cos(v_ref_joint_angles(2)) - sin(dh_param[1].alpha) * sin(v_ref_joint_angles(1)) * sin(v_ref_joint_angles(2)) + cos(dh_param[2].alpha) * sin(dh_param[1].alpha) * cos(v_ref_joint_angles(1)) * cos(v_ref_joint_angles(2))) - sin(v_ref_joint_angles(3)) * (cos(dh_param[1].alpha) * sin(dh_param[2].alpha) * sin(v_ref_joint_angles(2)) + sin(dh_param[1].alpha) * cos(v_ref_joint_angles(2)) * sin(v_ref_joint_angles(1)) + cos(dh_param[2].alpha) * sin(dh_param[1].alpha) * cos(v_ref_joint_angles(1)) * sin(v_ref_joint_angles(2)))) + dh_param[3].a * (cos(dh_param[1].alpha) * sin(dh_param[2].alpha) * cos(v_ref_joint_angles(2)) - sin(dh_param[1].alpha) * sin(v_ref_joint_angles(1)) * sin(v_ref_joint_angles(2)) + cos(dh_param[2].alpha) * sin(dh_param[1].alpha) * cos(v_ref_joint_angles(1)) * cos(v_ref_joint_angles(2)));
             m_jacobian(2, 2) = dh_param[4].a * (cos(v_ref_joint_angles(3)) * (cos(dh_param[1].alpha) * sin(dh_param[2].alpha) * cos(v_ref_joint_angles(2)) - sin(dh_param[1].alpha) * sin(v_ref_joint_angles(1)) * sin(v_ref_joint_angles(2)) + cos(dh_param[2].alpha) * sin(dh_param[1].alpha) * cos(v_ref_joint_angles(1)) * cos(v_ref_joint_angles(2))) - sin(v_ref_joint_angles(3)) * (cos(dh_param[1].alpha) * sin(dh_param[2].alpha) * sin(v_ref_joint_angles(2)) + sin(dh_param[1].alpha) * cos(v_ref_joint_angles(2)) * sin(v_ref_joint_angles(1)) + cos(dh_param[2].alpha) * sin(dh_param[1].alpha) * cos(v_ref_joint_angles(1)) * sin(v_ref_joint_angles(2))));
 
-            m_inv_jacobian = (m_jacobian.transpose()*m_jacobian+0.001f*Eigen::Matrix3f::Identity()).inverse()*m_jacobian.transpose(); //SR Inverse using Levenberg-Marquardt method
+            m_inv_jacobian = (m_jacobian.transpose() * m_jacobian + 0.001f * Eigen::Matrix3f::Identity()).inverse() * m_jacobian.transpose(); // SR Inverse using Levenberg-Marquardt method
 
             if (leg == LEFT_LEG)
             {

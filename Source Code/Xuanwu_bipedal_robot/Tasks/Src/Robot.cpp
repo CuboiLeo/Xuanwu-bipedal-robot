@@ -8,10 +8,15 @@ Robot::Robot()
     act_right_leg_angles = {0.0f, 0.0f, 0.0f, 0.0f};
     ref_left_leg_angles = {0.0f, 0.0f, 0.0f, 0.0f};
     ref_right_leg_angles = {0.0f, 0.0f, 0.0f, 0.0f};
-    ref_left_foot_pos = {0.0f, 0.0f, 0.0f};
-    ref_right_foot_pos = {0.0f, 0.0f, 0.0f};
+    ref_left_foot_pos = {-0.2299f, 0.0001f, 0.6499f};
+    ref_right_foot_pos = {0.2299f, 0.0001f, 0.6499f};
     act_left_foot_pos = {0.0f, 0.0f, 0.0f};
     act_right_foot_pos = {0.0f, 0.0f, 0.0f};
+    ref_CoM_pos = {0.0f, 0.0f, 0.117f};
+    act_CoM_pos = {0.0f, 0.0f, 0.0f};
+    ref_ZMP_pos = {0.0f, 0.0f, 0.0f};
+    act_ZMP_pos = {0.0f, 0.0f, 0.0f};
+    ref_robot_vel = {0.0f, 0.0f, 0.0f};
 }
 
 void Robot::initBatteryADC() const
