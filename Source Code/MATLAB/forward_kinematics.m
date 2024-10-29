@@ -26,7 +26,7 @@ z = T_05(3,4);
 yaw = atan2(T_05(2,1), T_05(1,1));
 
 sym_theta = [theta1 theta2 theta3 theta4];
-val_theta = [   -0.7351  1.5811 -0.5009 0.5051];
+val_theta = [   -0.7351  1.5811 -0.5009 0.5051]; 
 sym_sub = [a1 a2 a3 a4 a5 alpha2 alpha3];
 val_sub = [-0.135 -0.095 -0.09 -0.18 -0.38 -pi/2 -pi/2];
 
