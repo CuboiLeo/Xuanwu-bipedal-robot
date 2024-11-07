@@ -137,7 +137,7 @@
             <DriverSelection>4101</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
-          <Flash2>BIN\UL2V8M.DLL</Flash2>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -644,11 +644,6 @@
               </FileOption>
             </File>
             <File>
-              <FileName>stm32h7xx_it.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/stm32h7xx_it.c</FilePath>
-            </File>
-            <File>
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/usart.c</FilePath>
@@ -703,6 +698,11 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>stm32h7xx_it.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/stm32h7xx_it.c</FilePath>
             </File>
             <File>
               <FileName>stm32h7xx_hal_msp.c</FileName>
@@ -1240,6 +1240,11 @@
         <Group>
           <GroupName>Devices</GroupName>
           <Files>
+            <File>
+              <FileName>Orin_Nx.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Devices\Src\Orin_Nx.cpp</FilePath>
+            </File>
             <File>
               <FileName>ET16S_Remote.cpp</FileName>
               <FileType>8</FileType>

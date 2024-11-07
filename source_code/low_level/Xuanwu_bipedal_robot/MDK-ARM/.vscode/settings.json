@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "can_bsp.h": "c",
+        "main.h": "c",
+        "fdcan.h": "c",
+        "dm4310driver.h": "c",
+        "algorithm": "cpp",
+        "dense": "cpp",
+        "array": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "vector": "cpp"
+    }
+}

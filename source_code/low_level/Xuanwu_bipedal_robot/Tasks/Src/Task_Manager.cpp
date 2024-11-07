@@ -9,6 +9,7 @@
 #include <algorithm>
 #include "Dynamics.h"
 #include "Controls.h"
+#include "Orin_NX.h"
 
 Robot robot;
 Kinematics kinematics;
@@ -18,6 +19,7 @@ IMU imu;
 Buzzer buzzer;
 Dynamics dynamics;
 Controls controls;
+Orin orin;
 
 void Robot_Task(void *argument)
 {
@@ -128,14 +130,14 @@ void Debug_Task(void *argument)
 
     for (;;)
     {
-        char buffer[128]; // Adjust the size based on the data you need to print
+//        char buffer[128]; // Adjust the size based on the data you need to print
 
-        // Format the string using sprintf
-        sprintf(buffer, "/*%f, %f, %f, %f*/\n",
-                robot.getRefFootPosLeft().y, robot.getActFootPosLeft().y,robot.getRefFootPosLeft().z, robot.getActFootPosLeft().z);
+//        // Format the string using sprintf
+//        sprintf(buffer, "/*%f, %f, %f, %f*/\n",
+//                robot.getRefFootPosLeft().y, robot.getActFootPosLeft().y,robot.getRefFootPosLeft().z, robot.getActFootPosLeft().z);
 
-        // Transmit the formatted string over UART
-        HAL_UART_Transmit(&huart7, (uint8_t *)buffer, strlen(buffer), 0xFFFF);
+//        // Transmit the formatted string over UART
+//        HAL_UART_Transmit(&huart7, (uint8_t *)buffer, strlen(buffer), 0xFFFF);
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
@@ -176,19 +178,20 @@ void System_Monitor_Task(void *argument)
 {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(1000);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
 
     robot.initBatteryADC();
-    buzzer.Init();
+    //buzzer.Init();
 
     for (;;)
     {
-        float battery_voltage = robot.getBatteryVoltage();
+        //float battery_voltage = robot.getBatteryVoltage();
         // Low battery voltage warning
-        if (battery_voltage < 22.2f)
-        {
-            buzzer.Beep();
-        }
+        //if (battery_voltage < 22.2f)
+        //{
+            //buzzer.Beep();
+        //}
+        orin.sendData();
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
@@ -236,6 +239,11 @@ void fdcan2_rx_callback(void)
         dm4310_fbdata(&motor.motor_info[Right_Knee_Pitch], rx_data);
         break;
     }
+}
+
+void fdcan3_rx_callback(void)
+{
+    orin.receiveData();
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)

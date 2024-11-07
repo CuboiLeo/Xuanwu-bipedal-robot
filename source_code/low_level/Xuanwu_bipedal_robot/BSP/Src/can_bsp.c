@@ -5,8 +5,10 @@ void can_bsp_init(void)
 	can_filter_init();
 	HAL_FDCAN_Start(&hfdcan1);                              
 	HAL_FDCAN_Start(&hfdcan2);
+	HAL_FDCAN_Start(&hfdcan3);
 	HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
 	HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
+	HAL_FDCAN_ActivateNotification(&hfdcan3, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
 }
 
 void can_filter_init(void)
@@ -25,6 +27,9 @@ void can_filter_init(void)
 	HAL_FDCAN_ConfigFilter(&hfdcan2,&fdcan_filter); 		 				
 	HAL_FDCAN_ConfigGlobalFilter(&hfdcan2, FDCAN_REJECT, FDCAN_REJECT, FDCAN_FILTER_REMOTE, FDCAN_FILTER_REMOTE);
 	HAL_FDCAN_ConfigFifoWatermark(&hfdcan2, FDCAN_CFG_RX_FIFO0, 1);
+	HAL_FDCAN_ConfigFilter(&hfdcan3,&fdcan_filter);
+	HAL_FDCAN_ConfigGlobalFilter(&hfdcan3, FDCAN_REJECT, FDCAN_REJECT, FDCAN_FILTER_REMOTE, FDCAN_FILTER_REMOTE);
+	HAL_FDCAN_ConfigFifoWatermark(&hfdcan3, FDCAN_CFG_RX_FIFO0, 1);
 }
 
 uint8_t fdcanx_send_data(FDCAN_HandleTypeDef *hfdcan, uint16_t id, uint8_t *data, uint32_t len)
@@ -68,6 +73,10 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 		if(hfdcan == &hfdcan2)
 		{
 			fdcan2_rx_callback();
+		}
+		if(hfdcan == &hfdcan3)
+		{
+			fdcan3_rx_callback();
 		}
 	}
 }
