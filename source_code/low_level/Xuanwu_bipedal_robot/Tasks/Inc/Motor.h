@@ -23,7 +23,12 @@ public:
     uint8_t returnZeroPos(void);
     void createVirtualBoundary(void);
     bool checkJointsOverRange(uint8_t leg);
-    float getPos(int motor) const { return motor_info[motor].para.pos; };
+    float getPos(const int motor) const { return motor_info[motor].para.pos; };
+    float getVel(const int motor) const { return motor_info[motor].para.vel; };
+    float getTor(const int motor) const { return motor_info[motor].para.tor; };
+    float setPos(const int motor, const float pos) { motor_info[motor].ctrl.pos_set = pos; };
+    float setVel(const int motor, const float vel) { motor_info[motor].ctrl.vel_set = vel; };
+    float setTor(const int motor, const float tor) { motor_info[motor].ctrl.tor_set = tor; };
     uint8_t getSoftStartFlag(void) const { return soft_start_flag; };
     void setSoftStartFlag(const uint8_t &flag) { soft_start_flag = flag; };
 
