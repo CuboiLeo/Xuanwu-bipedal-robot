@@ -13,6 +13,7 @@ extern void IMU_Task(void *argument);
 extern void Robot_Task(void *argument);
 extern void Motor_Ctrl_Task(void *argument);
 extern void System_Monitor_Task(void *argument);
+exterm void Orin_Task(void *argument);
 
 #ifdef __cplusplus
 }

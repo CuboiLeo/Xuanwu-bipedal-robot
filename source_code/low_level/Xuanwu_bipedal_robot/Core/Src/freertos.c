@@ -54,7 +54,7 @@ osThreadId_t DebugHandle;
 const osThreadAttr_t Debug_attributes = {
   .name = "Debug",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityHigh,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for IMU */
 osThreadId_t IMUHandle;
@@ -72,7 +72,7 @@ const osThreadAttr_t IMU_attributes = {
 osThreadId_t RobotHandle;
 const osThreadAttr_t Robot_attributes = {
   .name = "Robot",
-  .stack_size = 1280 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for Motor_Ctrl */
@@ -87,6 +87,13 @@ osThreadId_t System_MonitorHandle;
 const osThreadAttr_t System_Monitor_attributes = {
   .name = "System_Monitor",
   .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityAboveNormal,
+};
+/* Definitions for Orin */
+osThreadId_t OrinHandle;
+const osThreadAttr_t Orin_attributes = {
+  .name = "Orin",
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 
@@ -100,6 +107,7 @@ void IMU_Task(void *argument);
 void Robot_Task(void *argument);
 void Motor_Ctrl_Task(void *argument);
 void System_Monitor_Task(void *argument);
+void Orin_Task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -167,6 +175,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of System_Monitor */
   System_MonitorHandle = osThreadNew(System_Monitor_Task, NULL, &System_Monitor_attributes);
+
+  /* creation of Orin */
+  OrinHandle = osThreadNew(Orin_Task, NULL, &Orin_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -266,6 +277,24 @@ __weak void System_Monitor_Task(void *argument)
     osDelay(1);
   }
   /* USER CODE END System_Monitor_Task */
+}
+
+/* USER CODE BEGIN Header_Orin_Task */
+/**
+* @brief Function implementing the Orin thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Orin_Task */
+__weak void Orin_Task(void *argument)
+{
+  /* USER CODE BEGIN Orin_Task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END Orin_Task */
 }
 
 /* Private application code --------------------------------------------------*/

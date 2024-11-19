@@ -183,4 +183,13 @@ xuanwu_bipedal_robot/orin_nx.o: ..\Devices\Src\Orin_Nx.cpp \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_tim_ex.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_uart.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_uart_ex.h \
-  ..\Core\Inc\fdcan.h
+  ..\Core\Inc\fdcan.h ..\Devices\Inc\DM4310driver.h ..\Tasks\Inc\Motor.h \
+  ..\Tasks\Inc\Robot.h ..\Algorithms\Inc\User_Math.h \
+  ..\Tasks\Inc\Robot_Types.h ..\BSP\Inc\Delay.h ..\Devices\Inc\IMU.h \
+  ..\Algorithms\Inc\Fusion.h ..\Algorithms\Inc\FusionAhrs.h \
+  ..\Algorithms\Inc\FusionMath.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\libcxx\stdbool.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdbool.h \
+  ..\Algorithms\Inc\FusionAxes.h ..\Algorithms\Inc\FusionCalibration.h \
+  ..\Algorithms\Inc\FusionCompass.h ..\Algorithms\Inc\FusionOffset.h \
+  ..\Devices\Inc\BMI088driver.h ..\Devices\Inc\BMI088Middleware.h

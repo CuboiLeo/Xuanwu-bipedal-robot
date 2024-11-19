@@ -1196,21 +1196,6 @@
           <GroupName>Algorithms</GroupName>
           <Files>
             <File>
-              <FileName>Controls.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Algorithms\Src\Controls.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>Kinematics.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Algorithms\Src\Kinematics.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>Dynamics.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Algorithms\Src\Dynamics.cpp</FilePath>
-            </File>
-            <File>
               <FileName>PID.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\Algorithms\Src\PID.cpp</FilePath>

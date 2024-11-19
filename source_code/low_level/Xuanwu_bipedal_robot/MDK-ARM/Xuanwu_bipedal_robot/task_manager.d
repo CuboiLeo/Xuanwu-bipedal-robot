@@ -196,10 +196,10 @@ xuanwu_bipedal_robot/task_manager.o: ..\Tasks\Src\Task_Manager.cpp \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_uart.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_uart_ex.h \
   ..\Tasks\Inc\Robot.h ..\Algorithms\Inc\User_Math.h \
-  ..\Tasks\Inc\Robot_Types.h ..\Algorithms\Inc\Kinematics.h \
-  ..\Tasks\Inc\Motor.h ..\Devices\Inc\DM4310driver.h ..\Core\Inc\fdcan.h \
-  ..\BSP\Inc\can_bsp.h ..\BSP\Inc\Delay.h ..\Devices\Inc\ET16S_Remote.h \
-  ..\Core\Inc\usart.h ..\Devices\Inc\IMU.h ..\Algorithms\Inc\Fusion.h \
+  ..\Tasks\Inc\Robot_Types.h ..\Tasks\Inc\Motor.h \
+  ..\Devices\Inc\DM4310driver.h ..\Core\Inc\fdcan.h ..\BSP\Inc\can_bsp.h \
+  ..\BSP\Inc\Delay.h ..\Devices\Inc\ET16S_Remote.h ..\Core\Inc\usart.h \
+  ..\Devices\Inc\IMU.h ..\Algorithms\Inc\Fusion.h \
   ..\Algorithms\Inc\FusionAhrs.h ..\Algorithms\Inc\FusionMath.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\libcxx\stdbool.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdbool.h \
@@ -610,5 +610,4 @@ xuanwu_bipedal_robot/task_manager.o: ..\Tasks\Src\Task_Manager.cpp \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\libcxx\__memory\shared_ptr.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\libcxx\__functional\reference_wrapper.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\libcxx\__functional\weak_result_type.h \
-  ..\Algorithms\Inc\Dynamics.h ..\Algorithms\Inc\Controls.h \
   ..\Devices\Inc\Orin_NX.h

@@ -115,9 +115,11 @@ void Orin::sendData(const Motor &motor, const IMU &imu, const Direction_Vector &
 
 void Orin::receiveData(Motor &motor)
 {
-    for(uint8_t i = 0, n = CAN_RECEIVE_START_ID; i < RECEIVE_PACKAGE_NUM; i++)
+		uint16_t n = CAN_RECEIVE_START_ID;
+    for(uint8_t i = 0; i < RECEIVE_PACKAGE_NUM; i++)
     {
-        fdcanx_receive(&hfdcan3, n + i, receive_data[i]);
+				n += i;
+        fdcanx_receive(&hfdcan3, &n, receive_data[i]);
     }
 
     uint16_t pos_tmp, vel_tmp, tor_tmp;
