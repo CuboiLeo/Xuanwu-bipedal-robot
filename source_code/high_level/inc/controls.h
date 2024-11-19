@@ -1,7 +1,7 @@
 #ifndef CONTROLS_H
 #define CONTROLS_H
 
-#include "Robot_Types.h"
+#include "robot_types.h"
 
 class Controls
 {

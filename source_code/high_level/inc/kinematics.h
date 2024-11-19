@@ -2,8 +2,7 @@
 #define FORWARD_KINEMATICS_H
 
 #include "stdint.h"
-#include "Robot_Types.h"
-#include "Robot.h"
+#include "robot_types.h"
 
 class Kinematics
 {

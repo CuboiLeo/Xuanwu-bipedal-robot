@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../inc/CAN.h
+linux/can.h
+-
+linux/can/raw.h
+-
+sys/socket.h
+-
+sys/ioctl.h
+-
+net/if.h
+-
+cstring
+-
+unistd.h
+-
+iostream
+-
+
+/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/src/CAN.cpp
+CAN.h
+/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/src/CAN.h
+
+/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/xuanwu.cpp
+CAN.h
+/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/CAN.h
+iostream
+-
+unistd.h
+-
+chrono
+-
+thread
+-
+

@@ -1,8 +1,6 @@
-#include "Kinematics.h"
-#include <Eigen/Dense>
+#include "inc/kinematics.h"
+#include "inc/Eigen/Dense"
 #include <cmath>
-#include "User_Math.h"
-#include "main.h"
 
 Kinematics::Kinematics()
 {

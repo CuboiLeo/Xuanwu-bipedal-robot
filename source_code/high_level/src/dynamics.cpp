@@ -1,5 +1,5 @@
-#include "Dynamics.h"
-#include "Eigen/Dense"
+#include "inc/dynamics.h"
+#include "inc/Eigen/Dense"
 
 Dynamics::Dynamics()
 {

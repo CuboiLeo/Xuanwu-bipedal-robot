@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++   -I/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/inc  -g   -o CMakeFiles/xuanwu.dir/xuanwu.cpp.o -c /home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/xuanwu.cpp",
+  "file": "/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/xuanwu.cpp"
+},
+{
+  "directory": "/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/build",
+  "command": "/usr/bin/aarch64-linux-gnu-g++   -I/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/inc  -g   -o CMakeFiles/xuanwu.dir/src/CAN.cpp.o -c /home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/src/CAN.cpp",
+  "file": "/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/src/CAN.cpp"
+}
+]

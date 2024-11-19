@@ -2,10 +2,7 @@
 #define DYNAMICS_H
 
 #include "stdint.h"
-#include "Robot_Types.h"
-#include "Robot.h"
-#include "Fusion.h"
-
+#include "robot_types.h"
 class Dynamics
 {
 public:
