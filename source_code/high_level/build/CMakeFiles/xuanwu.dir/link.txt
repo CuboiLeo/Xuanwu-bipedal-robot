@@ -1,1 +1,0 @@
-/usr/bin/aarch64-linux-gnu-g++  -g   CMakeFiles/xuanwu.dir/xuanwu.cpp.o CMakeFiles/xuanwu.dir/src/CAN.cpp.o  -o xuanwu 

@@ -1,3 +1,0 @@
-/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/build/CMakeFiles/rebuild_cache.dir
-/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/build/CMakeFiles/edit_cache.dir
-/home/cuboileo/Desktop/Xuanwu-bipedal-robot/source_code/high_level/build/CMakeFiles/xuanwu.dir
