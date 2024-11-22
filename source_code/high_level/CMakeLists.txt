@@ -4,12 +4,18 @@ project(xuanwu VERSION 1.2)
 
 set(SOURCES
     xuanwu.cpp
-    src/CAN.cpp
+    devices/src/CAN.cpp
+    devices/src/STM32_protocol.cpp
+    algorithms/src/user_math.cpp
 )
+
+set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} 
     PRIVATE 
-        ${PROJECT_SOURCE_DIR}/inc
+        ${PROJECT_SOURCE_DIR}/algorithms/inc
+        ${PROJECT_SOURCE_DIR}/devices/inc
+        ${PROJECT_SOURCE_DIR}/third_party
 )

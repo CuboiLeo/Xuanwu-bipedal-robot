@@ -1,6 +1,6 @@
-#include "Orin_NX.h"
+#include "STM32_protocol.h"
 
-void Orin::sendData(const Motor &motor, const IMU &imu, const Direction_Vector &ref_vel, const Direction_Vector &ref_angular_vel)
+void STM32::sendData(CAN &can, Motor &motor)
 {
     uint16_t pos_tmp, vel_tmp, tor_tmp;
     pos_tmp = float_to_uint(motor.getPos(Left_Hip_Yaw), P_MIN, P_MAX, 16);
@@ -77,49 +77,46 @@ void Orin::sendData(const Motor &motor, const IMU &imu, const Direction_Vector &
     send_data[5][0] = pos_tmp >> 8;
     send_data[5][1] = pos_tmp;
 
-    uint8_t vx, vy, vz, wz;
-    vx = float_to_uint(ref_vel.x, -ROBOT_MAX_VEL, ROBOT_MAX_VEL, 4);
-    vy = float_to_uint(ref_vel.y, -ROBOT_MAX_VEL, ROBOT_MAX_VEL, 4);
-    vz = float_to_uint(ref_vel.z, -ROBOT_MAX_VEL, ROBOT_MAX_VEL, 4);
-    wz = float_to_uint(ref_angular_vel.z, -ROBOT_MAX_ANG_VEL, ROBOT_MAX_ANG_VEL, 4);
-    send_data[5][2] = vx << 4 | vy;
-    send_data[5][3] = vz << 4 | wz;
-
-    uint16_t acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z;
-    FusionVector acc = imu.getAccel();
-    FusionVector gyro = imu.getGyro();
-    acc_x = float_to_uint(acc.axis.x, -3 * GRAVITY, 3 * GRAVITY, 16);
-    acc_y = float_to_uint(acc.axis.y, -3 * GRAVITY, 3 * GRAVITY, 16);
-    acc_z = float_to_uint(acc.axis.z, -3 * GRAVITY, 3 * GRAVITY, 16);
-    gyro_x = float_to_uint(gyro.axis.x, -2000, 2000, 16);
-    gyro_y = float_to_uint(gyro.axis.y, -2000, 2000, 16);
-    gyro_z = float_to_uint(gyro.axis.z, -2000, 2000, 16);
-    send_data[5][4] = acc_x >> 8;
-    send_data[5][5] = acc_x;
-    send_data[5][6] = acc_y >> 8;
-    send_data[5][7] = acc_y;
-    send_data[6][0] = acc_z >> 8;
-    send_data[6][1] = acc_z;
-    send_data[6][2] = gyro_x >> 8;
-    send_data[6][3] = gyro_x;
-    send_data[6][4] = gyro_y >> 8;
-    send_data[6][5] = gyro_y;
-    send_data[6][6] = gyro_z >> 8;
-    send_data[6][7] = gyro_z;
-
-    for (uint8_t i = 0, n = CAN_SEND_START_ID; i < SEND_PACKAGE_NUM; i++)
+    can_frame frame = {};
+    frame.can_id = CAN_SEND_START_ID;
+    frame.can_dlc = PACKAGE_SIZE;
+    for (int i = 0; i < SEND_PACKAGE_NUM; i++)
     {
-        fdcanx_send_data(&hfdcan3, n + i, send_data[i], sizeof(send_data[i]));
+        frame.can_id = CAN_SEND_START_ID + i;
+        memcpy(frame.data, send_data[i], PACKAGE_SIZE);
+        can.send(frame);
     }
 }
 
-void Orin::receiveData(Motor &motor)
+void STM32::receiveData(CAN &can, Motor &motor, IMU &imu, Command &command)
 {
-    uint16_t n = CAN_RECEIVE_START_ID;
-    for (uint8_t i = 0; i < RECEIVE_PACKAGE_NUM; i++)
+    can_frame frame = {};
+    frame.can_id = CAN_RECEIVE_START_ID;
+    frame.can_dlc = PACKAGE_SIZE;
+    can.receive(frame);
+    switch (frame.can_id)
     {
-        n += i;
-        fdcanx_receive(&hfdcan3, &n, receive_data[i]);
+    case CAN_RECEIVE_START_ID:
+        memcpy(receive_data[0], frame.data, PACKAGE_SIZE);
+        break;
+    case CAN_RECEIVE_START_ID + 1:
+        memcpy(receive_data[1], frame.data, PACKAGE_SIZE);
+        break;
+    case CAN_RECEIVE_START_ID + 2:
+        memcpy(receive_data[2], frame.data, PACKAGE_SIZE);
+        break;
+    case CAN_RECEIVE_START_ID + 3:
+        memcpy(receive_data[3], frame.data, PACKAGE_SIZE);
+        break;
+    case CAN_RECEIVE_START_ID + 4:
+        memcpy(receive_data[4], frame.data, PACKAGE_SIZE);
+        break;
+    case CAN_RECEIVE_START_ID + 5:
+        memcpy(receive_data[5], frame.data, PACKAGE_SIZE);
+        break;
+    case CAN_RECEIVE_START_ID + 6:
+        memcpy(receive_data[6], frame.data, PACKAGE_SIZE);
+        break;
     }
 
     uint16_t pos_tmp, vel_tmp, tor_tmp;
@@ -178,4 +175,22 @@ void Orin::receiveData(Motor &motor)
     motor.setPos(Right_Knee_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
     motor.setVel(Right_Knee_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
     motor.setTor(Right_Knee_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
+
+    uint8_t vx_tmp, vy_tmp, vz_tmp, wz_tmp;
+    vx_tmp = receive_data[5][2] >> 4;
+    vy_tmp = receive_data[5][2] & 0xF;
+    vz_tmp = receive_data[5][3] >> 4;
+    wz_tmp = receive_data[5][3] & 0xF;
+    command.setLinearVel({uint_to_float(vx_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 4), uint_to_float(vy_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 4), uint_to_float(vz_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 4)});
+    command.setAngularVel({0.0f, 0.0f, uint_to_float(wz_tmp, ANGULAR_VEL_MIN, ANGULAR_VEL_MAX, 4)});
+
+    uint16_t acc_x_tmp, acc_y_tmp, acc_z_tmp, gyro_x_tmp, gyro_y_tmp, gyro_z_tmp;
+    acc_x_tmp = receive_data[5][4] << 8 | receive_data[5][5];
+    acc_y_tmp = receive_data[5][6] << 8 | receive_data[5][7];
+    acc_z_tmp = receive_data[6][0] << 8 | receive_data[6][1];
+    gyro_x_tmp = receive_data[6][2] << 8 | receive_data[6][3];
+    gyro_y_tmp = receive_data[6][4] << 8 | receive_data[6][5];
+    gyro_z_tmp = receive_data[6][6] << 8 | receive_data[6][7];
+    imu.setAccel({uint_to_float(acc_x_tmp, A_MIN, A_MAX, 16), uint_to_float(acc_y_tmp, A_MIN, A_MAX, 16), uint_to_float(acc_z_tmp, A_MIN, A_MAX, 16)});
+    imu.setGyro({uint_to_float(gyro_x_tmp, G_MIN, G_MAX, 16), uint_to_float(gyro_y_tmp, G_MIN, G_MAX, 16), uint_to_float(gyro_z_tmp, G_MIN, G_MAX, 16)});
 }

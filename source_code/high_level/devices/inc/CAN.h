@@ -1,3 +1,6 @@
+#ifndef CAN_H
+#define CAN_H
+
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #include <sys/socket.h>
@@ -6,6 +9,8 @@
 #include <cstring>
 #include <unistd.h>
 #include <iostream>
+
+#define ENABLE_CAN_DEBUG (0)
 
 class CAN
 {
@@ -19,3 +24,5 @@ private:
     struct ifreq ifr = {};
     struct sockaddr_can addr = {};
 };
+
+#endif

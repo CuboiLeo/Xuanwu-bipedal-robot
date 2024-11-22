@@ -39,7 +39,7 @@ void CAN::send(const can_frame &frame)
     {
         std::cerr << "Error sending CAN message: " << strerror(errno) << std::endl;
     }
-    else
+    else if (ENABLE_CAN_DEBUG)
     {
         std::cout << "Sent CAN ID: " << std::hex << frame.can_id << std::endl;
         std::cout << "Data: " << std::endl;
@@ -59,7 +59,7 @@ void CAN::receive(can_frame &frame)
     {
         std::cerr << "Error receiving CAN message: " << strerror(errno) << std::endl;
     }
-    else if (nbytes > 0)
+    else if ((nbytes > 0) && (ENABLE_CAN_DEBUG))
     {
         std::cout << "Received CAN ID: " << std::hex << frame.can_id << std::endl;
         std::cout << "Data: " << std::endl;
