@@ -19,7 +19,8 @@ class Orin
 {
 public:
     void sendData(const Motor &motor, const IMU &imu, const Direction_Vector &ref_vel, const Direction_Vector &ref_angular_vel);
-    void receiveData(Motor &motor);
+    void receiveData(void);
+    void decodeData(Motor &motor);
 
 private:
     uint8_t send_data[SEND_PACKAGE_NUM][PACKAGE_SIZE] = {};

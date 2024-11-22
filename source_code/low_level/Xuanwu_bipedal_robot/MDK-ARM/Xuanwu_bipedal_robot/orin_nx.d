@@ -192,4 +192,6 @@ xuanwu_bipedal_robot/orin_nx.o: ..\Devices\Src\Orin_Nx.cpp \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdbool.h \
   ..\Algorithms\Inc\FusionAxes.h ..\Algorithms\Inc\FusionCalibration.h \
   ..\Algorithms\Inc\FusionCompass.h ..\Algorithms\Inc\FusionOffset.h \
-  ..\Devices\Inc\BMI088driver.h ..\Devices\Inc\BMI088Middleware.h
+  ..\Devices\Inc\BMI088driver.h ..\Devices\Inc\BMI088Middleware.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\libcxx\string.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h
