@@ -1,4 +1,5 @@
 #include "Orin_NX.h"
+#include <string.h>
 
 void Orin::sendData(const Motor &motor, const IMU &imu, const Direction_Vector &ref_vel, const Direction_Vector &ref_angular_vel)
 {
@@ -113,15 +114,36 @@ void Orin::sendData(const Motor &motor, const IMU &imu, const Direction_Vector &
     }
 }
 
-void Orin::receiveData(Motor &motor)
+void Orin::receiveData(void)
 {
-    uint16_t n = CAN_RECEIVE_START_ID;
-    for (uint8_t i = 0; i < RECEIVE_PACKAGE_NUM; i++)
+    uint16_t rec_id;
+    uint8_t rx_data[8] = {0};
+    fdcanx_receive(&hfdcan3, &rec_id, rx_data);
+    switch (rec_id)
     {
-        n += i;
-        fdcanx_receive(&hfdcan3, &n, receive_data[i]);
+    case CAN_RECEIVE_START_ID:
+        memcpy(receive_data[0], rx_data, sizeof(rx_data));
+        break;
+    case CAN_RECEIVE_START_ID + 1:
+        memcpy(receive_data[1], rx_data, sizeof(rx_data));
+        break;
+    case CAN_RECEIVE_START_ID + 2:
+        memcpy(receive_data[2], rx_data, sizeof(rx_data));
+        break;
+    case CAN_RECEIVE_START_ID + 3:
+        memcpy(receive_data[3], rx_data, sizeof(rx_data));
+        break;
+    case CAN_RECEIVE_START_ID + 4:
+        memcpy(receive_data[4], rx_data, sizeof(rx_data));
+        break;
+    case CAN_RECEIVE_START_ID + 5:
+        memcpy(receive_data[5], rx_data, sizeof(rx_data));
+        break;
     }
+}
 
+void Orin::decodeData(Motor &motor)
+{
     uint16_t pos_tmp, vel_tmp, tor_tmp;
     pos_tmp = receive_data[0][1] << 8 | receive_data[0][2];
     vel_tmp = receive_data[0][3] << 4 | receive_data[0][4] >> 4;
