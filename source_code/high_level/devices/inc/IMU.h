@@ -7,15 +7,15 @@
 class IMU
 {
 public:
-    Direction_Vector getAccel() const { return accel; };
-    Direction_Vector getGyro() const { return gyro; };
+    direction_vector getAccel() const { return accel; };
+    direction_vector getGyro() const { return gyro; };
 
-    void setAccel(const Direction_Vector accel) { this->accel = accel; };
-    void setGyro(const Direction_Vector gyro) { this->gyro = gyro; };
+    void setAccel(const direction_vector accel) { this->accel = accel; };
+    void setGyro(const direction_vector gyro) { this->gyro = gyro; };
 
 private:
-    Direction_Vector accel;
-    Direction_Vector gyro;
+    direction_vector accel;
+    direction_vector gyro;
 };
 
 #endif
