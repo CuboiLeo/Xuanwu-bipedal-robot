@@ -47,26 +47,6 @@ Motor::Motor()
 	soft_start_flag = 0;
 }
 
-void Motor::setAllJointsPos(Robot* robot)
-{
-	for (int i = 0; i < NUM_MOTORS; i++){
-		motor_info[i].ctrl.kp_set = 20;
-		motor_info[i].ctrl.kd_set = 1;
-	}
-
-	Joint_Angle ref_left_leg_angles = robot->getRefJointAnglesLeft();
-	motor_info[Left_Hip_Yaw].ctrl.pos_set = ref_left_leg_angles.hip_yaw;
-	motor_info[Left_Hip_Roll].ctrl.pos_set = ref_left_leg_angles.hip_roll;
-	motor_info[Left_Hip_Pitch].ctrl.pos_set = ref_left_leg_angles.hip_pitch;
-	motor_info[Left_Knee_Pitch].ctrl.pos_set = ref_left_leg_angles.knee_pitch;
-
-	Joint_Angle ref_right_leg_angles = robot->getRefJointAnglesRight();
-	motor_info[Right_Hip_Yaw].ctrl.pos_set = ref_right_leg_angles.hip_yaw;
-	motor_info[Right_Hip_Roll].ctrl.pos_set = ref_right_leg_angles.hip_roll;
-	motor_info[Right_Hip_Pitch].ctrl.pos_set = ref_right_leg_angles.hip_pitch;
-	motor_info[Right_Knee_Pitch].ctrl.pos_set = ref_right_leg_angles.knee_pitch;
-}
-
 uint8_t Motor::returnZeroPos(void)
 {
   uint8_t all_joints_reached_pos_flag = 1;
@@ -93,8 +73,8 @@ uint8_t Motor::returnZeroPos(void)
 		for(int i = 0; i < NUM_MOTORS; i++)
 		{
 			motor_info[i].ctrl.pos_set = 0;
-			motor_info[i].ctrl.kp_set = 0;
-			motor_info[i].ctrl.kd_set = 0;
+			motor_info[i].ctrl.kp_set = 20;
+			motor_info[i].ctrl.kd_set = 1;
 		}
 	}
 	
@@ -125,50 +105,6 @@ void Motor::createVirtualBoundary(void)
 			motor_info[i].ctrl.kd_set = 2;
 		}
 	}
-}
-
-bool Motor::checkJointsOverRange(uint8_t leg)
-{
-	bool over_range = false;
-	if (leg == LEFT_LEG)
-	{
-		if (fabs(motor_info[Left_Hip_Yaw].para.pos) > motor_info[Left_Hip_Yaw].range)
-		{
-			over_range = true;
-		}
-		else if (fabs(motor_info[Left_Hip_Roll].para.pos) > motor_info[Left_Hip_Roll].range)
-		{
-			over_range = true;
-		}
-		else if (fabs(motor_info[Left_Hip_Pitch].para.pos) > motor_info[Left_Hip_Pitch].range)
-		{
-			over_range = true;
-		}
-		else if (fabs(motor_info[Left_Knee_Pitch].para.pos) > motor_info[Left_Knee_Pitch].range)
-		{
-			over_range = true;
-		}
-	}
-	else if (leg == RIGHT_LEG)
-	{
-		if (fabs(motor_info[Right_Hip_Yaw].para.pos) > motor_info[Right_Hip_Yaw].range)
-		{
-			over_range = true;
-		}
-		else if (fabs(motor_info[Right_Hip_Roll].para.pos) > motor_info[Right_Hip_Roll].range)
-		{
-			over_range = true;
-		}
-		else if (fabs(motor_info[Right_Hip_Pitch].para.pos) > motor_info[Right_Hip_Pitch].range)
-		{
-			over_range = true;
-		}
-		else if (fabs(motor_info[Right_Knee_Pitch].para.pos) > motor_info[Right_Knee_Pitch].range)
-		{
-			over_range = true;
-		}
-	}
-	return over_range;
 }
 
 void Motor::resetJoints(void)

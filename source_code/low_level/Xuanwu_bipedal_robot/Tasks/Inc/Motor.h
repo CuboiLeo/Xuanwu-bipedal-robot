@@ -15,14 +15,12 @@ public:
     static constexpr uint8_t ALL_JOINTS_ZEROED_FLAG = 1;
 
     Motor();
-    void setAllJointsPos(Robot *robot);
     void resetJoints(void);
     void sendAll(void);
     void disableAll(void);
     void enableAll(void);
     uint8_t returnZeroPos(void);
     void createVirtualBoundary(void);
-    bool checkJointsOverRange(uint8_t leg);
     float getPos(const int motor) const { return motor_info[motor].para.pos; };
     float getVel(const int motor) const { return motor_info[motor].para.vel; };
     float getTor(const int motor) const { return motor_info[motor].para.tor; };

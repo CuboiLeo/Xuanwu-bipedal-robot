@@ -19,58 +19,20 @@ void Robot_Task(void *argument)
 {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(2);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
 
     remote.Init(&REMOTE_UART); // Initialize the remote
 
     for (;;)
     {
         remote.checkWatchdog(&REMOTE_UART);
-        // Assign joint angles based on motor feedback
-        Joint_Angle left_angles = {
-            motor.getPos(Left_Hip_Yaw),
-            motor.getPos(Left_Hip_Roll),
-            motor.getPos(Left_Hip_Pitch),
-            motor.getPos(Left_Knee_Pitch)};
-        Joint_Angle right_angles = {
-            motor.getPos(Right_Hip_Yaw),
-            motor.getPos(Right_Hip_Roll),
-            motor.getPos(Right_Hip_Pitch),
-            motor.getPos(Right_Knee_Pitch)};
 
-        // Update the robot's joint angles
-        robot.setActJointAnglesLeft(left_angles);
-        robot.setActJointAnglesRight(right_angles);
-
-        //        left_angles.hip_roll += LEFT_LEG_HIP_ROLL_OFFSET;
-        //        right_angles.hip_roll += RIGHT_LEG_HIP_ROLL_OFFSET;
-        //        robot.setActCoMPos(dynamics.computeCenterOfMass(left_angles, right_angles, imu.getRotationMatrix()));
-        //        robot.setActZMPPos(dynamics.computeZeroMomentPoint(imu.getAccel(), imu.getGyro(), imu.getGyroDot(), imu.getRotationMatrix()));
-
-        //        // Compute the robot's foot positions using forward kinematics
-        //        robot.setActFootPosLeft(kinematics.computeForwardKinematics(left_angles, LEFT_LEG));
-        //        robot.setActFootPosRight(kinematics.computeForwardKinematics(right_angles, RIGHT_LEG));
-
-        //        // Adjust the robot's CoM position
-        //        // Direction_Vector_Two ref_foot_pos = controls.controlCoMPos(robot.getRefCoMPos(), robot.getActCoMPos(), robot.getRefFootPosLeft(), robot.getRefFootPosRight());
-        //        // robot.setRefFootPosLeft(ref_foot_pos.left);
-        //        // robot.setRefFootPosRight(ref_foot_pos.right);
-
-        //        // Update the robot's velocity
-        //        Direction_Vector ref_robot_vel = {remote.getLeftStickX() / remote.CHANNEL_MAX_VALUE * 0.1f, remote.getLeftStickY() / remote.CHANNEL_MAX_VALUE * 0.1f, 0.0f};
-        //        robot.setRefRobotVel(ref_robot_vel);
-
-        //        //Update the robot's reference foot positions
-        //        robot.setRefFootPosLeft(kinematics.generateTrajectory(ref_robot_vel, LEFT_LEG));
-        //        robot.setRefFootPosRight(kinematics.generateTrajectory(ref_robot_vel, RIGHT_LEG));
-        //
-        //        // Compute the robot's joint angles using inverse kinematics
-        //        robot.setRefJointAnglesLeft(kinematics.computeInverseKinematics(robot.getRefFootPosLeft(), robot.getActFootPosLeft(), robot.getActJointAnglesLeft(), LEFT_LEG));
-        //        robot.setRefJointAnglesRight(kinematics.computeInverseKinematics(robot.getRefFootPosRight(), robot.getActFootPosRight(), robot.getActJointAnglesRight(), RIGHT_LEG));
+        robot.setRefRobotVel({remote.getLeftStickX()/Remote::CHANNEL_MAX_VALUE * ROBOT_MAX_VEL, remote.getLeftStickY()/Remote::CHANNEL_MAX_VALUE * ROBOT_MAX_VEL, 0});
+        robot.setRefRobotAngVel({0, 0, remote.getRightStickX()/Remote::CHANNEL_MAX_VALUE * ROBOT_MAX_ANG_VEL});
 
         if (motor.getSoftStartFlag() == motor.ALL_JOINTS_ZEROED_FLAG)
         {
-            motor.setAllJointsPos(&robot);
+            orin.decodeData(motor);
         }
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
@@ -82,7 +44,7 @@ void Motor_Ctrl_Task(void *argument)
     /* USER CODE BEGIN Motor_Ctrl_Task */
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(2);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
 
     // float count = 0;
     can_bsp_init();
@@ -118,7 +80,7 @@ void Debug_Task(void *argument)
 {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(100);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(1000);
 
     HAL_UART_Init(&huart7);
 
@@ -143,7 +105,7 @@ void IMU_Task(void *argument)
 {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(2);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
 
     float gyro[3], accel[3], temperature;
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
@@ -194,12 +156,11 @@ void Orin_Task(void *argument)
 {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(2);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
 
     for (;;)
     {
         orin.sendData(motor, imu, robot.getRefRobotVel(), robot.getRefRobotAngVel());
-        orin.decodeData(motor);
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
 }
