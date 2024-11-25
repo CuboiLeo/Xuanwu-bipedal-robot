@@ -1,10 +1,8 @@
 #include <iostream>
 #include <unistd.h>
-#include <chrono>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
-#include <ctime>
 #include "STM32_protocol.h"
 #include "motor.h"
 #include "IMU.h"
@@ -94,7 +92,6 @@ void CAN_receive_thread()
             shared_data.new_data = true;                                               // Set the new data flag
         }
         shared_data_cv.notify_one(); // Notify the compute thread that new data is available
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
 
@@ -107,6 +104,5 @@ void CAN_send_thread()
             stm32.encodeData(shared_data.motor);                 // Encode the data to send
         }
         stm32.sendData(can); // Send the data to the STM32
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
