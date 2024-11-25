@@ -7,15 +7,15 @@
 class Command
 {
     public:
-    direction_vector getLinearVel() const { return linear_vel; };
-    direction_vector getAngularVel() const { return angular_vel; };
+    Direction_Vector getLinearVel() const { return linear_vel; };
+    Direction_Vector getAngularVel() const { return angular_vel; };
 
-    void setLinearVel(const direction_vector linear_vel) { this->linear_vel = linear_vel; };
-    void setAngularVel(const direction_vector angular_vel) { this->angular_vel = angular_vel; };
+    void setLinearVel(const Direction_Vector linear_vel) { this->linear_vel = linear_vel; };
+    void setAngularVel(const Direction_Vector angular_vel) { this->angular_vel = angular_vel; };
 
     private:
-    direction_vector linear_vel;
-    direction_vector angular_vel;
+    Direction_Vector linear_vel;
+    Direction_Vector angular_vel;
 };
 
 #endif

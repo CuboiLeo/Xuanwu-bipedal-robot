@@ -1,8 +1,9 @@
-#ifndef FORWARD_KINEMATICS_H
-#define FORWARD_KINEMATICS_H
+#ifndef KINEMATICS_H
+#define KINEMATICS_H
 
-#include "stdint.h"
+#include <stdint.h>
 #include "robot_types.h"
+#include "user_math.h"
 
 class Kinematics
 {
@@ -18,18 +19,10 @@ public:
       static constexpr float SINGLE_STANCE_PERIOD = 0.4f;
       static constexpr float DOUBLE_STANCE_PERIOD = 0.3f;
 
-      Kinematics();
-      Direction_Vector computeForwardKinematics(Joint_Angle joint_angles, const int leg);
-      Joint_Angle computeInverseKinematics(const Direction_Vector &ref_foot_pos, const Direction_Vector &act_foot_pos, const Joint_Angle &joint_angles, const int leg);
-      Direction_Vector generateTrajectory(const Direction_Vector &ref_robot_vel, const int leg);
+      Direction_Vector computeForwardKinematics(const Joint_Angles &joint_angles, const DH_Parameter *dh_param);
+      Joint_Angles computeInverseKinematics(const Direction_Vector &act_foot_pos, const Direction_Vector &ref_foot_pos, const Joint_Angles &act_angle, const DH_Parameter *dh_param);
 
 private:
-      Joint_Angle IK_left_leg_angles;
-      Joint_Angle IK_right_leg_angles;
-
-      Direction_Vector FK_left_foot_pos;
-      Direction_Vector FK_right_foot_pos;
-
       uint8_t IK_iteration_count = 0;
       float IK_epsilon = 1.0f;
 

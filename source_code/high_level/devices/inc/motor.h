@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-enum motor_name {
+enum Motor_Name {
     Left_Hip_Yaw,
     Left_Hip_Roll,
     Left_Hip_Pitch,
@@ -15,15 +15,15 @@ enum motor_name {
     num_motor   // This is the number of motors
 };
 
-struct motor_params {
+struct Motor_Params {
     float pos;
     float vel;
     float tor;
 };
 
-struct motor_data {
-    motor_params ref;
-    motor_params act;
+struct Motor_Data {
+    Motor_Params ref;
+    Motor_Params act;
 };
 
 class Motor
@@ -45,7 +45,7 @@ public:
     void setActTor(const uint8_t motor_id, const float tor) { motor[motor_id].act.tor = tor; };
 
 private:
-    motor_data motor[num_motor];
+    Motor_Data motor[num_motor];
 };
 
 #endif

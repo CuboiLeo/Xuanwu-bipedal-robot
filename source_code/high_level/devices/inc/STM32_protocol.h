@@ -36,8 +36,10 @@
 class STM32
 {
 public:
-    void sendData(CAN &can, Motor &motor);
-    void receiveData(CAN &can, Motor &motor, IMU &imu, Command &command);
+    void sendData(CAN &can);
+    void receiveData(CAN &can);
+    void encodeData(Motor &motor);
+    void decodeData(Motor &motor, IMU &imu, Command &command);
 
 private:
     uint8_t send_data[SEND_PACKAGE_NUM][PACKAGE_SIZE] = {};

@@ -7,11 +7,17 @@ set(SOURCES
     devices/src/CAN.cpp
     devices/src/STM32_protocol.cpp
     algorithms/src/user_math.cpp
+    algorithms/src/kinematics.cpp
 )
 
 set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+
+target_link_libraries(${PROJECT_NAME} 
+    PRIVATE 
+        pthread
+)
 
 target_include_directories(${PROJECT_NAME} 
     PRIVATE 

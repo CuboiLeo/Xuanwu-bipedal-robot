@@ -1,6 +1,6 @@
 #include "STM32_protocol.h"
 
-void STM32::sendData(CAN &can, Motor &motor)
+void STM32::encodeData(Motor &motor)
 {
     uint16_t pos_tmp, vel_tmp, tor_tmp;
     pos_tmp = float_to_uint(motor.getRefPos(Left_Hip_Yaw), P_MIN, P_MAX, 16);
@@ -76,49 +76,10 @@ void STM32::sendData(CAN &can, Motor &motor)
     send_data[4][7] = tor_tmp;
     send_data[5][0] = pos_tmp >> 8;
     send_data[5][1] = pos_tmp;
-
-    can_frame frame = {};
-    frame.can_id = CAN_SEND_START_ID;
-    frame.can_dlc = PACKAGE_SIZE;
-    for (int i = 0; i < SEND_PACKAGE_NUM; i++)
-    {
-        frame.can_id = CAN_SEND_START_ID + i;
-        memcpy(frame.data, send_data[i], PACKAGE_SIZE);
-        can.send(frame);
-    }
 }
 
-void STM32::receiveData(CAN &can, Motor &motor, IMU &imu, Command &command)
+void STM32::decodeData(Motor &motor, IMU &imu, Command &command)
 {
-    can_frame frame = {};
-    frame.can_id = CAN_RECEIVE_START_ID;
-    frame.can_dlc = PACKAGE_SIZE;
-    can.receive(frame);
-    switch (frame.can_id)
-    {
-    case CAN_RECEIVE_START_ID:
-        memcpy(receive_data[0], frame.data, PACKAGE_SIZE);
-        break;
-    case CAN_RECEIVE_START_ID + 1:
-        memcpy(receive_data[1], frame.data, PACKAGE_SIZE);
-        break;
-    case CAN_RECEIVE_START_ID + 2:
-        memcpy(receive_data[2], frame.data, PACKAGE_SIZE);
-        break;
-    case CAN_RECEIVE_START_ID + 3:
-        memcpy(receive_data[3], frame.data, PACKAGE_SIZE);
-        break;
-    case CAN_RECEIVE_START_ID + 4:
-        memcpy(receive_data[4], frame.data, PACKAGE_SIZE);
-        break;
-    case CAN_RECEIVE_START_ID + 5:
-        memcpy(receive_data[5], frame.data, PACKAGE_SIZE);
-        break;
-    case CAN_RECEIVE_START_ID + 6:
-        memcpy(receive_data[6], frame.data, PACKAGE_SIZE);
-        break;
-    }
-
     uint16_t pos_tmp, vel_tmp, tor_tmp;
     pos_tmp = receive_data[0][1] << 8 | receive_data[0][2];
     vel_tmp = receive_data[0][3] << 4 | receive_data[0][4] >> 4;
@@ -193,4 +154,55 @@ void STM32::receiveData(CAN &can, Motor &motor, IMU &imu, Command &command)
     gyro_z_tmp = receive_data[6][6] << 8 | receive_data[6][7];
     imu.setAccel({uint_to_float(acc_x_tmp, A_MIN, A_MAX, 16), uint_to_float(acc_y_tmp, A_MIN, A_MAX, 16), uint_to_float(acc_z_tmp, A_MIN, A_MAX, 16)});
     imu.setGyro({uint_to_float(gyro_x_tmp, G_MIN, G_MAX, 16), uint_to_float(gyro_y_tmp, G_MIN, G_MAX, 16), uint_to_float(gyro_z_tmp, G_MIN, G_MAX, 16)});
+}
+
+void STM32::sendData(CAN &can)
+{
+    can_frame frame = {};
+    frame.can_id = CAN_SEND_START_ID;
+    frame.can_dlc = PACKAGE_SIZE;
+    for (int i = 0; i < SEND_PACKAGE_NUM; i++)
+    {
+        frame.can_id = CAN_SEND_START_ID + i;
+        memcpy(frame.data, send_data[i], PACKAGE_SIZE);
+        can.send(frame);
+    }
+}
+
+void STM32::receiveData(CAN &can)
+{
+    can_frame frame = {};
+    frame.can_id = CAN_RECEIVE_START_ID;
+    frame.can_dlc = PACKAGE_SIZE;
+    can.receive(frame);
+    if (frame.can_id == CAN_RECEIVE_START_ID)
+    {
+        memcpy(receive_data[0], frame.data, PACKAGE_SIZE);
+
+        for (int i = 1; i < RECEIVE_PACKAGE_NUM; i++)
+        {
+            can.receive(frame);
+            switch (frame.can_id)
+            {
+            case CAN_RECEIVE_START_ID + 1:
+                memcpy(receive_data[1], frame.data, PACKAGE_SIZE);
+                break;
+            case CAN_RECEIVE_START_ID + 2:
+                memcpy(receive_data[2], frame.data, PACKAGE_SIZE);
+                break;
+            case CAN_RECEIVE_START_ID + 3:
+                memcpy(receive_data[3], frame.data, PACKAGE_SIZE);
+                break;
+            case CAN_RECEIVE_START_ID + 4:
+                memcpy(receive_data[4], frame.data, PACKAGE_SIZE);
+                break;
+            case CAN_RECEIVE_START_ID + 5:
+                memcpy(receive_data[5], frame.data, PACKAGE_SIZE);
+                break;
+            case CAN_RECEIVE_START_ID + 6:
+                memcpy(receive_data[6], frame.data, PACKAGE_SIZE);
+                break;
+            }
+        }
+    }
 }
