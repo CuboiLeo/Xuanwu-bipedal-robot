@@ -3,10 +3,12 @@
 
 #include "robot_types.h"
 #include "robot_configs.h"
+#include "motor.h"
 
 class Robot
 {
 public:
+    // Setter and getter methods for robot data
     void setLegActAngles(const Joint_Angles &left, const Joint_Angles &right) { leg_angles.left.act = left; leg_angles.right.act = right; }
     void setFootActPos(const Direction_Vector &left, const Direction_Vector &right) { foot_pos.left.act = left; foot_pos.right.act = right; }
     void setCoMActPos(const Direction_Vector &CoM) { CoM_pos.act = CoM; }
@@ -26,6 +28,8 @@ public:
     Direction_Vector getFootRefPos(const uint8_t leg) const { return leg == LEFT_LEG_ID ? foot_pos.left.ref : foot_pos.right.ref; }
     Direction_Vector getCoMRefPos() const { return CoM_pos.ref; }
     Direction_Vector getZMPRefPos() const { return ZMP_pos.ref; }
+
+    void setMotorData(Motor &motor);
 
 private:
     Leg_Data leg_angles = {};

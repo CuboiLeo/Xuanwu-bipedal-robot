@@ -9,6 +9,7 @@
 #include <cstring>
 #include <unistd.h>
 #include <iostream>
+#include <fcntl.h>
 
 #define ENABLE_CAN_DEBUG (0)
 

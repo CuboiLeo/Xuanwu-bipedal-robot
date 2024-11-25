@@ -8,6 +8,7 @@ set(SOURCES
     devices/src/STM32_protocol.cpp
     algorithms/src/user_math.cpp
     algorithms/src/kinematics.cpp
+    algorithms/src/robot.cpp
 )
 
 set(CMAKE_BUILD_TYPE Debug)

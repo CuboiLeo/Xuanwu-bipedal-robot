@@ -4,6 +4,7 @@
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <ctime>
 #include "STM32_protocol.h"
 #include "motor.h"
 #include "IMU.h"
@@ -49,7 +50,7 @@ void compute_thread()
 {
     Robot robot;           // Robot object for robot state
     Kinematics kinematics; // Kinematics object for kinematics computation
-
+    float time = 0;
     while (true)
     {
         std::unique_lock<std::mutex> lock(shared_data_mutex); // Lock the shared data
@@ -68,9 +69,15 @@ void compute_thread()
         robot.setFootActPos(left_act_pos, right_act_pos);
 
         // Compute the inverse kinematics
-        Joint_Angles left_ref_angle = kinematics.computeInverseKinematics(robot.getFootActPos(LEFT_LEG_ID), robot.getFootRefPos(LEFT_LEG_ID),robot.getLegActAngles(LEFT_LEG_ID), DH_Left_Leg);
-        Joint_Angles right_ref_angle = kinematics.computeInverseKinematics(robot.getFootActPos(RIGHT_LEG_ID), robot.getFootRefPos(RIGHT_LEG_ID),robot.getLegActAngles(RIGHT_LEG_ID), DH_Right_Leg);
+        time += 0.0001;
+        Joint_Angles left_ref_angle = {1*sin(2*PI*time),2*sin(2*PI*time),3,4};
+        Joint_Angles right_ref_angle = {5,6,7,8};
+        //Joint_Angles left_ref_angle = kinematics.computeInverseKinematics(robot.getFootActPos(LEFT_LEG_ID), robot.getFootRefPos(LEFT_LEG_ID),robot.getLegActAngles(LEFT_LEG_ID), DH_Left_Leg);
+        //Joint_Angles right_ref_angle = kinematics.computeInverseKinematics(robot.getFootActPos(RIGHT_LEG_ID), robot.getFootRefPos(RIGHT_LEG_ID),robot.getLegActAngles(RIGHT_LEG_ID), DH_Right_Leg);
         robot.setLegRefAngles(left_ref_angle, right_ref_angle);
+
+        // Set the motor data
+        robot.setMotorData(shared_data.motor);
 
         lock.unlock(); // Unlock the shared data
     }
