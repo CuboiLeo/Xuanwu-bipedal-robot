@@ -25,6 +25,7 @@ public:
 private:
     uint8_t send_data[SEND_PACKAGE_NUM][PACKAGE_SIZE] = {};
     uint8_t receive_data[RECEIVE_PACKAGE_NUM][PACKAGE_SIZE] = {};
+    uint8_t watchdog = 0;
 };
 
 #endif
