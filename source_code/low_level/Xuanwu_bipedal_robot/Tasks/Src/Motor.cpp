@@ -4,45 +4,45 @@
 
 Motor::Motor()
 {
-  	motor_info[Left_Hip_Yaw].can_bus = 1;
+  motor_info[Left_Hip_Yaw].can_bus = 1;
 	motor_info[Left_Hip_Yaw].id = 0x01;
 	motor_info[Left_Hip_Yaw].ctrl.mode = 0; // 0: MIT, 1: Pos, 2: Vel
-	motor_info[Left_Hip_Yaw].range = 3.0f;
+	motor_info[Left_Hip_Yaw].range = 0.3f;
 
 	motor_info[Left_Hip_Roll].can_bus = 1;
 	motor_info[Left_Hip_Roll].id = 0x02;
 	motor_info[Left_Hip_Roll].ctrl.mode = 0;
-	motor_info[Left_Hip_Roll].range = 3.0f;
+	motor_info[Left_Hip_Roll].range = 0.4f;
 
 	motor_info[Left_Hip_Pitch].can_bus = 1;
 	motor_info[Left_Hip_Pitch].id = 0x03;
 	motor_info[Left_Hip_Pitch].ctrl.mode = 0;
-	motor_info[Left_Hip_Pitch].range = 3.0f;
+	motor_info[Left_Hip_Pitch].range = 0.6f;
 
 	motor_info[Left_Knee_Pitch].can_bus = 1;
 	motor_info[Left_Knee_Pitch].id = 0x04;
 	motor_info[Left_Knee_Pitch].ctrl.mode = 0;
-	motor_info[Left_Knee_Pitch].range = 3.0f;
+	motor_info[Left_Knee_Pitch].range = 1.0f;
 
 	motor_info[Right_Hip_Yaw].can_bus = 2;
 	motor_info[Right_Hip_Yaw].id = 0x05;
 	motor_info[Right_Hip_Yaw].ctrl.mode = 0;
-	motor_info[Right_Hip_Yaw].range = 3.0f;
+	motor_info[Right_Hip_Yaw].range = 0.3f;
 
 	motor_info[Right_Hip_Roll].can_bus = 2;
 	motor_info[Right_Hip_Roll].id = 0x06;
 	motor_info[Right_Hip_Roll].ctrl.mode = 0;
-	motor_info[Right_Hip_Roll].range = 3.0f;
+	motor_info[Right_Hip_Roll].range = 0.4f;
 
 	motor_info[Right_Hip_Pitch].can_bus = 2;
 	motor_info[Right_Hip_Pitch].id = 0x07;
 	motor_info[Right_Hip_Pitch].ctrl.mode = 0;
-	motor_info[Right_Hip_Pitch].range = 3.0f;
+	motor_info[Right_Hip_Pitch].range = 0.6f;
 
 	motor_info[Right_Knee_Pitch].can_bus = 2;
 	motor_info[Right_Knee_Pitch].id = 0x08;
 	motor_info[Right_Knee_Pitch].ctrl.mode = 0;
-	motor_info[Right_Knee_Pitch].range = 3.0f;
+	motor_info[Right_Knee_Pitch].range = 1.0f;
 
 	soft_start_flag = 0;
 }

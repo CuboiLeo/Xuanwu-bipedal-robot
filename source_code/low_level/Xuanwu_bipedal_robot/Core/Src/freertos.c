@@ -87,7 +87,7 @@ osThreadId_t System_MonitorHandle;
 const osThreadAttr_t System_Monitor_attributes = {
   .name = "System_Monitor",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityAboveNormal,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for Orin */
 osThreadId_t OrinHandle;
