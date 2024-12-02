@@ -56,7 +56,7 @@ M_right = [1 0 0 L1;
      0 0 0 1];
 % final transformation matrix
 T_left = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*expm(S{4}*theta4)*M_left);
-T_right = expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*expm(S{9}*theta9)*M_right;
+T_right = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*expm(S{9}*theta9)*M_right);
 
 % value substitution
 val_theta1 = 0;
@@ -89,18 +89,42 @@ val_theta = [val_theta2 val_theta3 val_theta4];
 norm_e = 1;
 epsilon = 0.005;
 iteration = 0;
-jacob = jacobian(sym_X_act,sym_theta);
-while norm_e > epsilon && iteration < 100
-    val_X_act = vpa(subs(sym_X_act,[sym_theta sub_syms],[val_theta sub_vals]),8);
-    error_X = vpa(X_ref - val_X_act,8);
-    norm_e = norm(error_X)
-    val_jacob = vpa(subs(jacob,[sym_theta sub_syms],[val_theta sub_vals]),8);
-    inv_jacob = inv(val_jacob);
-    delta_theta = val_jacob\error_X;
-    val_theta = val_theta + delta_theta';
-    val_theta = mod(eval(val_theta) + pi, 2*pi) - pi
-    iteration = iteration + 1;
-end
+jacob = simplify(jacobian(sym_X_act,sym_theta))
+% while norm_e > epsilon && iteration < 100
+%     val_X_act = vpa(subs(sym_X_act,[sym_theta sub_syms],[val_theta sub_vals]),8);
+%     error_X = vpa(X_ref - val_X_act,8);
+%     norm_e = norm(error_X);
+%     val_jacob = vpa(subs(jacob,[sym_theta sub_syms],[val_theta sub_vals]),8);
+%     inv_jacob = inv(val_jacob);
+%     delta_theta = val_jacob\error_X;
+%     val_theta = val_theta + delta_theta';
+%     val_theta = mod(eval(val_theta) + pi, 2*pi) - pi;
+%     iteration = iteration + 1;
+% end
+
+% left leg Jacobian matrix for Orin
+% jacob(1,1) = -cos(theta1)*cos(theta2)*(L5*cos(theta3 + theta4) + L4*cos(theta3))
+% jacob(1,2) = L4*cos(theta3)*sin(theta1) + L5*cos(theta3)*cos(theta4)*sin(theta1) + L4*cos(theta1)*sin(theta2)*sin(theta3) - L5*sin(theta1)*sin(theta3)*sin(theta4) + L5*cos(theta1)*cos(theta3)*sin(theta2)*sin(theta4) + L5*cos(theta1)*cos(theta4)*sin(theta2)*sin(theta3)
+% jacob(1,3) = L5*cos(theta3)*cos(theta4)*sin(theta1) - L5*sin(theta1)*sin(theta3)*sin(theta4) + L5*cos(theta1)*cos(theta3)*sin(theta2)*sin(theta4) + L5*cos(theta1)*cos(theta4)*sin(theta2)*sin(theta3)
+% jacob(2,1) = cos(theta2)*sin(theta1)*(L5*cos(theta3 + theta4) + L4*cos(theta3))
+% jacob(2,2) = L4*cos(theta1)*cos(theta3) + L5*cos(theta1)*cos(theta3)*cos(theta4) - L5*cos(theta1)*sin(theta3)*sin(theta4) - L4*sin(theta1)*sin(theta2)*sin(theta3) - L5*cos(theta3)*sin(theta1)*sin(theta2)*sin(theta4) - L5*cos(theta4)*sin(theta1)*sin(theta2)*sin(theta3)
+% jacob(2,3) = L5*cos(theta1)*cos(theta3)*cos(theta4) - L5*cos(theta1)*sin(theta3)*sin(theta4) - L5*cos(theta3)*sin(theta1)*sin(theta2)*sin(theta4) - L5*cos(theta4)*sin(theta1)*sin(theta2)*sin(theta3)
+% jacob(3,1) = sin(theta2)*(L5*cos(theta3 + theta4) + L4*cos(theta3))
+% jacob(3,2) = cos(theta2)*(L5*sin(theta3 + theta4) + L4*sin(theta3))
+% jacob(3,3) = L5*sin(theta3 + theta4)*cos(theta2)
+
+% right leg Jacobian matrix for Orin
+% jacob(1,1) = -cos(theta6)*cos(theta7)*(L5*cos(theta8 + theta9) + L4*cos(theta8))
+% jacob(1,2) = L4*cos(theta8)*sin(theta6) + L5*cos(theta8)*cos(theta9)*sin(theta6) + L4*cos(theta6)*sin(theta7)*sin(theta8) - L5*sin(theta6)*sin(theta8)*sin(theta9) + L5*cos(theta6)*cos(theta8)*sin(theta7)*sin(theta9) + L5*cos(theta6)*cos(theta9)*sin(theta7)*sin(theta8)
+% jacob(1,3) = L5*cos(theta8)*cos(theta9)*sin(theta6) - L5*sin(theta6)*sin(theta8)*sin(theta9) + L5*cos(theta6)*cos(theta8)*sin(theta7)*sin(theta9) + L5*cos(theta6)*cos(theta9)*sin(theta7)*sin(theta8)
+% jacob(2,1) = cos(theta7)*sin(theta6)*(L5*cos(theta8 + theta9) + L4*cos(theta8))
+% jacob(2,2) = L4*cos(theta6)*cos(theta8) + L5*cos(theta6)*cos(theta8)*cos(theta9) - L5*cos(theta6)*sin(theta8)*sin(theta9) - L4*sin(theta6)*sin(theta7)*sin(theta8) - L5*cos(theta8)*sin(theta6)*sin(theta7)*sin(theta9) - L5*cos(theta9)*sin(theta6)*sin(theta7)*sin(theta8)
+% jacob(2,3) = L5*cos(theta6)*cos(theta8)*cos(theta9) - L5*cos(theta6)*sin(theta8)*sin(theta9) - L5*cos(theta8)*sin(theta6)*sin(theta7)*sin(theta9) - L5*cos(theta9)*sin(theta6)*sin(theta7)*sin(theta8)
+% jacob(3,1) = sin(theta7)*(L5*cos(theta8 + theta9) + L4*cos(theta8))
+% jacob(3,2) = cos(theta7)*(L5*sin(theta8 + theta9) + L4*sin(theta8))
+% jacob(3,3) = L5*sin(theta8 + theta9)*cos(theta7)
+
+% In fact, the Jacobian of two leg are identical!
 
 %% Modified DH Method (for V1 robot)
 clear; clc; close all;

@@ -55,8 +55,16 @@ M_right = [1 0 0 L1;
      0 0 1 -(L2+L4+L5);
      0 0 0 1];
 % final transformation matrix
-T_left = expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*expm(S{4}*theta4)*M_left;
-T_right = expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*expm(S{9}*theta9)*M_right;
+T_left = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*expm(S{4}*theta4)*M_left);
+T_right = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*expm(S{9}*theta9)*M_right);
+
+x_left = T_left(1,4);
+y_left = T_left(2,4);
+z_left = T_left(3,4);
+
+x_right = T_right(1,4);
+y_right = T_right(2,4);
+z_right = T_right(3,4);
 
 % value substitution
 val_theta1 = 0;
@@ -75,8 +83,16 @@ val_L5 = 0.27;
 sub_vals = [val_theta1 val_theta2 val_theta3 val_theta4 val_theta6 val_theta7 val_theta8 val_theta9 val_L1 val_L2 val_L3 val_L4 val_L5];
 sub_syms = [theta1 theta2 theta3 theta4 theta6 theta7 theta8 theta9 L1 L2 L3 L4 L5];
 
-val_T_left = vpa(subs(T_left,sub_syms,sub_vals),2)
-val_T_right = vpa(subs(T_right,sub_syms,sub_vals),2)
+val_T_left = vpa(subs(T_left,sub_syms,sub_vals),2);
+val_T_right = vpa(subs(T_right,sub_syms,sub_vals),2);
+
+% forward kinematics equations for computation in Orin
+% x_left = L4*sin(theta1)*sin(theta3) - L1 - L4*cos(theta1)*cos(theta3)*sin(theta2) + L5*cos(theta3)*sin(theta1)*sin(theta4) + L5*cos(theta4)*sin(theta1)*sin(theta3) - L5*cos(theta1)*cos(theta3)*cos(theta4)*sin(theta2) + L5*cos(theta1)*sin(theta2)*sin(theta3)*sin(theta4)
+% y_left = L4*cos(theta1)*sin(theta3) + L5*cos(theta1)*cos(theta3)*sin(theta4) + L5*cos(theta1)*cos(theta4)*sin(theta3) + L4*cos(theta3)*sin(theta1)*sin(theta2) + L5*cos(theta3)*cos(theta4)*sin(theta1)*sin(theta2) - L5*sin(theta1)*sin(theta2)*sin(theta3)*sin(theta4)
+% z_left = L5*cos(theta2)*sin(theta3)*sin(theta4) - L4*cos(theta2)*cos(theta3) - L5*cos(theta2)*cos(theta3)*cos(theta4) - L2
+% x_right = L1 + L4*sin(theta6)*sin(theta8) - L4*cos(theta6)*cos(theta8)*sin(theta7) + L5*cos(theta8)*sin(theta6)*sin(theta9) + L5*cos(theta9)*sin(theta6)*sin(theta8) - L5*cos(theta6)*cos(theta8)*cos(theta9)*sin(theta7) + L5*cos(theta6)*sin(theta7)*sin(theta8)*sin(theta9)
+% y_right = L4*cos(theta6)*sin(theta8) + L5*cos(theta6)*cos(theta8)*sin(theta9) + L5*cos(theta6)*cos(theta9)*sin(theta8) + L4*cos(theta8)*sin(theta6)*sin(theta7) + L5*cos(theta8)*cos(theta9)*sin(theta6)*sin(theta7) - L5*sin(theta6)*sin(theta7)*sin(theta8)*sin(theta9)
+% z_right = L5*cos(theta7)*sin(theta8)*sin(theta9) - L4*cos(theta7)*cos(theta8) - L5*cos(theta7)*cos(theta8)*cos(theta9) - L2
 
 %% Modified DH Method (for V1 robot)
 clear; clc; close all;
