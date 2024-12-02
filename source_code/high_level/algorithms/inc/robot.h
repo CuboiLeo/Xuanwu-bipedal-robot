@@ -8,6 +8,7 @@
 class Robot
 {
 public:
+    Robot();
     // Setter and getter methods for robot data
     void setLegActAngles(const Joint_Angles &left, const Joint_Angles &right) { leg_angles.left.act = left; leg_angles.right.act = right; }
     void setFootActPos(const Direction_Vector &left, const Direction_Vector &right) { foot_pos.left.act = left; foot_pos.right.act = right; }
@@ -32,10 +33,10 @@ public:
     void setMotorData(Motor &motor);
 
 private:
-    Leg_Data leg_angles = {};
-    Foot_Data foot_pos = {};
-    Direction_Data CoM_pos = {};
-    Direction_Data ZMP_pos = {};
+    Leg_Data leg_angles;
+    Foot_Data foot_pos;
+    Direction_Data CoM_pos;
+    Direction_Data ZMP_pos;
 };
 
 #endif

@@ -3,62 +3,22 @@
 
 #include <stdint.h>
 #include "robot_types.h"
+#include "robot_configs.h"
 #include "user_math.h"
 
 class Kinematics
 {
 public:
-      static constexpr uint8_t MAX_ITERATIONS = 50;
-      static constexpr float UPDATE_TOLERANCE = 0.005f;
-      static constexpr float ERROR_TOLERANCE = 0.005f;
-      static constexpr float MAX_X = 0.2299f;
-      static constexpr float MAX_Y = 0.0001f;
-      static constexpr float MAX_Z = 0.6399f;
-      static constexpr float STEP_SIZE = 0.15f;
-      static constexpr float STEP_HEIGHT = 0.06f;
-      static constexpr float SINGLE_STANCE_PERIOD = 0.4f;
-      static constexpr float DOUBLE_STANCE_PERIOD = 0.3f;
+      static constexpr uint8_t MAX_ITERATIONS = 50;    // Maximum number of iterations for the inverse kinematics
+      static constexpr float ERROR_TOLERANCE = 0.005f; // Error tolerance for the inverse kinematics
 
-      Direction_Vector computeForwardKinematics(const Joint_Angles &joint_angles, const DH_Parameter *dh_param);
-      Joint_Angles computeInverseKinematics(const Direction_Vector &act_foot_pos, const Direction_Vector &ref_foot_pos, const Joint_Angles &act_angle, const DH_Parameter *dh_param);
+      Direction_Vector computeForwardKinematics(const Joint_Angles &joint_angles, const uint8_t &leg_id);
+      Joint_Angles computeInverseKinematics(const Direction_Vector &act_foot_pos, const Direction_Vector &ref_foot_pos, const Joint_Angles &act_angle, const uint8_t &leg_id);
 
 private:
-      uint8_t IK_iteration_count = 0;
-      float IK_epsilon = 1.0f;
-
-      float x_deviation = 0.0f;
-      float y_deviation = 0.0f;
-      float z_deviation = 0.0f;
-      float left_foot_phase = 0.0f;
-      float right_foot_phase = 0.0f;
-      float double_stance_phase = 0.0f;
-      bool left_foot_swing_flag = false;
-      bool right_foot_swing_flag = false;
-      bool double_stance_flag = false;
+      uint8_t IK_iteration_count = 0; // Iteration count for the inverse kinematics
+      float IK_epsilon = 1.0f;        // Error for the inverse kinematics
+      float IK_lambda = 0.001f;       // Damping factor for the inverse kinematics - SR Inverse Levenberg-Marquardt method
 };
 
-/* Forward kinematics computation, the final transformation matrix is computed in MATLAB
-T05 = T01*T12*T23*T34*T45
-
-T01 = [cos(theta1), -sin(theta1), 0,  a]
-      [sin(theta1),  cos(theta1), 0,  0]
-      [          0,            0, 1,  0]
-      [          0,            0, 0,  1]
-T12 = [            cos(theta2),            -sin(theta2),            0, dh_param[1].a]
-      [cos(dh_param[1].alpha)*sin(theta2), cos(dh_param[1].alpha)*cos(theta2), -sin(dh_param[1].alpha),  0]
-      [sin(dh_param[1].alpha)*sin(theta2), sin(dh_param[1].alpha)*cos(theta2),  cos(dh_param[1].alpha),  0]
-      [                      0,                       0,            0,  1]
-T23 = [            cos(theta3),            -sin(theta3),            0, dh_param[2].a]
-      [cos(dh_param[2].alpha)*sin(theta3), cos(dh_param[2].alpha)*cos(theta3), -sin(dh_param[2].alpha),  0]
-      [sin(dh_param[2].alpha)*sin(theta3), sin(dh_param[2].alpha)*cos(theta3),  cos(dh_param[2].alpha),  0]
-      [                      0,                       0,            0,  1]
-T34 = [cos(theta4), -sin(theta4), 0, dh_param[3].a]
-      [sin(theta4),  cos(theta4), 0,  0]
-      [          0,            0, 1,  0]
-      [          0,            0, 0,  1]
-T45 = [1, 0, 0, dh_param[4].a]
-      [0, 1, 0,  0]
-      [0, 0, 1,  0]
-      [0, 0, 0,  1]
-*/
 #endif

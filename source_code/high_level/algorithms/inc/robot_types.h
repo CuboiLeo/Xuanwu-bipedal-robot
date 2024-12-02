@@ -1,6 +1,9 @@
 #ifndef ROBOT_TYPES_H
 #define ROBOT_TYPES_H
 
+#include <stdint.h>
+#include <iostream>
+
 struct Joint_Angles { // Joint angles in radians
     float hip_yaw;
     float hip_roll;
@@ -12,13 +15,6 @@ struct Direction_Vector { // Direction vector in m, m/s, m/s^2
     float x;
     float y;
     float z;
-};
-
-struct DH_Parameter {
-        float a;      // Link length
-        float alpha;  // Link twist
-        float d;      // Link offset
-        float theta;  // Joint angle
 };
 
 struct Joint_Data {

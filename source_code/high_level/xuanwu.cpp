@@ -23,8 +23,8 @@ struct Shared_Data
 Shared_Data shared_data;                // Global shared data
 std::mutex shared_data_mutex;           // Mutex for shared data
 std::condition_variable shared_data_cv; // Condition variable for shared data
-STM32 stm32;     // STM32 object for CAN communication
-CAN can("can0"); // CAN object for communication
+STM32 stm32;                            // STM32 object for CAN communication
+CAN can("can0");                        // CAN object for communication
 
 // Thread function declarations
 void CAN_receive_thread();
@@ -48,7 +48,6 @@ void compute_thread()
 {
     Robot robot;           // Robot object for robot state
     Kinematics kinematics; // Kinematics object for kinematics computation
-    float time = 0;
     while (true)
     {
         std::unique_lock<std::mutex> lock(shared_data_mutex); // Lock the shared data
@@ -56,22 +55,19 @@ void compute_thread()
                             { return shared_data.new_data; }); // Wait for new data
         shared_data.new_data = false;
 
-        // Compute the robot's state
+        // Set the leg act angles
         Joint_Angles left_act_angle = {shared_data.motor.getActPos(Left_Hip_Yaw), shared_data.motor.getActPos(Left_Hip_Roll), shared_data.motor.getActPos(Left_Hip_Pitch), shared_data.motor.getActPos(Left_Knee_Pitch)};
         Joint_Angles right_act_angle = {shared_data.motor.getActPos(Right_Hip_Yaw), shared_data.motor.getActPos(Right_Hip_Roll), shared_data.motor.getActPos(Right_Hip_Pitch), shared_data.motor.getActPos(Right_Knee_Pitch)};
         robot.setLegActAngles(left_act_angle, right_act_angle);
 
         // Compute the forward kinematics
-        Direction_Vector left_act_pos = kinematics.computeForwardKinematics(robot.getLegActAngles(LEFT_LEG_ID), DH_Left_Leg);
-        Direction_Vector right_act_pos = kinematics.computeForwardKinematics(robot.getLegActAngles(RIGHT_LEG_ID), DH_Right_Leg);
+        Direction_Vector left_act_pos = kinematics.computeForwardKinematics(robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+        Direction_Vector right_act_pos = kinematics.computeForwardKinematics(robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
         robot.setFootActPos(left_act_pos, right_act_pos);
 
         // Compute the inverse kinematics
-        time += 0.0001;
-        Joint_Angles left_ref_angle = {1*sin(2*PI*time),2*sin(2*PI*time),3,4};
-        Joint_Angles right_ref_angle = {5,6,7,8};
-        //Joint_Angles left_ref_angle = kinematics.computeInverseKinematics(robot.getFootActPos(LEFT_LEG_ID), robot.getFootRefPos(LEFT_LEG_ID),robot.getLegActAngles(LEFT_LEG_ID), DH_Left_Leg);
-        //Joint_Angles right_ref_angle = kinematics.computeInverseKinematics(robot.getFootActPos(RIGHT_LEG_ID), robot.getFootRefPos(RIGHT_LEG_ID),robot.getLegActAngles(RIGHT_LEG_ID), DH_Right_Leg);
+        Joint_Angles left_ref_angle = kinematics.computeInverseKinematics(robot.getFootActPos(LEFT_LEG_ID), robot.getFootRefPos(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+        Joint_Angles right_ref_angle = kinematics.computeInverseKinematics(robot.getFootActPos(RIGHT_LEG_ID), robot.getFootRefPos(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
         robot.setLegRefAngles(left_ref_angle, right_ref_angle);
 
         // Set the motor data

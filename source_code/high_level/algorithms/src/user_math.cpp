@@ -15,11 +15,3 @@ float uint_to_float(int x_int, float x_min, float x_max, int bits)
 	float offset = x_min;
 	return ((float)x_int)*span/((float)((1<<bits)-1)) + offset;
 }
-
-float WRAP2_2PI(float x)
-{
-	x = std::fmod(x + PI, 2 * PI);
-	if (x < 0) 
-        x += 2 * PI;  
-	return x - PI;
-}
