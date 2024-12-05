@@ -40,20 +40,20 @@ W = {w1,w2,w3,w4,0,w6,w7,w8,w9};
 V = {v1,v2,v3,v4,0,v6,v7,v8,v9};
 for i = [1:4,6:9]
     S{i} = [0 -W{i}(3) W{i}(2) V{i}(1);
-            W{i}(3) 0 -W{i}(1) V{i}(2);
-            -W{i}(2) W{i}(1) 0 V{i}(3);
-               0         0   0    0   ];
+        W{i}(3) 0 -W{i}(1) V{i}(2);
+        -W{i}(2) W{i}(1) 0 V{i}(3);
+        0         0   0    0   ];
 end
 
 % end-effector frame configuration
 M_left = [1 0 0 -L1;
-     0 1 0 0;
-     0 0 1 -(L2+L4+L5);
-     0 0 0 1];
+    0 1 0 0;
+    0 0 1 -(L2+L4+L5);
+    0 0 0 1];
 M_right = [1 0 0 L1;
-     0 1 0 0;
-     0 0 1 -(L2+L4+L5);
-     0 0 0 1];
+    0 1 0 0;
+    0 0 1 -(L2+L4+L5);
+    0 0 0 1];
 % final transformation matrix
 T_left = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*expm(S{4}*theta4)*M_left);
 T_right = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*expm(S{9}*theta9)*M_right);
@@ -100,10 +100,10 @@ syms theta1 theta2 theta3 theta4;
 syms a1 a2 a3 a4 a5 alpha2 alpha3;
 % theta d a alpha
 dhparams = [theta1 0 a1 0;
-            theta2 0 a2 alpha2;
-            theta3 0 a3 alpha3;
-            theta4 0 a4 0;
-            0      0 a5 0];
+    theta2 0 a2 alpha2;
+    theta3 0 a3 alpha3;
+    theta4 0 a4 0;
+    0      0 a5 0];
 num_T_matrix = size(dhparams,1);
 T = sym(zeros(4, 4, num_T_matrix));
 T_05 = sym(eye(4));
@@ -122,7 +122,7 @@ z = T_05(3,4);
 yaw = atan2(T_05(2,1), T_05(1,1));
 
 sym_theta = [theta1 theta2 theta3 theta4];
-val_theta = [   -0.7351  1.5811 -0.5009 0.5051]; 
+val_theta = [   -0.7351  1.5811 -0.5009 0.5051];
 sym_sub = [a1 a2 a3 a4 a5 alpha2 alpha3];
 val_sub = [-0.135 -0.095 -0.09 -0.18 -0.38 -pi/2 -pi/2];
 
