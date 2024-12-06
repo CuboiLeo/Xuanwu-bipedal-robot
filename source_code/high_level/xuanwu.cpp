@@ -9,6 +9,7 @@
 #include "command.h"
 #include "robot.h"
 #include "kinematics.h"
+#include "dynamics.h"
 
 // Shared data between threads
 struct Shared_Data
@@ -48,12 +49,17 @@ void compute_thread()
 {
     Robot robot;           // Robot object for robot state
     Kinematics kinematics; // Kinematics object for kinematics computation
+    Dynamics dynamics;     // Dynamics object for dynamics computation
+
     while (true)
     {
         std::unique_lock<std::mutex> lock(shared_data_mutex); // Lock the shared data
         shared_data_cv.wait(lock, []
                             { return shared_data.new_data; }); // Wait for new data
         shared_data.new_data = false;
+
+        // Update the IMU data
+        shared_data.imu.processData();
 
         // Set the leg act angles
         Joint_Angles left_act_angle = {shared_data.motor.getActPos(Left_Hip_Yaw), shared_data.motor.getActPos(Left_Hip_Roll), shared_data.motor.getActPos(Left_Hip_Pitch), shared_data.motor.getActPos(Left_Knee_Pitch)};
@@ -69,6 +75,20 @@ void compute_thread()
         Joint_Angles left_ref_angle = kinematics.computeInverseKinematics(robot.getFootActPos(LEFT_LEG_ID), robot.getFootRefPos(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
         Joint_Angles right_ref_angle = kinematics.computeInverseKinematics(robot.getFootActPos(RIGHT_LEG_ID), robot.getFootRefPos(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
         robot.setLegRefAngles(left_ref_angle, right_ref_angle);
+
+        // Compute the center of mass
+        FusionMatrix rotation_matrix = shared_data.imu.getRotationMatrix();
+        Direction_Vector CoM = dynamics.computeCenterOfMass(robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), rotation_matrix);
+        robot.setCoMActPos(CoM);
+
+        // Compute the zero moment point
+        Direction_Vector accel = shared_data.imu.getAccel();
+        Direction_Vector gyro = shared_data.imu.getGyro();
+        Direction_Vector gyro_dot = shared_data.imu.getGyroDot();
+        Direction_Vector ZMP = dynamics.computeZeroMomentPoint(accel, gyro, gyro_dot, rotation_matrix);
+        robot.setZMPActPos(ZMP);
+
+        std::cout << "ZMP: " << ZMP.x << " " << ZMP.y << " " << ZMP.z << std::endl;
 
         // Set the motor data
         robot.setMotorData(shared_data.motor);

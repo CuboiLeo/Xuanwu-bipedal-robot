@@ -145,15 +145,16 @@ void STM32::decodeData(Motor &motor, IMU &imu, Command &command)
     command.setLinearVel({uint_to_float(vx_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 4), uint_to_float(vy_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 4), uint_to_float(vz_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 4)});
     command.setAngularVel({0.0f, 0.0f, uint_to_float(wz_tmp, ANGULAR_VEL_MIN, ANGULAR_VEL_MAX, 4)});
 
-    uint16_t acc_x_tmp, acc_y_tmp, acc_z_tmp, gyro_x_tmp, gyro_y_tmp, gyro_z_tmp;
-    acc_x_tmp = receive_data[5][4] << 8 | receive_data[5][5];
-    acc_y_tmp = receive_data[5][6] << 8 | receive_data[5][7];
-    acc_z_tmp = receive_data[6][0] << 8 | receive_data[6][1];
-    gyro_x_tmp = receive_data[6][2] << 8 | receive_data[6][3];
-    gyro_y_tmp = receive_data[6][4] << 8 | receive_data[6][5];
-    gyro_z_tmp = receive_data[6][6] << 8 | receive_data[6][7];
-    imu.setAccel({uint_to_float(acc_x_tmp, A_MIN, A_MAX, 16), uint_to_float(acc_y_tmp, A_MIN, A_MAX, 16), uint_to_float(acc_z_tmp, A_MIN, A_MAX, 16)});
-    imu.setGyro({uint_to_float(gyro_x_tmp, G_MIN, G_MAX, 16), uint_to_float(gyro_y_tmp, G_MIN, G_MAX, 16), uint_to_float(gyro_z_tmp, G_MIN, G_MAX, 16)});
+    float acc_x_tmp, acc_y_tmp, acc_z_tmp, gyro_x_tmp, gyro_y_tmp, gyro_z_tmp;
+    acc_x_tmp = uint_to_float(receive_data[5][4] << 8 | receive_data[5][5], A_MIN, A_MAX, 16);
+    acc_y_tmp = uint_to_float(receive_data[5][6] << 8 | receive_data[5][7], A_MIN, A_MAX, 16);
+    acc_z_tmp = uint_to_float(receive_data[6][0] << 8 | receive_data[6][1], A_MIN, A_MAX, 16);
+    gyro_x_tmp = uint_to_float(receive_data[6][2] << 8 | receive_data[6][3], G_MIN, G_MAX, 16);
+    gyro_y_tmp = uint_to_float(receive_data[6][4] << 8 | receive_data[6][5], G_MIN, G_MAX, 16);
+    gyro_z_tmp = uint_to_float(receive_data[6][6] << 8 | receive_data[6][7], G_MIN, G_MAX, 16);
+
+    imu.setAccel({acc_y_tmp, -acc_x_tmp, acc_z_tmp}); // Rotate the IMU data to match the robot frame
+    imu.setGyro({gyro_y_tmp, -gyro_x_tmp, gyro_z_tmp}); // Rotate the IMU data to match the robot frame
 }
 
 void STM32::sendData(CAN &can)
