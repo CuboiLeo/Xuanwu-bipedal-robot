@@ -73,7 +73,7 @@ C3 = [C31 C32 C33];
 C4 = [C41 C42 C43];
 C5 = [C51 C52 C53];
 val_C1 = [0 0 0.027];
-val_C2 = [0.0075 -0.06 -0.067];
+val_C2 = [-0.0075 -0.06 -0.067];
 val_C3 = [0 0.084 0];
 val_C4 = [0 0 -0.142];
 val_C5 = [0 0 -0.131];
@@ -86,35 +86,35 @@ M1 = [1 0 0 C1(1);
     0 1 0 C1(2);
     0 0 1 C1(3);
     0 0 0 1];
-M2 = [1 0 0 L1+C2(1);
+M2 = [1 0 0 -L1+C2(1);
     0 1 0 C2(2);
     0 0 1 C2(3);
     0 0 0 1];
-M3 = [1 0 0 L1+C3(1);
+M3 = [1 0 0 -L1+C3(1);
     0 1 0 -L3+C3(2);
     0 0 1 -L2+C3(3);
     0 0 0 1];
-M4 = [1 0 0 L1+C4(1);
+M4 = [1 0 0 -L1+C4(1);
     0 1 0 C4(2);
     0 0 1 -L2+C4(3);
     0 0 0 1];
-M5 = [1 0 0 L1+C5(1);
+M5 = [1 0 0 -L1+C5(1);
     0 1 0 C5(2);
     0 0 1 -(L2+L4)+C5(3);
     0 0 0 1];
-M6 = [1 0 0 -L1+C2(1);
+M6 = [1 0 0 L1-C2(1);
     0 1 0 C2(2);
     0 0 1 C2(3);
     0 0 0 1];
-M7 = [1 0 0 -L1+C3(1);
+M7 = [1 0 0 L1+C3(1);
     0 1 0 -L3+C3(2);
     0 0 1 -L2+C3(3);
     0 0 0 1];
-M8 = [1 0 0 -L1+C4(1);
+M8 = [1 0 0 L1+C4(1);
     0 1 0 C4(2);
     0 0 1 -L2+C4(3);
     0 0 0 1];
-M9 = [1 0 0 -L1+C5(1);
+M9 = [1 0 0 L1+C5(1);
     0 1 0 C5(2);
     0 0 1 -(L2+L4)+C5(3);
     0 0 0 1];
@@ -143,9 +143,9 @@ for i = 1:9
     z_total = z_total + T{i}(3,4)*m{i};
     m_total = m_total + m{i};
 end
-x_total = x_total/m_total;
-y_total = y_total/m_total;
-z_total = z_total/m_total;
+x_total = x_total/m_total
+y_total = y_total/m_total
+z_total = z_total/m_total
 
 
 % The transformation matrixes are for Orin computation
@@ -159,66 +159,67 @@ z_total = z_total/m_total;
 % 
 % T2 =
 % 
-% [ cos(theta1), sin(theta1), 0, C21*cos(theta1) - L1 + 2*L1*cos(theta1) + C22*sin(theta1)]
-% [-sin(theta1), cos(theta1), 0,      C22*cos(theta1) - C21*sin(theta1) - 2*L1*sin(theta1)]
-% [           0,           0, 1,                                                       C23]
-% [           0,           0, 0,                                                         1]
+% [ cos(theta1), sin(theta1), 0, C21*cos(theta1) - L1 + C22*sin(theta1)]
+% [-sin(theta1), cos(theta1), 0,      C22*cos(theta1) - C21*sin(theta1)]
+% [           0,           0, 1,                                    C23]
+% [           0,           0, 0,                                      1]
 % 
 % 
 % T3 =
 % 
-% [ cos(theta1)*cos(theta2), sin(theta1),  cos(theta1)*sin(theta2), C32*sin(theta1) - L1 - L3*sin(theta1) + C31*cos(theta1)*cos(theta2) + 2*L1*cos(theta1)*cos(theta2) + C33*cos(theta1)*sin(theta2)]
-% [-cos(theta2)*sin(theta1), cos(theta1), -sin(theta1)*sin(theta2),      C32*cos(theta1) - L3*cos(theta1) - C31*cos(theta2)*sin(theta1) - 2*L1*cos(theta2)*sin(theta1) - C33*sin(theta1)*sin(theta2)]
-% [            -sin(theta2),           0,              cos(theta2),                                                                        C33*cos(theta2) - L2 - C31*sin(theta2) - 2*L1*sin(theta2)]
-% [                       0,           0,                        0,                                                                                                                                1]
+% [ cos(theta1)*cos(theta2), sin(theta1),  cos(theta1)*sin(theta2), C32*sin(theta1) - L1 - L3*sin(theta1) + C31*cos(theta1)*cos(theta2) + C33*cos(theta1)*sin(theta2)]
+% [-cos(theta2)*sin(theta1), cos(theta1), -sin(theta1)*sin(theta2),      C32*cos(theta1) - L3*cos(theta1) - C31*cos(theta2)*sin(theta1) - C33*sin(theta1)*sin(theta2)]
+% [            -sin(theta2),           0,              cos(theta2),                                                            C33*cos(theta2) - L2 - C31*sin(theta2)]
+% [                       0,           0,                        0,                                                                                                 1]
 % 
 % 
 % T4 =
 % 
-% [ cos(theta1)*cos(theta2), cos(theta3)*sin(theta1) + cos(theta1)*sin(theta2)*sin(theta3),   cos(theta1)*cos(theta3)*sin(theta2) - sin(theta1)*sin(theta3), C41*cos(theta1)*cos(theta2) - L1 + 2*L1*cos(theta1)*cos(theta2) + C42*cos(theta3)*sin(theta1) - C43*sin(theta1)*sin(theta3) + C43*cos(theta1)*cos(theta3)*sin(theta2) + C42*cos(theta1)*sin(theta2)*sin(theta3)]
-% [-cos(theta2)*sin(theta1), cos(theta1)*cos(theta3) - sin(theta1)*sin(theta2)*sin(theta3), - cos(theta1)*sin(theta3) - cos(theta3)*sin(theta1)*sin(theta2),      C42*cos(theta1)*cos(theta3) - C41*cos(theta2)*sin(theta1) - C43*cos(theta1)*sin(theta3) - 2*L1*cos(theta2)*sin(theta1) - C43*cos(theta3)*sin(theta1)*sin(theta2) - C42*sin(theta1)*sin(theta2)*sin(theta3)]
-% [            -sin(theta2),                                       cos(theta2)*sin(theta3),                                         cos(theta2)*cos(theta3),                                                                                                             C43*cos(theta2)*cos(theta3) - C41*sin(theta2) - 2*L1*sin(theta2) - L2 + C42*cos(theta2)*sin(theta3)]
-% [                       0,                                                             0,                                                               0,                                                                                                                                                                                                               1]
+% [ cos(theta1)*cos(theta2), cos(theta3)*sin(theta1) + cos(theta1)*sin(theta2)*sin(theta3),   cos(theta1)*cos(theta3)*sin(theta2) - sin(theta1)*sin(theta3), C41*cos(theta1)*cos(theta2) - L1 + C42*cos(theta3)*sin(theta1) - C43*sin(theta1)*sin(theta3) + C43*cos(theta1)*cos(theta3)*sin(theta2) + C42*cos(theta1)*sin(theta2)*sin(theta3)]
+% [-cos(theta2)*sin(theta1), cos(theta1)*cos(theta3) - sin(theta1)*sin(theta2)*sin(theta3), - cos(theta1)*sin(theta3) - cos(theta3)*sin(theta1)*sin(theta2),      C42*cos(theta1)*cos(theta3) - C41*cos(theta2)*sin(theta1) - C43*cos(theta1)*sin(theta3) - C43*cos(theta3)*sin(theta1)*sin(theta2) - C42*sin(theta1)*sin(theta2)*sin(theta3)]
+% [            -sin(theta2),                                       cos(theta2)*sin(theta3),                                         cos(theta2)*cos(theta3),                                                                                                 C43*cos(theta2)*cos(theta3) - C41*sin(theta2) - L2 + C42*cos(theta2)*sin(theta3)]
+% [                       0,                                                             0,                                                               0,                                                                                                                                                                                1]
 % 
 % 
 % T5 =
 % 
-% [ cos(theta1)*cos(theta2), cos(theta4)*(cos(theta3)*sin(theta1) + cos(theta1)*sin(theta2)*sin(theta3)) - sin(theta4)*(sin(theta1)*sin(theta3) - cos(theta1)*cos(theta3)*sin(theta2)), - cos(theta4)*(sin(theta1)*sin(theta3) - cos(theta1)*cos(theta3)*sin(theta2)) - sin(theta4)*(cos(theta3)*sin(theta1) + cos(theta1)*sin(theta2)*sin(theta3)), C51*cos(theta1)*cos(theta2) - L1 + 2*L1*cos(theta1)*cos(theta2) + L4*sin(theta1)*sin(theta3) + C52*cos(theta3)*cos(theta4)*sin(theta1) - L4*cos(theta1)*cos(theta3)*sin(theta2) - C53*cos(theta3)*sin(theta1)*sin(theta4) - C53*cos(theta4)*sin(theta1)*sin(theta3) - C52*sin(theta1)*sin(theta3)*sin(theta4) + C53*cos(theta1)*cos(theta3)*cos(theta4)*sin(theta2) + C52*cos(theta1)*cos(theta3)*sin(theta2)*sin(theta4) + C52*cos(theta1)*cos(theta4)*sin(theta2)*sin(theta3) - C53*cos(theta1)*sin(theta2)*sin(theta3)*sin(theta4)]
-% [-cos(theta2)*sin(theta1), cos(theta4)*(cos(theta1)*cos(theta3) - sin(theta1)*sin(theta2)*sin(theta3)) - sin(theta4)*(cos(theta1)*sin(theta3) + cos(theta3)*sin(theta1)*sin(theta2)), - cos(theta4)*(cos(theta1)*sin(theta3) + cos(theta3)*sin(theta1)*sin(theta2)) - sin(theta4)*(cos(theta1)*cos(theta3) - sin(theta1)*sin(theta2)*sin(theta3)),      L4*cos(theta1)*sin(theta3) - 2*L1*cos(theta2)*sin(theta1) - C51*cos(theta2)*sin(theta1) + C52*cos(theta1)*cos(theta3)*cos(theta4) - C53*cos(theta1)*cos(theta3)*sin(theta4) - C53*cos(theta1)*cos(theta4)*sin(theta3) - C52*cos(theta1)*sin(theta3)*sin(theta4) + L4*cos(theta3)*sin(theta1)*sin(theta2) - C53*cos(theta3)*cos(theta4)*sin(theta1)*sin(theta2) - C52*cos(theta3)*sin(theta1)*sin(theta2)*sin(theta4) - C52*cos(theta4)*sin(theta1)*sin(theta2)*sin(theta3) + C53*sin(theta1)*sin(theta2)*sin(theta3)*sin(theta4)]
-% [            -sin(theta2),                                                                                                                          sin(theta3 + theta4)*cos(theta2),                                                                                                                            cos(theta3 + theta4)*cos(theta2),                                                                                                                                                                                                                                                                                          C53*cos(theta2)*cos(theta3)*cos(theta4) - C51*sin(theta2) - 2*L1*sin(theta2) - L4*cos(theta2)*cos(theta3) - L2 + C52*cos(theta2)*cos(theta3)*sin(theta4) + C52*cos(theta2)*cos(theta4)*sin(theta3) - C53*cos(theta2)*sin(theta3)*sin(theta4)]
-% [                       0,                                                                                                                                                         0,                                                                                                                                                           0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     1]
+% [ cos(theta1)*cos(theta2), cos(theta4)*(cos(theta3)*sin(theta1) + cos(theta1)*sin(theta2)*sin(theta3)) - sin(theta4)*(sin(theta1)*sin(theta3) - cos(theta1)*cos(theta3)*sin(theta2)), - cos(theta4)*(sin(theta1)*sin(theta3) - cos(theta1)*cos(theta3)*sin(theta2)) - sin(theta4)*(cos(theta3)*sin(theta1) + cos(theta1)*sin(theta2)*sin(theta3)), C51*cos(theta1)*cos(theta2) - L1 + L4*sin(theta1)*sin(theta3) + C52*cos(theta3)*cos(theta4)*sin(theta1) - L4*cos(theta1)*cos(theta3)*sin(theta2) - C53*cos(theta3)*sin(theta1)*sin(theta4) - C53*cos(theta4)*sin(theta1)*sin(theta3) - C52*sin(theta1)*sin(theta3)*sin(theta4) + C53*cos(theta1)*cos(theta3)*cos(theta4)*sin(theta2) + C52*cos(theta1)*cos(theta3)*sin(theta2)*sin(theta4) + C52*cos(theta1)*cos(theta4)*sin(theta2)*sin(theta3) - C53*cos(theta1)*sin(theta2)*sin(theta3)*sin(theta4)]
+% [-cos(theta2)*sin(theta1), cos(theta4)*(cos(theta1)*cos(theta3) - sin(theta1)*sin(theta2)*sin(theta3)) - sin(theta4)*(cos(theta1)*sin(theta3) + cos(theta3)*sin(theta1)*sin(theta2)), - cos(theta4)*(cos(theta1)*sin(theta3) + cos(theta3)*sin(theta1)*sin(theta2)) - sin(theta4)*(cos(theta1)*cos(theta3) - sin(theta1)*sin(theta2)*sin(theta3)),      L4*cos(theta1)*sin(theta3) - C51*cos(theta2)*sin(theta1) + C52*cos(theta1)*cos(theta3)*cos(theta4) - C53*cos(theta1)*cos(theta3)*sin(theta4) - C53*cos(theta1)*cos(theta4)*sin(theta3) - C52*cos(theta1)*sin(theta3)*sin(theta4) + L4*cos(theta3)*sin(theta1)*sin(theta2) - C53*cos(theta3)*cos(theta4)*sin(theta1)*sin(theta2) - C52*cos(theta3)*sin(theta1)*sin(theta2)*sin(theta4) - C52*cos(theta4)*sin(theta1)*sin(theta2)*sin(theta3) + C53*sin(theta1)*sin(theta2)*sin(theta3)*sin(theta4)]
+% [            -sin(theta2),                                                                                                                          sin(theta3 + theta4)*cos(theta2),                                                                                                                            cos(theta3 + theta4)*cos(theta2),                                                                                                                                                                                                                                                                              C53*cos(theta2)*cos(theta3)*cos(theta4) - C51*sin(theta2) - L4*cos(theta2)*cos(theta3) - L2 + C52*cos(theta2)*cos(theta3)*sin(theta4) + C52*cos(theta2)*cos(theta4)*sin(theta3) - C53*cos(theta2)*sin(theta3)*sin(theta4)]
+% [                       0,                                                                                                                                                         0,                                                                                                                                                           0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      1]
+% 
 % 
 % T6 =
 % 
-% [ cos(theta6), sin(theta6), 0, L1 + C21*cos(theta6) - 2*L1*cos(theta6) + C22*sin(theta6)]
-% [-sin(theta6), cos(theta6), 0,      C22*cos(theta6) - C21*sin(theta6) + 2*L1*sin(theta6)]
-% [           0,           0, 1,                                                       C23]
-% [           0,           0, 0,                                                         1]
+% [ cos(theta6), sin(theta6), 0, L1 - C21*cos(theta6) + C22*sin(theta6)]
+% [-sin(theta6), cos(theta6), 0,      C22*cos(theta6) + C21*sin(theta6)]
+% [           0,           0, 1,                                    C23]
+% [           0,           0, 0,                                      1]
 % 
 % 
 % T7 =
 % 
-% [ cos(theta6)*cos(theta7), sin(theta6),  cos(theta6)*sin(theta7), L1 + C32*sin(theta6) - L3*sin(theta6) + C31*cos(theta6)*cos(theta7) - 2*L1*cos(theta6)*cos(theta7) + C33*cos(theta6)*sin(theta7)]
-% [-cos(theta7)*sin(theta6), cos(theta6), -sin(theta6)*sin(theta7),      C32*cos(theta6) - L3*cos(theta6) - C31*cos(theta7)*sin(theta6) + 2*L1*cos(theta7)*sin(theta6) - C33*sin(theta6)*sin(theta7)]
-% [            -sin(theta7),           0,              cos(theta7),                                                                        C33*cos(theta7) - L2 - C31*sin(theta7) + 2*L1*sin(theta7)]
-% [                       0,           0,                        0,                                                                                                                                1]
+% [ cos(theta6)*cos(theta7), sin(theta6),  cos(theta6)*sin(theta7), L1 + C32*sin(theta6) - L3*sin(theta6) + C31*cos(theta6)*cos(theta7) + C33*cos(theta6)*sin(theta7)]
+% [-cos(theta7)*sin(theta6), cos(theta6), -sin(theta6)*sin(theta7),      C32*cos(theta6) - L3*cos(theta6) - C31*cos(theta7)*sin(theta6) - C33*sin(theta6)*sin(theta7)]
+% [            -sin(theta7),           0,              cos(theta7),                                                            C33*cos(theta7) - L2 - C31*sin(theta7)]
+% [                       0,           0,                        0,                                                                                                 1]
 % 
 % 
 % T8 =
 % 
-% [ cos(theta6)*cos(theta7), cos(theta8)*sin(theta6) + cos(theta6)*sin(theta7)*sin(theta8),   cos(theta6)*cos(theta8)*sin(theta7) - sin(theta6)*sin(theta8), L1 + C41*cos(theta6)*cos(theta7) - 2*L1*cos(theta6)*cos(theta7) + C42*cos(theta8)*sin(theta6) - C43*sin(theta6)*sin(theta8) + C43*cos(theta6)*cos(theta8)*sin(theta7) + C42*cos(theta6)*sin(theta7)*sin(theta8)]
-% [-cos(theta7)*sin(theta6), cos(theta6)*cos(theta8) - sin(theta6)*sin(theta7)*sin(theta8), - cos(theta6)*sin(theta8) - cos(theta8)*sin(theta6)*sin(theta7),      C42*cos(theta6)*cos(theta8) - C41*cos(theta7)*sin(theta6) - C43*cos(theta6)*sin(theta8) + 2*L1*cos(theta7)*sin(theta6) - C43*cos(theta8)*sin(theta6)*sin(theta7) - C42*sin(theta6)*sin(theta7)*sin(theta8)]
-% [            -sin(theta7),                                       cos(theta7)*sin(theta8),                                         cos(theta7)*cos(theta8),                                                                                                             2*L1*sin(theta7) - C41*sin(theta7) - L2 + C43*cos(theta7)*cos(theta8) + C42*cos(theta7)*sin(theta8)]
-% [                       0,                                                             0,                                                               0,                                                                                                                                                                                                               1]
+% [ cos(theta6)*cos(theta7), cos(theta8)*sin(theta6) + cos(theta6)*sin(theta7)*sin(theta8),   cos(theta6)*cos(theta8)*sin(theta7) - sin(theta6)*sin(theta8), L1 + C41*cos(theta6)*cos(theta7) + C42*cos(theta8)*sin(theta6) - C43*sin(theta6)*sin(theta8) + C43*cos(theta6)*cos(theta8)*sin(theta7) + C42*cos(theta6)*sin(theta7)*sin(theta8)]
+% [-cos(theta7)*sin(theta6), cos(theta6)*cos(theta8) - sin(theta6)*sin(theta7)*sin(theta8), - cos(theta6)*sin(theta8) - cos(theta8)*sin(theta6)*sin(theta7),      C42*cos(theta6)*cos(theta8) - C41*cos(theta7)*sin(theta6) - C43*cos(theta6)*sin(theta8) - C43*cos(theta8)*sin(theta6)*sin(theta7) - C42*sin(theta6)*sin(theta7)*sin(theta8)]
+% [            -sin(theta7),                                       cos(theta7)*sin(theta8),                                         cos(theta7)*cos(theta8),                                                                                                 C43*cos(theta7)*cos(theta8) - C41*sin(theta7) - L2 + C42*cos(theta7)*sin(theta8)]
+% [                       0,                                                             0,                                                               0,                                                                                                                                                                                1]
 % 
 % 
 % T9 =
 % 
-% [ cos(theta6)*cos(theta7), cos(theta9)*(cos(theta8)*sin(theta6) + cos(theta6)*sin(theta7)*sin(theta8)) - sin(theta9)*(sin(theta6)*sin(theta8) - cos(theta6)*cos(theta8)*sin(theta7)), - cos(theta9)*(sin(theta6)*sin(theta8) - cos(theta6)*cos(theta8)*sin(theta7)) - sin(theta9)*(cos(theta8)*sin(theta6) + cos(theta6)*sin(theta7)*sin(theta8)), L1 + C51*cos(theta6)*cos(theta7) - 2*L1*cos(theta6)*cos(theta7) + L4*sin(theta6)*sin(theta8) + C52*cos(theta8)*cos(theta9)*sin(theta6) - L4*cos(theta6)*cos(theta8)*sin(theta7) - C53*cos(theta8)*sin(theta6)*sin(theta9) - C53*cos(theta9)*sin(theta6)*sin(theta8) - C52*sin(theta6)*sin(theta8)*sin(theta9) + C53*cos(theta6)*cos(theta8)*cos(theta9)*sin(theta7) + C52*cos(theta6)*cos(theta8)*sin(theta7)*sin(theta9) + C52*cos(theta6)*cos(theta9)*sin(theta7)*sin(theta8) - C53*cos(theta6)*sin(theta7)*sin(theta8)*sin(theta9)]
-% [-cos(theta7)*sin(theta6), cos(theta9)*(cos(theta6)*cos(theta8) - sin(theta6)*sin(theta7)*sin(theta8)) - sin(theta9)*(cos(theta6)*sin(theta8) + cos(theta8)*sin(theta6)*sin(theta7)), - cos(theta9)*(cos(theta6)*sin(theta8) + cos(theta8)*sin(theta6)*sin(theta7)) - sin(theta9)*(cos(theta6)*cos(theta8) - sin(theta6)*sin(theta7)*sin(theta8)),      2*L1*cos(theta7)*sin(theta6) - C51*cos(theta7)*sin(theta6) + L4*cos(theta6)*sin(theta8) + C52*cos(theta6)*cos(theta8)*cos(theta9) - C53*cos(theta6)*cos(theta8)*sin(theta9) - C53*cos(theta6)*cos(theta9)*sin(theta8) - C52*cos(theta6)*sin(theta8)*sin(theta9) + L4*cos(theta8)*sin(theta6)*sin(theta7) - C53*cos(theta8)*cos(theta9)*sin(theta6)*sin(theta7) - C52*cos(theta8)*sin(theta6)*sin(theta7)*sin(theta9) - C52*cos(theta9)*sin(theta6)*sin(theta7)*sin(theta8) + C53*sin(theta6)*sin(theta7)*sin(theta8)*sin(theta9)]
-% [            -sin(theta7),                                                                                                                          sin(theta8 + theta9)*cos(theta7),                                                                                                                            cos(theta8 + theta9)*cos(theta7),                                                                                                                                                                                                                                                                                          2*L1*sin(theta7) - C51*sin(theta7) - L2 - L4*cos(theta7)*cos(theta8) + C53*cos(theta7)*cos(theta8)*cos(theta9) + C52*cos(theta7)*cos(theta8)*sin(theta9) + C52*cos(theta7)*cos(theta9)*sin(theta8) - C53*cos(theta7)*sin(theta8)*sin(theta9)]
-% [                       0,                                                                                                                                                         0,                                                                                                                                                           0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     1]
-% 
+% [ cos(theta6)*cos(theta7), cos(theta9)*(cos(theta8)*sin(theta6) + cos(theta6)*sin(theta7)*sin(theta8)) - sin(theta9)*(sin(theta6)*sin(theta8) - cos(theta6)*cos(theta8)*sin(theta7)), - cos(theta9)*(sin(theta6)*sin(theta8) - cos(theta6)*cos(theta8)*sin(theta7)) - sin(theta9)*(cos(theta8)*sin(theta6) + cos(theta6)*sin(theta7)*sin(theta8)), L1 + C51*cos(theta6)*cos(theta7) + L4*sin(theta6)*sin(theta8) + C52*cos(theta8)*cos(theta9)*sin(theta6) - L4*cos(theta6)*cos(theta8)*sin(theta7) - C53*cos(theta8)*sin(theta6)*sin(theta9) - C53*cos(theta9)*sin(theta6)*sin(theta8) - C52*sin(theta6)*sin(theta8)*sin(theta9) + C53*cos(theta6)*cos(theta8)*cos(theta9)*sin(theta7) + C52*cos(theta6)*cos(theta8)*sin(theta7)*sin(theta9) + C52*cos(theta6)*cos(theta9)*sin(theta7)*sin(theta8) - C53*cos(theta6)*sin(theta7)*sin(theta8)*sin(theta9)]
+% [-cos(theta7)*sin(theta6), cos(theta9)*(cos(theta6)*cos(theta8) - sin(theta6)*sin(theta7)*sin(theta8)) - sin(theta9)*(cos(theta6)*sin(theta8) + cos(theta8)*sin(theta6)*sin(theta7)), - cos(theta9)*(cos(theta6)*sin(theta8) + cos(theta8)*sin(theta6)*sin(theta7)) - sin(theta9)*(cos(theta6)*cos(theta8) - sin(theta6)*sin(theta7)*sin(theta8)),      L4*cos(theta6)*sin(theta8) - C51*cos(theta7)*sin(theta6) + C52*cos(theta6)*cos(theta8)*cos(theta9) - C53*cos(theta6)*cos(theta8)*sin(theta9) - C53*cos(theta6)*cos(theta9)*sin(theta8) - C52*cos(theta6)*sin(theta8)*sin(theta9) + L4*cos(theta8)*sin(theta6)*sin(theta7) - C53*cos(theta8)*cos(theta9)*sin(theta6)*sin(theta7) - C52*cos(theta8)*sin(theta6)*sin(theta7)*sin(theta9) - C52*cos(theta9)*sin(theta6)*sin(theta7)*sin(theta8) + C53*sin(theta6)*sin(theta7)*sin(theta8)*sin(theta9)]
+% [            -sin(theta7),                                                                                                                          sin(theta8 + theta9)*cos(theta7),                                                                                                                            cos(theta8 + theta9)*cos(theta7),                                                                                                                                                                                                                                                                              C53*cos(theta7)*cos(theta8)*cos(theta9) - C51*sin(theta7) - L4*cos(theta7)*cos(theta8) - L2 + C52*cos(theta7)*cos(theta8)*sin(theta9) + C52*cos(theta7)*cos(theta9)*sin(theta8) - C53*cos(theta7)*sin(theta8)*sin(theta9)]
+% [                       0,                                                                                                                                                         0,                                                                                                                                                           0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      1]
+
 %% for V1 robot
 clear; clc; close all;
 

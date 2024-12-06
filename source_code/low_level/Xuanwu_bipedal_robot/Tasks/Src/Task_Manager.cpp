@@ -137,16 +137,16 @@ void System_Monitor_Task(void *argument)
     const TickType_t TimeIncrement = pdMS_TO_TICKS(5000);
 
     robot.initBatteryADC();
-    buzzer.Init();
+//    buzzer.Init();
 
     for (;;)
     {
-        float battery_voltage = robot.getBatteryVoltage();
-        //  Low battery voltage warning
-        if (battery_voltage < 22.2f)
-        {
-					buzzer.Beep();
-        }
+//        float battery_voltage = robot.getBatteryVoltage();
+//        //  Low battery voltage warning
+//        if (battery_voltage < 22.2f)
+//        {
+//					buzzer.Beep();
+//        }
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
