@@ -85,7 +85,7 @@ void compute_thread()
         Direction_Vector accel = shared_data.imu.getAccel();
         Direction_Vector gyro = shared_data.imu.getGyro();
         Direction_Vector gyro_dot = shared_data.imu.getGyroDot();
-        Direction_Vector ZMP = dynamics.computeZeroMomentPoint(accel, gyro, gyro_dot, rotation_matrix);
+        Direction_Vector ZMP = dynamics.computeZeroMomentPoint(accel, gyro, gyro_dot);
         robot.setZMPActPos(ZMP);
 
         std::cout << "ZMP: " << ZMP.x << " " << ZMP.y << " " << ZMP.z << std::endl;
