@@ -48,11 +48,11 @@ end
 % substitute values
 val_theta1 = 0;
 val_theta2 = 0;
-val_theta3 = 0;
+val_theta3 = pi/2;
 val_theta4 = 0;
 val_theta6 = 0;
 val_theta7 = 0;
-val_theta8 = 0;
+val_theta8 = pi/2;
 val_theta9 = 0;
 val_L1 = 0.135;
 val_L2 = 0.12;
@@ -118,16 +118,16 @@ M9 = [1 0 0 L1+C5(1);
     0 1 0 C5(2);
     0 0 1 -(L2+L4)+C5(3);
     0 0 0 1];
-T1 = M1
-T2 = simplify(expm(S{1}*theta1)*M2)
-T3 = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*M3)
-T4 = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*M4)
-T5 = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*expm(S{4}*theta4)*M5)
+T1 = M1;
+T2 = simplify(expm(S{1}*theta1)*M2);
+T3 = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*M3);
+T4 = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*M4);
+T5 = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*expm(S{4}*theta4)*M5);
 
-T6 = simplify(expm(S{6}*theta6)*M6)
-T7 = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*M7)
-T8 = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*M8)
-T9 = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*expm(S{9}*theta9)*M9)
+T6 = simplify(expm(S{6}*theta6)*M6);
+T7 = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*M7);
+T8 = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*M8);
+T9 = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*expm(S{9}*theta9)*M9);
 
 T = {T1,T2,T3,T4,T5,T6,T7,T8,T9};
 m = {m1,m2,m3,m4,m5,m2,m3,m4,m5};

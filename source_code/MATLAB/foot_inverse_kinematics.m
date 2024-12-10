@@ -90,17 +90,17 @@ norm_e = 1;
 epsilon = 0.005;
 iteration = 0;
 jacob = simplify(jacobian(sym_X_act,sym_theta))
-% while norm_e > epsilon && iteration < 100
-%     val_X_act = vpa(subs(sym_X_act,[sym_theta sub_syms],[val_theta sub_vals]),8);
-%     error_X = vpa(X_ref - val_X_act,8);
-%     norm_e = norm(error_X);
-%     val_jacob = vpa(subs(jacob,[sym_theta sub_syms],[val_theta sub_vals]),8);
-%     inv_jacob = inv(val_jacob);
-%     delta_theta = val_jacob\error_X;
-%     val_theta = val_theta + delta_theta';
-%     val_theta = mod(eval(val_theta) + pi, 2*pi) - pi;
-%     iteration = iteration + 1;
-% end
+while norm_e > epsilon && iteration < 100
+    val_X_act = vpa(subs(sym_X_act,[sym_theta sub_syms],[val_theta sub_vals]),8);
+    error_X = vpa(X_ref - val_X_act,8);
+    norm_e = norm(error_X);
+    val_jacob = vpa(subs(jacob,[sym_theta sub_syms],[val_theta sub_vals]),8);
+    inv_jacob = inv(val_jacob);
+    delta_theta = val_jacob\error_X;
+    val_theta = val_theta + delta_theta';
+    val_theta = mod(eval(val_theta) + pi, 2*pi) - pi;
+    iteration = iteration + 1;
+end
 
 % left leg Jacobian matrix for Orin
 % jacob(1,1) = -cos(theta1)*cos(theta2)*(L5*cos(theta3 + theta4) + L4*cos(theta3))

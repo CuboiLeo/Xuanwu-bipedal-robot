@@ -45,7 +45,7 @@ for i = [1:4,6:9]
         0         0   0    0   ];
 end
 
-% end-effector frame configuration
+% end-effector frame configuration 
 M_left = [1 0 0 -L1;
     0 1 0 0;
     0 0 1 -(L2+L4+L5);
