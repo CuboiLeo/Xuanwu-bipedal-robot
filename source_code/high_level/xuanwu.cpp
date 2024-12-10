@@ -67,13 +67,16 @@ void compute_thread()
         robot.setLegActAngles(left_act_angle, right_act_angle);
 
         // Compute the forward kinematics
-        Direction_Vector left_act_pos = kinematics.computeForwardKinematics(robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
-        Direction_Vector right_act_pos = kinematics.computeForwardKinematics(robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
+        Direction_Vector left_act_pos = kinematics.computeFootFK(robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+        Direction_Vector right_act_pos = kinematics.computeFootFK(robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
         robot.setFootActPos(left_act_pos, right_act_pos);
 
+        // Set the foot reference position
+        robot.setFootRefPos({-L1+0.001f, 0.001f, -(L2+L4+L5)+0.05f}, {L1-0.001f, 0.001f, -(L2+L4+L5)+0.05f});
+
         // Compute the inverse kinematics
-        Joint_Angles left_ref_angle = kinematics.computeInverseKinematics(robot.getFootActPos(LEFT_LEG_ID), robot.getFootRefPos(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
-        Joint_Angles right_ref_angle = kinematics.computeInverseKinematics(robot.getFootActPos(RIGHT_LEG_ID), robot.getFootRefPos(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
+        Joint_Angles left_ref_angle = kinematics.computeFootIK(robot.getFootActPos(LEFT_LEG_ID), robot.getFootRefPos(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+        Joint_Angles right_ref_angle = kinematics.computeFootIK(robot.getFootActPos(RIGHT_LEG_ID), robot.getFootRefPos(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
         robot.setLegRefAngles(left_ref_angle, right_ref_angle);
 
         // Compute the center of mass
@@ -88,7 +91,7 @@ void compute_thread()
         Direction_Vector ZMP = dynamics.computeZeroMomentPoint(accel, gyro, gyro_dot);
         robot.setZMPActPos(ZMP);
 
-        std::cout << "ZMP: " << ZMP.x << " " << ZMP.y << " " << ZMP.z << std::endl;
+        std::cout << "Left Leg Reference Angles: " << left_ref_angle.hip_yaw << " " << left_ref_angle.hip_roll << " " << left_ref_angle.hip_pitch << " " << left_ref_angle.knee_pitch << std::endl;
 
         // Set the motor data
         robot.setMotorData(shared_data.motor);

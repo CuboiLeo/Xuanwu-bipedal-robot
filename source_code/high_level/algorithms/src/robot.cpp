@@ -8,8 +8,8 @@ Robot::Robot()
     leg_angles.right.ref = {0.0f, 0.0f, 0.0f, 0.0f};
     foot_pos.left.act = {0.0f, 0.0f, 0.0f};
     foot_pos.right.act = {0.0f, 0.0f, 0.0f};
-    foot_pos.left.ref = {-L1+0.001f, 0.001f, -(L2+L4+L5)+0.05f};
-    foot_pos.right.ref = {L1-0.001f, 0.001f, -(L2+L4+L5)+0.05f};
+    foot_pos.left.ref = {0.0f, 0.0f, 0.0f};
+    foot_pos.right.ref = {0.0f, 0.0f, 0.0f};
     CoM_pos.act = {0.0f, 0.0f, 0.0f};
     CoM_pos.ref = {0.0f, 0.0f, 0.0f};
     ZMP_pos.act = {0.0f, 0.0f, 0.0f};

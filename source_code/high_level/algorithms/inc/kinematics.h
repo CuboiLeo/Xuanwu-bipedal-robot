@@ -12,8 +12,10 @@ public:
       static constexpr uint8_t MAX_ITERATIONS = 50;    // Maximum number of iterations for the inverse kinematics
       static constexpr float ERROR_TOLERANCE = 0.005f; // Error tolerance for the inverse kinematics
 
-      Direction_Vector computeForwardKinematics(const Joint_Angles &joint_angles, const uint8_t &leg_id);
-      Joint_Angles computeInverseKinematics(const Direction_Vector &act_foot_pos, const Direction_Vector &ref_foot_pos, const Joint_Angles &act_angle, const uint8_t &leg_id);
+      Direction_Vector computeFootFK(const Joint_Angles &joint_angles, const uint8_t &leg_id);
+      Joint_Angles computeFootIK(const Direction_Vector &act_foot_pos, const Direction_Vector &ref_foot_pos, const Joint_Angles &act_joint_angles, const uint8_t &leg_id);
+      Direction_Vector computeCenterFK(const Joint_Angles &joint_angles, const uint8_t &leg_id);
+      Joint_Angles computeCenterIK(const Direction_Vector &act_center_pos, const Direction_Vector &ref_center_pos, const Joint_Angles &act_joint_angles, const uint8_t &leg_id);
 
 private:
       uint8_t IK_iteration_count = 0; // Iteration count for the inverse kinematics

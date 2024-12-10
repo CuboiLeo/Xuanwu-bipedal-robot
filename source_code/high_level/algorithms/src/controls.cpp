@@ -1,4 +1,4 @@
-#include "inc/controls.h"
+#include "controls.h"
 
 Controls::Controls()
 {
