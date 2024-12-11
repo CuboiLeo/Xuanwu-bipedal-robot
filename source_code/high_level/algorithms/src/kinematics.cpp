@@ -32,16 +32,17 @@ Joint_Angles Kinematics::computeFootIK(const Direction_Vector &act_foot_pos, con
       Eigen::Vector3f v_ref_foot_pos(ref_foot_pos.x, ref_foot_pos.y, ref_foot_pos.z);
       Eigen::Vector3f v_act_foot_pos(act_foot_pos.x, act_foot_pos.y, act_foot_pos.z);
       Eigen::Vector3f v_foot_pos_error = v_ref_foot_pos - v_act_foot_pos;
-      IK_epsilon = v_foot_pos_error.norm(); // Calculation will not be performed if the error is already less than the tolerance
+      float IK_epsilon = v_foot_pos_error.norm(); // Calculation will not be performed if the error is already less than the tolerance
 
       // Initialize the Jacobian matrix
       Eigen::Matrix3f m_Jacobian;
 
       // Initialize the joint angles
       Joint_Angles computed_joint_angles = act_joint_angles; // Initial condition for the joint angles is the current joint angles
+      computed_joint_angles.hip_pitch = 0.3f;                // Initial condition for the hip pitch so that knee always bends in the forward direction
       Eigen::Vector3f v_delta_joint_angles;
 
-      IK_iteration_count = 0; // Reset the iteration count
+      uint8_t IK_iteration_count = 0; // Reset the iteration count
 
       // Newton-Raphson method for inverse kinematics
       while (IK_epsilon > ERROR_TOLERANCE && IK_iteration_count < MAX_ITERATIONS)
@@ -58,7 +59,7 @@ Joint_Angles Kinematics::computeFootIK(const Direction_Vector &act_foot_pos, con
             m_Jacobian(2, 2) = L5 * sinf(computed_joint_angles.hip_pitch + computed_joint_angles.knee_pitch) * cosf(computed_joint_angles.hip_roll);
 
             // SR Inverse usinfg Levenberg-Marquardt method solved using ldlt decomposition as in this Ax = b, A is symmetric and positive definite
-            v_delta_joint_angles = (m_Jacobian.transpose() * m_Jacobian + IK_lambda * Eigen::Matrix3f::Identity()).ldlt().solve(m_Jacobian.transpose() * v_foot_pos_error);
+            v_delta_joint_angles = (m_Jacobian.transpose() * m_Jacobian + IK_LAMBDA * Eigen::Matrix3f::Identity()).ldlt().solve(m_Jacobian.transpose() * v_foot_pos_error);
 
             // Update the joint angles
             computed_joint_angles.hip_roll += v_delta_joint_angles(0);
@@ -110,16 +111,17 @@ Joint_Angles Kinematics::computeCenterIK(const Direction_Vector &act_center_pos,
       Eigen::Vector3f v_ref_center_pos(ref_center_pos.x, ref_center_pos.y, ref_center_pos.z);
       Eigen::Vector3f v_act_center_pos(act_center_pos.x, act_center_pos.y, act_center_pos.z);
       Eigen::Vector3f v_center_pos_error = v_ref_center_pos - v_act_center_pos;
-      IK_epsilon = v_center_pos_error.norm(); // Calculation will not be performed if the error is already less than the tolerance
+      float IK_epsilon = v_center_pos_error.norm(); // Calculation will not be performed if the error is already less than the tolerance
 
       // Initialize the Jacobian matrix
       Eigen::Matrix3f m_Jacobian;
 
       // Initialize the joint angles
       Joint_Angles computed_joint_angles = act_joint_angles; // Initial condition for the joint angles is the current joint angles
+      computed_joint_angles.hip_pitch = 0.3f;                // Initial condition for the hip pitch so that knee always bends in the forward direction
       Eigen::Vector3f v_delta_joint_angles;
 
-      IK_iteration_count = 0; // Reset the iteration count
+      uint8_t IK_iteration_count = 0; // Reset the iteration count
 
       // Newton-Raphson method for inverse kinematics
       while (IK_epsilon > ERROR_TOLERANCE && IK_iteration_count < MAX_ITERATIONS)
@@ -151,7 +153,7 @@ Joint_Angles Kinematics::computeCenterIK(const Direction_Vector &act_center_pos,
                   break;
             }
             // SR Inverse usinfg Levenberg-Marquardt method solved using ldlt decomposition as in this Ax = b, A is symmetric and positive definite
-            v_delta_joint_angles = (m_Jacobian.transpose() * m_Jacobian + IK_lambda * Eigen::Matrix3f::Identity()).ldlt().solve(m_Jacobian.transpose() * v_center_pos_error);
+            v_delta_joint_angles = (m_Jacobian.transpose() * m_Jacobian + IK_LAMBDA * Eigen::Matrix3f::Identity()).ldlt().solve(m_Jacobian.transpose() * v_center_pos_error);
 
             // Update the joint angles
             computed_joint_angles.hip_roll += v_delta_joint_angles(0);

@@ -45,7 +45,7 @@ public:
     void setActTor(const uint8_t motor_id, const float tor) { motor[motor_id].act.tor = tor; };
 
 private:
-    Motor_Data motor[num_motor];
+    Motor_Data motor[num_motor] = {};
 };
 
 #endif

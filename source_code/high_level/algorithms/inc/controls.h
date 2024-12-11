@@ -2,16 +2,18 @@
 #define CONTROLS_H
 
 #include "robot_types.h"
+#include "Eigen/Dense"
+#include "Fusion.h"
 
 class Controls
 {
 public:
-    Controls();
-    Direction_Vector_Two controlCoMPos(const Direction_Vector &ref_com_pos, const Direction_Vector &act_com_pos, const Direction_Vector &ref_left_foot_pos, const Direction_Vector &ref_right_foot_pos);
+    Direction_Vector controlCoMPos(const Direction_Vector &ref_CoM_pos, const Direction_Vector &act_CoM_pos, const Joint_Angles &act_left_angles, const Joint_Angles &act_right_angles, const FusionMatrix &rotation_matrix);
 
 private:
-    static constexpr float CoM_adjust_threshold = 0.002f;
-    static constexpr float CoM_step_size = 0.00004f;
+    static constexpr uint8_t MAX_ITERATIONS = 100;
+    static constexpr float ERROR_TOLERANCE = 0.005f;
+    static constexpr float ERROR_GAIN = 0.3f;
 };
 
 #endif

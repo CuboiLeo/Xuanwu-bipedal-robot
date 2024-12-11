@@ -10,6 +10,7 @@ set(SOURCES
     algorithms/src/user_math.cpp
     algorithms/src/kinematics.cpp
     algorithms/src/dynamics.cpp
+    algorithms/src/controls.cpp
     algorithms/src/robot.cpp
 )
 

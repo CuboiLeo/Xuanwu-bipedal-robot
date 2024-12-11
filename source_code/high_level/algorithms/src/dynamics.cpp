@@ -69,8 +69,8 @@ Direction_Vector Dynamics::computeZeroMomentPoint(const Direction_Vector &accel,
     CoM_accel_world_frame = {v_CoM_accel_world_frame(0), v_CoM_accel_world_frame(1), v_CoM_accel_world_frame(2)};
 
     // Compute the zero moment point of the robot
-    ZMP_world_frame.x = CoM_world_frame.x - ((ROBOT_HEIGHT + CoM_world_frame.z) / GRAVITY) * CoM_accel_world_frame.x;
-    ZMP_world_frame.y = CoM_world_frame.y - ((ROBOT_HEIGHT + CoM_world_frame.z) / GRAVITY) * CoM_accel_world_frame.y;
+    ZMP_world_frame.x = CoM_world_frame.x - (COM_HEIGHT / GRAVITY) * CoM_accel_world_frame.x;
+    ZMP_world_frame.y = CoM_world_frame.y - (COM_HEIGHT / GRAVITY) * CoM_accel_world_frame.y;
     ZMP_world_frame.z = 0.0f;
 
     return ZMP_world_frame;

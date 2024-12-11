@@ -24,8 +24,8 @@
 // Define the range of the data for IMU
 #define A_MIN (-3*GRAVITY)
 #define A_MAX (3*GRAVITY)
-#define G_MIN (-2000.0f)
-#define G_MAX (2000.0f)
+#define G_MIN (-2000.0f*DEG2RAD)
+#define G_MAX (2000.0f*DEG2RAD)
 
 // Define the range of the data for command
 #define LINEAR_VEL_MIN (-1.0f)

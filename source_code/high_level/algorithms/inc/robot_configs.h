@@ -31,6 +31,7 @@ static constexpr Direction_Vector C2 = {-0.0075f, -0.06f, -0.067f}; // Hip yaw m
 static constexpr Direction_Vector C3 = {0.0f, 0.084f, 0.0f}; // Hip roll motor frame to link 3 CoM
 static constexpr Direction_Vector C4 = {0.0f, 0.0f, -0.142f}; // Hip pitch motor frame to link 4 CoM
 static constexpr Direction_Vector C5 = {0.0f, 0.0f, -0.131f}; // Knee pitch motor frame to link 5 CoM
+static constexpr float COM_HEIGHT = 0.44f; // Height of the CoM from the ground
 
 
 
