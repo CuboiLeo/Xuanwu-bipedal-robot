@@ -5,7 +5,7 @@
 #include "BMI088driver.h"
 #include "BMI088Middleware.h"
 
-static constexpr float IMU_TASK_PERIOD = 0.002f; // IMU task period in seconds
+static constexpr float IMU_TASK_PERIOD = 0.001f; // IMU task period in seconds
 
 class IMU
 {
