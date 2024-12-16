@@ -11,6 +11,11 @@ struct Joint_Angles { // Joint angles in radians
     float knee_pitch;
 };
 
+struct Joint_Angles_Two_Legs { // Joint angles for both legs
+    Joint_Angles left;
+    Joint_Angles right;
+};
+
 struct Direction_Vector { // Direction vector in m, m/s, m/s^2
     float x;
     float y;
