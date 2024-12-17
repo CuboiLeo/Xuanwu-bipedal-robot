@@ -4,16 +4,16 @@
 #include "robot_types.h"
 #include "Eigen/Dense"
 #include "Fusion.h"
+#include "robot_configs.h"
 
 class Controls
 {
 public:
-    Direction_Vector controlCoMPos(const Direction_Vector &ref_CoM_pos, const Direction_Vector &act_CoM_pos, const Joint_Angles &act_left_angles, const Joint_Angles &act_right_angles, const FusionMatrix &rotation_matrix);
+    Joint_Angles_Two_Legs controlZMPPos(const Direction_Vector &act_ZMP_pos, const Direction_Vector &ref_ZMP_pos, const Joint_Angles_Two_Legs &act_joint_angles, const FusionMatrix &rotation_matrix);
 
 private:
-    static constexpr uint8_t MAX_ITERATIONS = 100;
-    static constexpr float ERROR_TOLERANCE = 0.005f;
-    static constexpr float ERROR_GAIN = 0.3f;
+    inline static constexpr float ZMP_ERROR_GAIN = 0.05f; // Gain for the ZMP error
+    inline static constexpr float LAMBDA = 0.001f;       // Damping factor for the inverse kinematics - SR Inverse Levenberg-Marquardt method
 };
 
 #endif

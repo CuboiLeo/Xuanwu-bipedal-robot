@@ -80,14 +80,14 @@ void compute_thread()
         Direction_Vector ZMP_pos = dynamics.computeZMPPos(robot.getCoMActPos(), robot.getCoMActAccel());
         robot.setZMPActPos(ZMP_pos);
 
-        std::cout << "CoM: " << CoM_pos.x << " " << CoM_pos.y << " " << CoM_pos.z << std::endl;
+        std::cout << "ZMP Position: " << ZMP_pos.x << " " << ZMP_pos.y << std::endl;
 
         robot.setCoMRefPos({0.0f, 0.0f, -0.13f});
         Joint_Angles_Two_Legs ref_joint_angles = kinematics.computeCoMIK(robot.getCoMActPos(), robot.getCoMRefPos(), {robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
         robot.setLegRefAngles(ref_joint_angles.left, ref_joint_angles.right);
 
-        // std::cout << "Left Angles: " << ref_joint_angles.left.hip_yaw << " " << ref_joint_angles.left.hip_roll << " " << ref_joint_angles.left.hip_pitch << " " << ref_joint_angles.left.knee_pitch << std::endl;
-        // std::cout << "Right Angles: " << ref_joint_angles.right.hip_yaw << " " << ref_joint_angles.right.hip_roll << " " << ref_joint_angles.right.hip_pitch << " " << ref_joint_angles.right.knee_pitch << std::endl;
+        std::cout << "Left Angles: " << ref_joint_angles.left.hip_yaw << " " << ref_joint_angles.left.hip_roll << " " << ref_joint_angles.left.hip_pitch << " " << ref_joint_angles.left.knee_pitch << std::endl;
+        std::cout << "Right Angles: " << ref_joint_angles.right.hip_yaw << " " << ref_joint_angles.right.hip_roll << " " << ref_joint_angles.right.hip_pitch << " " << ref_joint_angles.right.knee_pitch << std::endl;
 
         // // Compute the forward kinematics
         // Direction_Vector left_act_pos = kinematics.computeFootFK(robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
