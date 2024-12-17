@@ -73,8 +73,9 @@ uint8_t Motor::returnZeroPos(void)
 		for(int i = 0; i < NUM_MOTORS; i++)
 		{
 			motor_info[i].ctrl.pos_set = 0;
-			motor_info[i].ctrl.kp_set = 15;
+			motor_info[i].ctrl.kp_set = 50;
 			motor_info[i].ctrl.kd_set = 2;
+			motor_info[i].ctrl.tor_set = motor_info[i].ctrl.pos_set;
 		}
 	}
 	
