@@ -24,25 +24,35 @@ Motor::Motor()
 	motor_info[Left_Knee_Pitch].ctrl.mode = 0;
 	motor_info[Left_Knee_Pitch].range = 1.5f;
 
+	motor_info[Left_Foot_Pitch].can_bus = 1;
+	motor_info[Left_Foot_Pitch].id = 0x05;
+	motor_info[Left_Foot_Pitch].ctrl.mode = 0;
+	motor_info[Left_Foot_Pitch].range = 1.2f;
+
 	motor_info[Right_Hip_Yaw].can_bus = 2;
-	motor_info[Right_Hip_Yaw].id = 0x05;
+	motor_info[Right_Hip_Yaw].id = 0x21;
 	motor_info[Right_Hip_Yaw].ctrl.mode = 0;
 	motor_info[Right_Hip_Yaw].range = 0.3f;
 
 	motor_info[Right_Hip_Roll].can_bus = 2;
-	motor_info[Right_Hip_Roll].id = 0x06;
+	motor_info[Right_Hip_Roll].id = 0x22;
 	motor_info[Right_Hip_Roll].ctrl.mode = 0;
 	motor_info[Right_Hip_Roll].range = 0.4f;
 
 	motor_info[Right_Hip_Pitch].can_bus = 2;
-	motor_info[Right_Hip_Pitch].id = 0x07;
+	motor_info[Right_Hip_Pitch].id = 0x23;
 	motor_info[Right_Hip_Pitch].ctrl.mode = 0;
 	motor_info[Right_Hip_Pitch].range = 1.5f;
 
 	motor_info[Right_Knee_Pitch].can_bus = 2;
-	motor_info[Right_Knee_Pitch].id = 0x08;
+	motor_info[Right_Knee_Pitch].id = 0x24;
 	motor_info[Right_Knee_Pitch].ctrl.mode = 0;
 	motor_info[Right_Knee_Pitch].range = 1.5f;
+
+	motor_info[Right_Foot_Pitch].can_bus = 2;
+	motor_info[Right_Foot_Pitch].id = 0x25;
+	motor_info[Right_Foot_Pitch].ctrl.mode = 0;
+	motor_info[Right_Foot_Pitch].range = 1.2f;
 
 	soft_start_flag = 0;
 }

@@ -184,6 +184,9 @@ void fdcan1_rx_callback(void)
     case 0x14:
         dm4310_fbdata(&motor.motor_info[Left_Knee_Pitch], rx_data);
         break;
+    case 0x15:
+        dm4310_fbdata(&motor.motor_info[Left_Foot_Pitch], rx_data);
+        break;
     }
 }
 
@@ -194,17 +197,20 @@ void fdcan2_rx_callback(void)
     fdcanx_receive(&hfdcan2, &rec_id, rx_data);
     switch (rec_id)
     {
-    case 0x15:
+    case 0x31:
         dm4310_fbdata(&motor.motor_info[Right_Hip_Yaw], rx_data);
         break;
-    case 0x16:
+    case 0x32:
         dm4310_fbdata(&motor.motor_info[Right_Hip_Roll], rx_data);
         break;
-    case 0x17:
+    case 0x33:
         dm4310_fbdata(&motor.motor_info[Right_Hip_Pitch], rx_data);
         break;
-    case 0x18:
+    case 0x34:
         dm4310_fbdata(&motor.motor_info[Right_Knee_Pitch], rx_data);
+        break;
+    case 0x35:
+        dm4310_fbdata(&motor.motor_info[Right_Foot_Pitch], rx_data);
         break;
     }
 }

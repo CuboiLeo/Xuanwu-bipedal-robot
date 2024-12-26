@@ -11,7 +11,7 @@
 class Motor
 {
 public:
-    static constexpr uint8_t NUM_MOTORS = 8;
+    static constexpr uint8_t NUM_MOTORS = 10;
     static constexpr uint8_t ALL_JOINTS_ZEROED_FLAG = 1;
 
     Motor();
