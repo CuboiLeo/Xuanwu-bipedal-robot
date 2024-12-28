@@ -10,8 +10,8 @@
 #include "Robot.h"
 
 #define PACKAGE_SIZE (8)
-#define SEND_PACKAGE_NUM (7)
-#define RECEIVE_PACKAGE_NUM (6)
+#define SEND_PACKAGE_NUM (9)
+#define RECEIVE_PACKAGE_NUM (7)
 #define CAN_SEND_START_ID (0x01)
 #define CAN_RECEIVE_START_ID (0x21)
 
