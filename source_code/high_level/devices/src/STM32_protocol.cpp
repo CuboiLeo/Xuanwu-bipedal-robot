@@ -6,7 +6,7 @@ void STM32::encodeData(Motor &motor)
     pos_tmp = float_to_uint(motor.getRefPos(Left_Hip_Yaw), P_MIN, P_MAX, 16);
     vel_tmp = float_to_uint(motor.getRefVel(Left_Hip_Yaw), V_MIN, V_MAX, 12);
     tor_tmp = float_to_uint(motor.getRefTor(Left_Hip_Yaw), T_MIN, T_MAX, 12);
-    send_data[0][0] = 0x01;
+    send_data[0][0] = 0x01; // reserved bit 1
     send_data[0][1] = (pos_tmp >> 8);
     send_data[0][2] = pos_tmp;
     send_data[0][3] = (vel_tmp >> 4);
@@ -40,42 +40,61 @@ void STM32::encodeData(Motor &motor)
     send_data[2][3] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[2][4] = tor_tmp;
 
-    pos_tmp = float_to_uint(motor.getRefPos(Right_Hip_Yaw), P_MIN, P_MAX, 16);
-    vel_tmp = float_to_uint(motor.getRefVel(Right_Hip_Yaw), V_MIN, V_MAX, 12);
-    tor_tmp = float_to_uint(motor.getRefTor(Right_Hip_Yaw), T_MIN, T_MAX, 12);
+    pos_tmp = float_to_uint(motor.getRefPos(Left_Foot_Pitch), P_MIN, P_MAX, 16);
+    vel_tmp = float_to_uint(motor.getRefVel(Left_Foot_Pitch), V_MIN, V_MAX, 12);
+    tor_tmp = float_to_uint(motor.getRefTor(Left_Foot_Pitch), T_MIN, T_MAX, 12);
     send_data[2][5] = (vel_tmp >> 4);
     send_data[2][6] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[2][7] = tor_tmp;
-    send_data[3][0] = 0x02;
+    send_data[3][0] = 0x02; // reserved bit 2
     send_data[3][1] = (pos_tmp >> 8);
     send_data[3][2] = pos_tmp;
 
-    pos_tmp = float_to_uint(motor.getRefPos(Right_Hip_Roll), P_MIN, P_MAX, 16);
-    vel_tmp = float_to_uint(motor.getRefVel(Right_Hip_Roll), V_MIN, V_MAX, 12);
-    tor_tmp = float_to_uint(motor.getRefTor(Right_Hip_Roll), T_MIN, T_MAX, 12);
+    pos_tmp = float_to_uint(motor.getRefPos(Right_Hip_Yaw), P_MIN, P_MAX, 16);
+    vel_tmp = float_to_uint(motor.getRefVel(Right_Hip_Yaw), V_MIN, V_MAX, 12);
+    tor_tmp = float_to_uint(motor.getRefTor(Right_Hip_Yaw), T_MIN, T_MAX, 12);
     send_data[3][3] = (pos_tmp >> 8);
     send_data[3][4] = pos_tmp;
     send_data[3][5] = (vel_tmp >> 4);
     send_data[3][6] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[3][7] = tor_tmp;
 
-    pos_tmp = float_to_uint(motor.getRefPos(Right_Hip_Pitch), P_MIN, P_MAX, 16);
-    vel_tmp = float_to_uint(motor.getRefVel(Right_Hip_Pitch), V_MIN, V_MAX, 12);
-    tor_tmp = float_to_uint(motor.getRefTor(Right_Hip_Pitch), T_MIN, T_MAX, 12);
+    pos_tmp = float_to_uint(motor.getRefPos(Right_Hip_Roll), P_MIN, P_MAX, 16);
+    vel_tmp = float_to_uint(motor.getRefVel(Right_Hip_Roll), V_MIN, V_MAX, 12);
+    tor_tmp = float_to_uint(motor.getRefTor(Right_Hip_Roll), T_MIN, T_MAX, 12);
     send_data[4][0] = (pos_tmp >> 8);
     send_data[4][1] = pos_tmp;
     send_data[4][2] = (vel_tmp >> 4);
     send_data[4][3] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[4][4] = tor_tmp;
 
-    pos_tmp = float_to_uint(motor.getRefPos(Right_Knee_Pitch), P_MIN, P_MAX, 16);
-    vel_tmp = float_to_uint(motor.getRefVel(Right_Knee_Pitch), V_MIN, V_MAX, 12);
-    tor_tmp = float_to_uint(motor.getRefTor(Right_Knee_Pitch), T_MIN, T_MAX, 12);
+    pos_tmp = float_to_uint(motor.getRefPos(Right_Hip_Pitch), P_MIN, P_MAX, 16);
+    vel_tmp = float_to_uint(motor.getRefVel(Right_Hip_Pitch), V_MIN, V_MAX, 12);
+    tor_tmp = float_to_uint(motor.getRefTor(Right_Hip_Pitch), T_MIN, T_MAX, 12);
     send_data[4][5] = (vel_tmp >> 4);
     send_data[4][6] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[4][7] = tor_tmp;
-    send_data[5][0] = pos_tmp >> 8;
-    send_data[5][1] = pos_tmp;
+    send_data[5][0] = 0x03; // reserved bit 3
+    send_data[5][1] = pos_tmp >> 8;
+    send_data[5][2] = pos_tmp;
+
+    pos_tmp = float_to_uint(motor.getRefPos(Right_Knee_Pitch), P_MIN, P_MAX, 16);
+    vel_tmp = float_to_uint(motor.getRefVel(Right_Knee_Pitch), V_MIN, V_MAX, 12);
+    tor_tmp = float_to_uint(motor.getRefTor(Right_Knee_Pitch), T_MIN, T_MAX, 12);
+    send_data[5][3] = (pos_tmp >> 8);
+    send_data[5][4] = pos_tmp;
+    send_data[5][5] = (vel_tmp >> 4);
+    send_data[5][6] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
+    send_data[5][7] = tor_tmp;
+
+    pos_tmp = float_to_uint(motor.getRefPos(Right_Foot_Pitch), P_MIN, P_MAX, 16);
+    vel_tmp = float_to_uint(motor.getRefVel(Right_Foot_Pitch), V_MIN, V_MAX, 12);
+    tor_tmp = float_to_uint(motor.getRefTor(Right_Foot_Pitch), T_MIN, T_MAX, 12);
+    send_data[6][0] = (pos_tmp >> 8);
+    send_data[6][1] = pos_tmp;
+    send_data[6][2] = (vel_tmp >> 4);
+    send_data[6][3] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
+    send_data[6][4] = tor_tmp;
 }
 
 void STM32::decodeData(Motor &motor, IMU &imu, Command &command)
@@ -112,48 +131,61 @@ void STM32::decodeData(Motor &motor, IMU &imu, Command &command)
     pos_tmp = receive_data[3][1] << 8 | receive_data[3][2];
     vel_tmp = receive_data[2][5] << 4 | receive_data[2][6] >> 4;
     tor_tmp = (receive_data[2][6] & 0xF) << 8 | receive_data[2][7];
-    motor.setActPos(Right_Hip_Yaw, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Right_Hip_Yaw, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
-    motor.setActTor(Right_Hip_Yaw, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
+    motor.setActPos(Left_Foot_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
+    motor.setActVel(Left_Foot_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    motor.setActTor(Left_Foot_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
 
     pos_tmp = receive_data[3][3] << 8 | receive_data[3][4];
     vel_tmp = receive_data[3][5] << 4 | receive_data[3][6] >> 4;
     tor_tmp = (receive_data[3][6] & 0xF) << 8 | receive_data[3][7];
-    motor.setActPos(Right_Hip_Roll, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Right_Hip_Roll, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
-    motor.setActTor(Right_Hip_Roll, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
+    motor.setActPos(Right_Hip_Yaw, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
+    motor.setActVel(Right_Hip_Yaw, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    motor.setActTor(Right_Hip_Yaw, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
 
     pos_tmp = receive_data[4][0] << 8 | receive_data[4][1];
     vel_tmp = receive_data[4][2] << 4 | receive_data[4][3] >> 4;
     tor_tmp = (receive_data[4][3] & 0xF) << 8 | receive_data[4][4];
+    motor.setActPos(Right_Hip_Roll, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
+    motor.setActVel(Right_Hip_Roll, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    motor.setActTor(Right_Hip_Roll, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
+
+    pos_tmp = receive_data[5][1] << 8 | receive_data[5][2];
+    vel_tmp = receive_data[4][5] << 4 | receive_data[4][6] >> 4;
+    tor_tmp = (receive_data[4][6] & 0xF) << 8 | receive_data[4][7];
     motor.setActPos(Right_Hip_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
     motor.setActVel(Right_Hip_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
     motor.setActTor(Right_Hip_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
 
-    pos_tmp = receive_data[5][0] << 8 | receive_data[5][1];
-    vel_tmp = receive_data[4][5] << 4 | receive_data[4][6] >> 4;
-    tor_tmp = (receive_data[4][6] & 0xF) << 8 | receive_data[4][7];
+    pos_tmp = receive_data[5][3] << 8 | receive_data[5][4];
+    vel_tmp = receive_data[5][5] << 4 | receive_data[5][6] >> 4;
+    tor_tmp = (receive_data[5][6] & 0xF) << 8 | receive_data[5][7];
     motor.setActPos(Right_Knee_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
     motor.setActVel(Right_Knee_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
     motor.setActTor(Right_Knee_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
 
-    uint8_t vx_tmp, vy_tmp, vz_tmp, wz_tmp;
-    vx_tmp = receive_data[5][2] >> 4;
-    vy_tmp = receive_data[5][2] & 0xF;
-    vz_tmp = receive_data[5][3] >> 4;
-    wz_tmp = receive_data[5][3] & 0xF;
-    command.setLinearVel({uint_to_float(vx_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 4), uint_to_float(vy_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 4), uint_to_float(vz_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 4)});
-    command.setAngularVel({0.0f, 0.0f, uint_to_float(wz_tmp, ANGULAR_VEL_MIN, ANGULAR_VEL_MAX, 4)});
+    pos_tmp = receive_data[6][0] << 8 | receive_data[6][1];
+    vel_tmp = receive_data[6][2] << 4 | receive_data[6][3] >> 4;
+    tor_tmp = (receive_data[6][3] & 0xF) << 8 | receive_data[6][4];
+    motor.setActPos(Right_Foot_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
+    motor.setActVel(Right_Foot_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    motor.setActTor(Right_Foot_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
+
+    uint8_t vx_tmp, vy_tmp, wz_tmp;
+    vx_tmp = receive_data[6][5];
+    vy_tmp = receive_data[6][6];
+    wz_tmp = receive_data[6][7];
+    command.setLinearVel({uint_to_float(vx_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 8), uint_to_float(vy_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 8), 0});
+    command.setAngularVel({0.0f, 0.0f, uint_to_float(wz_tmp, ANGULAR_VEL_MIN, ANGULAR_VEL_MAX, 8)});
 
     float acc_x_tmp, acc_y_tmp, acc_z_tmp, gyro_x_tmp, gyro_y_tmp, gyro_z_tmp;
-    acc_x_tmp = uint_to_float(receive_data[5][4] << 8 | receive_data[5][5], A_MIN, A_MAX, 16);
-    acc_y_tmp = uint_to_float(receive_data[5][6] << 8 | receive_data[5][7], A_MIN, A_MAX, 16);
-    acc_z_tmp = uint_to_float(receive_data[6][0] << 8 | receive_data[6][1], A_MIN, A_MAX, 16);
-    gyro_x_tmp = uint_to_float(receive_data[6][2] << 8 | receive_data[6][3], G_MIN, G_MAX, 16);
-    gyro_y_tmp = uint_to_float(receive_data[6][4] << 8 | receive_data[6][5], G_MIN, G_MAX, 16);
-    gyro_z_tmp = uint_to_float(receive_data[6][6] << 8 | receive_data[6][7], G_MIN, G_MAX, 16);
+    acc_x_tmp = uint_to_float(receive_data[7][0] << 8 | receive_data[7][1], A_MIN, A_MAX, 16);
+    acc_y_tmp = uint_to_float(receive_data[7][2] << 8 | receive_data[7][3], A_MIN, A_MAX, 16);
+    acc_z_tmp = uint_to_float(receive_data[7][4] << 8 | receive_data[7][5], A_MIN, A_MAX, 16);
+    gyro_x_tmp = uint_to_float(receive_data[7][6] << 8 | receive_data[7][7], G_MIN, G_MAX, 16);
+    gyro_y_tmp = uint_to_float(receive_data[8][0] << 8 | receive_data[8][1], G_MIN, G_MAX, 16);
+    gyro_z_tmp = uint_to_float(receive_data[8][2] << 8 | receive_data[8][3], G_MIN, G_MAX, 16);
 
-    imu.setAccel({acc_y_tmp, -acc_x_tmp, acc_z_tmp}); // Rotate the IMU data to match the robot frame
+    imu.setAccel({acc_y_tmp, -acc_x_tmp, acc_z_tmp});   // Rotate the IMU data to match the robot frame
     imu.setGyro({gyro_y_tmp, -gyro_x_tmp, gyro_z_tmp}); // Rotate the IMU data to match the robot frame
 }
 
