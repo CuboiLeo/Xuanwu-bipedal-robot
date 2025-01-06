@@ -24,10 +24,10 @@ Motor::Motor()
 	motor_info[Left_Knee_Pitch].ctrl.mode = 0;
 	motor_info[Left_Knee_Pitch].range = 1.5f;
 
-	motor_info[Left_Foot_Pitch].can_bus = 1;
-	motor_info[Left_Foot_Pitch].id = 0x05;
-	motor_info[Left_Foot_Pitch].ctrl.mode = 0;
-	motor_info[Left_Foot_Pitch].range = 1.2f;
+	motor_info[Left_Ankle_Pitch].can_bus = 1;
+	motor_info[Left_Ankle_Pitch].id = 0x05;
+	motor_info[Left_Ankle_Pitch].ctrl.mode = 0;
+	motor_info[Left_Ankle_Pitch].range = 1.2f;
 
 	motor_info[Right_Hip_Yaw].can_bus = 2;
 	motor_info[Right_Hip_Yaw].id = 0x21;
@@ -49,10 +49,10 @@ Motor::Motor()
 	motor_info[Right_Knee_Pitch].ctrl.mode = 0;
 	motor_info[Right_Knee_Pitch].range = 1.5f;
 
-	motor_info[Right_Foot_Pitch].can_bus = 2;
-	motor_info[Right_Foot_Pitch].id = 0x25;
-	motor_info[Right_Foot_Pitch].ctrl.mode = 0;
-	motor_info[Right_Foot_Pitch].range = 1.2f;
+	motor_info[Right_Ankle_Pitch].can_bus = 2;
+	motor_info[Right_Ankle_Pitch].id = 0x25;
+	motor_info[Right_Ankle_Pitch].ctrl.mode = 0;
+	motor_info[Right_Ankle_Pitch].range = 1.2f;
 
 	soft_start_flag = 0;
 }
@@ -136,14 +136,14 @@ void Motor::sendAll(void)
 	dm4310_ctrl_send(&motor_info[Left_Hip_Pitch]);
 	dm4310_ctrl_send(&motor_info[Left_Knee_Pitch]);
 	delay_us(200);
-	dm4310_ctrl_send(&motor_info[Left_Foot_Pitch]);
+	dm4310_ctrl_send(&motor_info[Left_Ankle_Pitch]);
 	dm4310_ctrl_send(&motor_info[Right_Hip_Yaw]);
 	delay_us(200);
 	dm4310_ctrl_send(&motor_info[Right_Hip_Roll]);
 	dm4310_ctrl_send(&motor_info[Right_Hip_Pitch]);
 	delay_us(200);
 	dm4310_ctrl_send(&motor_info[Right_Knee_Pitch]);
-	dm4310_ctrl_send(&motor_info[Right_Foot_Pitch]);
+	dm4310_ctrl_send(&motor_info[Right_Ankle_Pitch]);
 	delay_us(200);
 }
 
@@ -155,14 +155,14 @@ void Motor::disableAll(void)
 	dm4310_disable(&motor_info[Left_Hip_Pitch]);
 	dm4310_disable(&motor_info[Left_Knee_Pitch]);
 	delay_us(200);
-	dm4310_disable(&motor_info[Left_Foot_Pitch]);
+	dm4310_disable(&motor_info[Left_Ankle_Pitch]);
 	dm4310_disable(&motor_info[Right_Hip_Yaw]);
 	delay_us(200);
 	dm4310_disable(&motor_info[Right_Hip_Roll]);
 	dm4310_disable(&motor_info[Right_Hip_Pitch]);
 	delay_us(200);
 	dm4310_disable(&motor_info[Right_Knee_Pitch]);
-	dm4310_disable(&motor_info[Right_Foot_Pitch]);
+	dm4310_disable(&motor_info[Right_Ankle_Pitch]);
 	delay_us(200);
 }
 
@@ -174,12 +174,12 @@ void Motor::enableAll(void)
 	dm4310_enable(&motor_info[Left_Hip_Pitch]);
 	dm4310_enable(&motor_info[Left_Knee_Pitch]);
 	delay_us(200);
-	dm4310_enable(&motor_info[Left_Foot_Pitch]);
+	dm4310_enable(&motor_info[Left_Ankle_Pitch]);
 	dm4310_enable(&motor_info[Right_Hip_Yaw]);
 	delay_us(200);
 	dm4310_enable(&motor_info[Right_Hip_Roll]);
 	dm4310_enable(&motor_info[Right_Hip_Pitch]);
 	delay_us(200);
 	dm4310_enable(&motor_info[Right_Knee_Pitch]);
-	dm4310_enable(&motor_info[Right_Foot_Pitch]);
+	dm4310_enable(&motor_info[Right_Ankle_Pitch]);
 }

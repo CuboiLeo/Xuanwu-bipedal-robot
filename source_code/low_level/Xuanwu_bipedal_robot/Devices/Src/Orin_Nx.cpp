@@ -41,9 +41,9 @@ void Orin::sendData(const Motor &motor, const IMU &imu, const Direction_Vector &
     send_data[2][3] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[2][4] = tor_tmp;
 
-    pos_tmp = float_to_uint(motor.getPos(Left_Foot_Pitch), P_MIN, P_MAX, 16);
-    vel_tmp = float_to_uint(motor.getVel(Left_Foot_Pitch), V_MIN, V_MAX, 12);
-    tor_tmp = float_to_uint(motor.getTor(Left_Foot_Pitch), T_MIN, T_MAX, 12);
+    pos_tmp = float_to_uint(motor.getPos(Left_Ankle_Pitch), P_MIN, P_MAX, 16);
+    vel_tmp = float_to_uint(motor.getVel(Left_Ankle_Pitch), V_MIN, V_MAX, 12);
+    tor_tmp = float_to_uint(motor.getTor(Left_Ankle_Pitch), T_MIN, T_MAX, 12);
     send_data[2][5] = (vel_tmp >> 4);
     send_data[2][6] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[2][7] = tor_tmp;
@@ -88,9 +88,9 @@ void Orin::sendData(const Motor &motor, const IMU &imu, const Direction_Vector &
     send_data[5][6] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[5][7] = tor_tmp;
 
-    pos_tmp = float_to_uint(motor.getPos(Right_Foot_Pitch), P_MIN, P_MAX, 16);
-    vel_tmp = float_to_uint(motor.getVel(Right_Foot_Pitch), V_MIN, V_MAX, 12);
-    tor_tmp = float_to_uint(motor.getTor(Right_Foot_Pitch), T_MIN, T_MAX, 12);
+    pos_tmp = float_to_uint(motor.getPos(Right_Ankle_Pitch), P_MIN, P_MAX, 16);
+    vel_tmp = float_to_uint(motor.getVel(Right_Ankle_Pitch), V_MIN, V_MAX, 12);
+    tor_tmp = float_to_uint(motor.getTor(Right_Ankle_Pitch), T_MIN, T_MAX, 12);
     send_data[6][0] = (pos_tmp >> 8);
     send_data[6][1] = pos_tmp;
     send_data[6][2] = (vel_tmp >> 4);
@@ -209,9 +209,9 @@ void Orin::decodeData(Motor &motor)
         pos_tmp = receive_data[3][1] << 8 | receive_data[3][2];
         vel_tmp = receive_data[2][5] << 4 | receive_data[2][6] >> 4;
         tor_tmp = (receive_data[2][6] & 0xF) << 8 | receive_data[2][7];
-        motor.setPos(Left_Foot_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-        // motor.setVel(Left_Foot_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
-        // motor.setTor(Left_Foot_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
+        motor.setPos(Left_Ankle_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
+        // motor.setVel(Left_Ankle_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+        // motor.setTor(Left_Ankle_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
 
         pos_tmp = receive_data[3][3] << 8 | receive_data[3][4];
         vel_tmp = receive_data[3][5] << 4 | receive_data[3][6] >> 4;
@@ -244,8 +244,8 @@ void Orin::decodeData(Motor &motor)
         pos_tmp = receive_data[6][0] << 8 | receive_data[6][1];
         vel_tmp = receive_data[6][2] << 4 | receive_data[6][3] >> 4;
         tor_tmp = (receive_data[6][3] & 0xF) << 8 | receive_data[6][4];
-        motor.setPos(Right_Foot_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-        // motor.setVel(Right_Foot_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
-        // motor.setTor(Right_Foot_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
+        motor.setPos(Right_Ankle_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
+        // motor.setVel(Right_Ankle_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+        // motor.setTor(Right_Ankle_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
     }
 }

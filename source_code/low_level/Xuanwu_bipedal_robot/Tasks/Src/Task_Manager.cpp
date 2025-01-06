@@ -185,7 +185,7 @@ void fdcan1_rx_callback(void)
         dm4310_fbdata(&motor.motor_info[Left_Knee_Pitch], rx_data);
         break;
     case 0x15:
-        dm4310_fbdata(&motor.motor_info[Left_Foot_Pitch], rx_data);
+        dm4310_fbdata(&motor.motor_info[Left_Ankle_Pitch], rx_data);
         break;
     }
 }
@@ -210,7 +210,7 @@ void fdcan2_rx_callback(void)
         dm4310_fbdata(&motor.motor_info[Right_Knee_Pitch], rx_data);
         break;
     case 0x35:
-        dm4310_fbdata(&motor.motor_info[Right_Foot_Pitch], rx_data);
+        dm4310_fbdata(&motor.motor_info[Right_Ankle_Pitch], rx_data);
         break;
     }
 }
