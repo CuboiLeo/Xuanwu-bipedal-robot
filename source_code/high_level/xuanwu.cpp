@@ -64,43 +64,46 @@ void compute_thread()
         shared_data.imu.processData();
 
         // Set the leg act angles
-        Joint_Angles left_act_angle = {shared_data.motor.getActPos(Left_Hip_Yaw), shared_data.motor.getActPos(Left_Hip_Roll), shared_data.motor.getActPos(Left_Hip_Pitch), shared_data.motor.getActPos(Left_Knee_Pitch)};
-        Joint_Angles right_act_angle = {shared_data.motor.getActPos(Right_Hip_Yaw), shared_data.motor.getActPos(Right_Hip_Roll), shared_data.motor.getActPos(Right_Hip_Pitch), shared_data.motor.getActPos(Right_Knee_Pitch)};
+        Joint_Angles left_act_angle = {shared_data.motor.getActPos(Left_Hip_Yaw), shared_data.motor.getActPos(Left_Hip_Roll), shared_data.motor.getActPos(Left_Hip_Pitch), shared_data.motor.getActPos(Left_Knee_Pitch), shared_data.motor.getActPos(Left_Ankle_Pitch)};
+        Joint_Angles right_act_angle = {shared_data.motor.getActPos(Right_Hip_Yaw), shared_data.motor.getActPos(Right_Hip_Roll), shared_data.motor.getActPos(Right_Hip_Pitch), shared_data.motor.getActPos(Right_Knee_Pitch), shared_data.motor.getActPos(Right_Ankle_Pitch)};
         robot.setLegActAngles(left_act_angle, right_act_angle);
 
         // Compute the center of mass position
-        Direction_Vector CoM_pos = kinematics.computeCoMFK({robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
-        robot.setCoMActPos(CoM_pos);
+        // Direction_Vector CoM_pos = kinematics.computeCoMFK({robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
+        // robot.setCoMActPos(CoM_pos);
 
-        // Compute the center of mass acceleration
-        Direction_Vector CoM_accel = dynamics.computeCoMAccel(robot.getCoMActPos(), shared_data.imu.getAccel(), shared_data.imu.getGyro(), shared_data.imu.getGyroDot());
-        robot.setCoMActAccel(CoM_accel);
+        // // Compute the center of mass acceleration
+        // Direction_Vector CoM_accel = dynamics.computeCoMAccel(robot.getCoMActPos(), shared_data.imu.getAccel(), shared_data.imu.getGyro(), shared_data.imu.getGyroDot());
+        // robot.setCoMActAccel(CoM_accel);
 
-        // Compute the zero moment point position
-        Direction_Vector ZMP_pos = dynamics.computeZMPPos(robot.getCoMActPos(), robot.getCoMActAccel());
-        robot.setZMPActPos(ZMP_pos);
+        // // Compute the zero moment point position
+        // Direction_Vector ZMP_pos = dynamics.computeZMPPos(robot.getCoMActPos(), robot.getCoMActAccel());
+        // robot.setZMPActPos(ZMP_pos);
 
-        std::cout << "ZMP Position: " << ZMP_pos.x << " " << ZMP_pos.y << std::endl;
+        // //std::cout << "ZMP Position: " << ZMP_pos.x << " " << ZMP_pos.y << std::endl;
 
-        robot.setCoMRefPos({0.0f, 0.0f, -0.13f});
-        Joint_Angles_Two_Legs ref_joint_angles = kinematics.computeCoMIK(robot.getCoMActPos(), robot.getCoMRefPos(), {robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
-        robot.setLegRefAngles(ref_joint_angles.left, ref_joint_angles.right);
+        // robot.setCoMRefPos({0.0f, 0.0f, -0.168f});
+        // Joint_Angles_Two_Legs ref_joint_angles = kinematics.computeCoMIK(robot.getCoMActPos(), robot.getCoMRefPos(), {robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
+        // robot.setLegRefAngles(ref_joint_angles.left, ref_joint_angles.right);
 
-        std::cout << "Left Angles: " << ref_joint_angles.left.hip_yaw << " " << ref_joint_angles.left.hip_roll << " " << ref_joint_angles.left.hip_pitch << " " << ref_joint_angles.left.knee_pitch << std::endl;
-        std::cout << "Right Angles: " << ref_joint_angles.right.hip_yaw << " " << ref_joint_angles.right.hip_roll << " " << ref_joint_angles.right.hip_pitch << " " << ref_joint_angles.right.knee_pitch << std::endl;
+        // std::cout << "Left Angles:  " << ref_joint_angles.left.hip_yaw << " | " << ref_joint_angles.left.hip_roll << " | " << ref_joint_angles.left.hip_pitch << " | " << ref_joint_angles.left.knee_pitch << " | " << ref_joint_angles.left.ankle_pitch << std::endl;
+        // std::cout << "Right Angles: " << ref_joint_angles.right.hip_yaw << " | " << ref_joint_angles.right.hip_roll << " | " << ref_joint_angles.right.hip_pitch << " | " << ref_joint_angles.right.knee_pitch << " | " << ref_joint_angles.right.ankle_pitch << std::endl;
 
-        // // Compute the forward kinematics
-        // Direction_Vector left_act_pos = kinematics.computeFootFK(robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
-        // Direction_Vector right_act_pos = kinematics.computeFootFK(robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
-        // robot.setFootActPos(left_act_pos, right_act_pos);
+        // Compute the forward kinematics
+        Direction_Vector left_act_pos = kinematics.computeFootFK(robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+        Direction_Vector right_act_pos = kinematics.computeFootFK(robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
+        robot.setFootActPos(left_act_pos, right_act_pos);
 
-        // // Set the foot reference position
-        // robot.setFootRefPos({-L1 + 0.001f, 0.02f, -(L2 + L4 + L5) + 0.05f}, {L1 - 0.001f, 0.02f, -(L2 + L4 + L5) + 0.05f});
+        // Set the foot reference position
+        robot.setFootRefPos({-L1 + 0.001f, 0.001f, -(L2 + L4 + L5 + L6) + 0.05f}, {L1 - 0.001f, 0.001f, -(L2 + L4 + L5 + L6) + 0.02f});
 
-        // // Compute the inverse kinematics
-        // Joint_Angles left_ref_angle = kinematics.computeFootIK(robot.getFootActPos(LEFT_LEG_ID), robot.getFootRefPos(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
-        // Joint_Angles right_ref_angle = kinematics.computeFootIK(robot.getFootActPos(RIGHT_LEG_ID), robot.getFootRefPos(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
-        // robot.setLegRefAngles(left_ref_angle, right_ref_angle);
+        // Compute the inverse kinematics
+        Joint_Angles left_ref_angle = kinematics.computeFootIK(robot.getFootActPos(LEFT_LEG_ID), robot.getFootRefPos(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+        Joint_Angles right_ref_angle = kinematics.computeFootIK(robot.getFootActPos(RIGHT_LEG_ID), robot.getFootRefPos(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
+        robot.setLegRefAngles(left_ref_angle, right_ref_angle);
+
+        std::cout << "Left Angles:  " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
+        std::cout << "Right Angles: " << right_ref_angle.hip_yaw << " | " << right_ref_angle.hip_roll << " | " << right_ref_angle.hip_pitch << " | " << right_ref_angle.knee_pitch << " | " << right_ref_angle.ankle_pitch << std::endl;
 
         // Set the motor data
         robot.setMotorData(shared_data.motor);

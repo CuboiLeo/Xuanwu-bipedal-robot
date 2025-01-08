@@ -9,6 +9,7 @@ struct Joint_Angles { // Joint angles in radians
     float hip_roll;
     float hip_pitch;
     float knee_pitch;
+    float ankle_pitch;
 };
 
 struct Joint_Angles_Two_Legs { // Joint angles for both legs

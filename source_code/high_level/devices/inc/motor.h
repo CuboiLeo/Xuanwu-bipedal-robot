@@ -8,12 +8,12 @@ enum Motor_Name {
     Left_Hip_Roll,
     Left_Hip_Pitch,
     Left_Knee_Pitch,
-    Left_Foot_Pitch,
+    Left_Ankle_Pitch,
     Right_Hip_Yaw,
     Right_Hip_Roll,
     Right_Hip_Pitch,
     Right_Knee_Pitch,
-    Right_Foot_Pitch,
+    Right_Ankle_Pitch,
     num_motor   // This is the number of motors
 };
 

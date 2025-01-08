@@ -40,9 +40,9 @@ void STM32::encodeData(Motor &motor)
     send_data[2][3] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[2][4] = tor_tmp;
 
-    pos_tmp = float_to_uint(motor.getRefPos(Left_Foot_Pitch), P_MIN, P_MAX, 16);
-    vel_tmp = float_to_uint(motor.getRefVel(Left_Foot_Pitch), V_MIN, V_MAX, 12);
-    tor_tmp = float_to_uint(motor.getRefTor(Left_Foot_Pitch), T_MIN, T_MAX, 12);
+    pos_tmp = float_to_uint(motor.getRefPos(Left_Ankle_Pitch), P_MIN, P_MAX, 16);
+    vel_tmp = float_to_uint(motor.getRefVel(Left_Ankle_Pitch), V_MIN, V_MAX, 12);
+    tor_tmp = float_to_uint(motor.getRefTor(Left_Ankle_Pitch), T_MIN, T_MAX, 12);
     send_data[2][5] = (vel_tmp >> 4);
     send_data[2][6] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[2][7] = tor_tmp;
@@ -87,9 +87,9 @@ void STM32::encodeData(Motor &motor)
     send_data[5][6] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[5][7] = tor_tmp;
 
-    pos_tmp = float_to_uint(motor.getRefPos(Right_Foot_Pitch), P_MIN, P_MAX, 16);
-    vel_tmp = float_to_uint(motor.getRefVel(Right_Foot_Pitch), V_MIN, V_MAX, 12);
-    tor_tmp = float_to_uint(motor.getRefTor(Right_Foot_Pitch), T_MIN, T_MAX, 12);
+    pos_tmp = float_to_uint(motor.getRefPos(Right_Ankle_Pitch), P_MIN, P_MAX, 16);
+    vel_tmp = float_to_uint(motor.getRefVel(Right_Ankle_Pitch), V_MIN, V_MAX, 12);
+    tor_tmp = float_to_uint(motor.getRefTor(Right_Ankle_Pitch), T_MIN, T_MAX, 12);
     send_data[6][0] = (pos_tmp >> 8);
     send_data[6][1] = pos_tmp;
     send_data[6][2] = (vel_tmp >> 4);
@@ -131,9 +131,9 @@ void STM32::decodeData(Motor &motor, IMU &imu, Command &command)
     pos_tmp = receive_data[3][1] << 8 | receive_data[3][2];
     vel_tmp = receive_data[2][5] << 4 | receive_data[2][6] >> 4;
     tor_tmp = (receive_data[2][6] & 0xF) << 8 | receive_data[2][7];
-    motor.setActPos(Left_Foot_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Left_Foot_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
-    motor.setActTor(Left_Foot_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
+    motor.setActPos(Left_Ankle_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
+    motor.setActVel(Left_Ankle_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    motor.setActTor(Left_Ankle_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
 
     pos_tmp = receive_data[3][3] << 8 | receive_data[3][4];
     vel_tmp = receive_data[3][5] << 4 | receive_data[3][6] >> 4;
@@ -166,9 +166,9 @@ void STM32::decodeData(Motor &motor, IMU &imu, Command &command)
     pos_tmp = receive_data[6][0] << 8 | receive_data[6][1];
     vel_tmp = receive_data[6][2] << 4 | receive_data[6][3] >> 4;
     tor_tmp = (receive_data[6][3] & 0xF) << 8 | receive_data[6][4];
-    motor.setActPos(Right_Foot_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Right_Foot_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
-    motor.setActTor(Right_Foot_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
+    motor.setActPos(Right_Ankle_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
+    motor.setActVel(Right_Ankle_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    motor.setActTor(Right_Ankle_Pitch, uint_to_float(tor_tmp, T_MIN, T_MAX, 12));
 
     uint8_t vx_tmp, vy_tmp, wz_tmp;
     vx_tmp = receive_data[6][5];
@@ -234,6 +234,12 @@ void STM32::receiveData(CAN &can)
                 break;
             case CAN_RECEIVE_START_ID + 6:
                 memcpy(receive_data[6], frame.data, PACKAGE_SIZE);
+                break;
+            case CAN_RECEIVE_START_ID + 7:
+                memcpy(receive_data[7], frame.data, PACKAGE_SIZE);
+                break;
+            case CAN_RECEIVE_START_ID + 8:
+                memcpy(receive_data[8], frame.data, PACKAGE_SIZE);
                 break;
             }
         }
