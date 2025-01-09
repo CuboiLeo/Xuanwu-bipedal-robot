@@ -93,10 +93,20 @@ Joint_Angles_Two_Legs Kinematics::computeCoMIK(const Direction_Vector &act_CoM_p
       Eigen::MatrixXf m_Jacobian(2, 6);
 
       // Initialize the joint angles
-      Joint_Angles_Two_Legs computed_joint_angles = act_joint_angles; // Initial condition for the joint angles is the current joint angles
+      Joint_Angles_Two_Legs computed_joint_angles; // Initial condition for the joint angles is the current joint angles
+      computed_joint_angles.left.hip_yaw = 0;
+      computed_joint_angles.left.hip_roll = 0;
+      computed_joint_angles.left.hip_pitch = 0.5f;
+      computed_joint_angles.left.knee_pitch = -0.5f;
+      computed_joint_angles.left.ankle_pitch = 0;
+      computed_joint_angles.right.hip_yaw = 0;
+      computed_joint_angles.right.hip_roll = 0;
+      computed_joint_angles.right.hip_pitch = 0.5f;
+      computed_joint_angles.right.knee_pitch = -0.5f;
+      computed_joint_angles.right.ankle_pitch = 0;
       Eigen::VectorXf v_delta_joint_angles(6);
 
-      uint8_t IK_iteration_count = 0; // Reset the iteration count
+      IK_iteration_count = 0; // Reset the iteration count
 
       // Newton-Raphson method for inverse kinematics
       while (IK_epsilon > ERROR_TOLERANCE && IK_iteration_count < MAX_ITERATIONS)
@@ -140,13 +150,10 @@ Joint_Angles_Two_Legs Kinematics::computeCoMIK(const Direction_Vector &act_CoM_p
             IK_epsilon = v_CoM_pos_error.norm(); // Compute the error norm to check for convergence
 
             IK_iteration_count++; // Increment the iteration count
+            
       }
-
-      computed_joint_angles.left.hip_yaw = 0;  // Hip yaw is always zero
-      computed_joint_angles.right.hip_yaw = 0; // Hip yaw is always zero
-      computed_joint_angles.left.ankle_pitch = 0;  // Ankle pitch is always zero
-      computed_joint_angles.right.ankle_pitch = 0; // Ankle pitch is always zero
-
+      std::cout << "Iterations: " << IK_iteration_count << std::endl;
+      std::cout << "Error: " << IK_epsilon << std::endl;
       return computed_joint_angles;
 }
 
@@ -187,6 +194,12 @@ Joint_Angles Kinematics::computeFootIK(const Direction_Vector &act_foot_pos, con
 
       // Initialize the joint angles
       Joint_Angles computed_joint_angles = act_joint_angles; // Initial condition for the joint angles is the current joint angles
+      computed_joint_angles.hip_yaw = 0.01f;
+      computed_joint_angles.hip_roll = 0.01f;
+      computed_joint_angles.hip_pitch = 0.5f;
+      computed_joint_angles.knee_pitch = -0.5f;
+      computed_joint_angles.ankle_pitch = 0.01f;
+
       Eigen::Vector3f v_delta_joint_angles;
 
       uint8_t IK_iteration_count = 0; // Reset the iteration count
@@ -223,7 +236,8 @@ Joint_Angles Kinematics::computeFootIK(const Direction_Vector &act_foot_pos, con
             IK_iteration_count++; // Increment the iteration count
       }
 
-      computed_joint_angles.hip_yaw = 0; // Hip yaw is always zero
+
+      computed_joint_angles.hip_yaw = 0;     // Hip yaw is always zero
       computed_joint_angles.ankle_pitch = 0; // Ankle pitch is always zero
 
       return computed_joint_angles;

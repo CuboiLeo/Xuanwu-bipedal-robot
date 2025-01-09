@@ -3,6 +3,7 @@
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <chrono>
 #include "STM32_protocol.h"
 #include "motor.h"
 #include "IMU.h"
@@ -55,6 +56,7 @@ void compute_thread()
 
     while (true)
     {
+        auto start = std::chrono::high_resolution_clock::now();
         std::unique_lock<std::mutex> lock(shared_data_mutex); // Lock the shared data
         shared_data_cv.wait(lock, []
                             { return shared_data.new_data; }); // Wait for new data
@@ -68,7 +70,7 @@ void compute_thread()
         Joint_Angles right_act_angle = {shared_data.motor.getActPos(Right_Hip_Yaw), shared_data.motor.getActPos(Right_Hip_Roll), shared_data.motor.getActPos(Right_Hip_Pitch), shared_data.motor.getActPos(Right_Knee_Pitch), shared_data.motor.getActPos(Right_Ankle_Pitch)};
         robot.setLegActAngles(left_act_angle, right_act_angle);
 
-        // Compute the center of mass position
+        // // Compute the center of mass position
         // Direction_Vector CoM_pos = kinematics.computeCoMFK({robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
         // robot.setCoMActPos(CoM_pos);
 
@@ -80,7 +82,8 @@ void compute_thread()
         // Direction_Vector ZMP_pos = dynamics.computeZMPPos(robot.getCoMActPos(), robot.getCoMActAccel());
         // robot.setZMPActPos(ZMP_pos);
 
-        // //std::cout << "ZMP Position: " << ZMP_pos.x << " " << ZMP_pos.y << std::endl;
+        // std::cout << "CoM Position: " << CoM_pos.x << " " << CoM_pos.y << " " << CoM_pos.z << std::endl;
+        // std::cout << "ZMP Position: " << ZMP_pos.x << " " << ZMP_pos.y << std::endl;
 
         // robot.setCoMRefPos({0.0f, 0.0f, -0.168f});
         // Joint_Angles_Two_Legs ref_joint_angles = kinematics.computeCoMIK(robot.getCoMActPos(), robot.getCoMRefPos(), {robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
@@ -89,13 +92,13 @@ void compute_thread()
         // std::cout << "Left Angles:  " << ref_joint_angles.left.hip_yaw << " | " << ref_joint_angles.left.hip_roll << " | " << ref_joint_angles.left.hip_pitch << " | " << ref_joint_angles.left.knee_pitch << " | " << ref_joint_angles.left.ankle_pitch << std::endl;
         // std::cout << "Right Angles: " << ref_joint_angles.right.hip_yaw << " | " << ref_joint_angles.right.hip_roll << " | " << ref_joint_angles.right.hip_pitch << " | " << ref_joint_angles.right.knee_pitch << " | " << ref_joint_angles.right.ankle_pitch << std::endl;
 
-        // Compute the forward kinematics
+        // Compute the foot forward kinematics
         Direction_Vector left_act_pos = kinematics.computeFootFK(robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
         Direction_Vector right_act_pos = kinematics.computeFootFK(robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
         robot.setFootActPos(left_act_pos, right_act_pos);
 
         // Set the foot reference position
-        robot.setFootRefPos({-L1 + 0.001f, 0.001f, -(L2 + L4 + L5 + L6) + 0.05f}, {L1 - 0.001f, 0.001f, -(L2 + L4 + L5 + L6) + 0.02f});
+        robot.setFootRefPos({-L1 + 0.001f, 0.001f, -(L2 + L4 + L5 + L6) + 0.04f}, {L1 - 0.001f, 0.001f, -(L2 + L4 + L5 + L6) + 0.04f});
 
         // Compute the inverse kinematics
         Joint_Angles left_ref_angle = kinematics.computeFootIK(robot.getFootActPos(LEFT_LEG_ID), robot.getFootRefPos(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
@@ -108,6 +111,9 @@ void compute_thread()
         // Set the motor data
         robot.setMotorData(shared_data.motor);
 
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
+        std::cout << "Elapsed time: " << elapsed.count() << " seconds" << std::endl;
         lock.unlock(); // Unlock the shared data
     }
 }
@@ -132,7 +138,7 @@ void CAN_send_thread()
     {
         {
             std::lock_guard<std::mutex> lock(shared_data_mutex); // Lock the shared data
-            stm32.encodeData(shared_data.motor);                 // Encode the data to send
+            stm32.encodeData(shared_data.motor);                       // Encode the data to send
         }
         stm32.sendData(can); // Send the data to the STM32
     }
