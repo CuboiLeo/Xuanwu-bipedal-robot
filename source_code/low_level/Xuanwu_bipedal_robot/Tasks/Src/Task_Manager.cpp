@@ -32,7 +32,7 @@ void Robot_Task(void *argument)
 
         if (motor.getSoftStartFlag() == motor.ALL_JOINTS_ZEROED_FLAG)
         {
-            //orin.decodeData(motor);
+            orin.decodeData(motor);
         }
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);

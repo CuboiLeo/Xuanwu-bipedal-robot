@@ -51,13 +51,13 @@ end
 % substitute values
 val_theta1 = 0;
 val_theta2 = 0;
-val_theta3 = 0;
-val_theta4 = 0;
+val_theta3 = pi/6;
+val_theta4 = -pi/8;
 val_theta5 = 0;
 val_theta6 = 0;
 val_theta7 = 0;
-val_theta8 = 0;
-val_theta9 = 0;
+val_theta8 = pi/6;
+val_theta9 = -pi/8;
 val_theta10 = 0;
 val_L1 = 0.135;
 val_L2 = 0.12;
@@ -137,18 +137,18 @@ M6R = [1 0 0 L1+C6(1);
     0 0 1 -(L2+L4+L5)+C6(3);
     0 0 0 1];
 
-T1 = M1
-T2L = simplify(expm(S{1}*theta1)*M2L)
-T3L = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*M3L)
-T4L = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*M4L)
-T5L = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*expm(S{4}*theta4)*M5L)
-T6L = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*expm(S{4}*theta4)*expm(S{5}*theta5)*M6L)
+T1 = M1;
+T2L = simplify(expm(S{1}*theta1)*M2L);
+T3L = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*M3L);
+T4L = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*M4L);
+T5L = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*expm(S{4}*theta4)*M5L);
+T6L = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*expm(S{4}*theta4)*expm(S{5}*theta5)*M6L);
 
-T2R = simplify(expm(S{6}*theta6)*M2R)
-T3R = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*M3R)
-T4R = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*M4R)
-T5R = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*expm(S{9}*theta9)*M5R)
-T6R = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*expm(S{9}*theta9)*expm(S{10}*theta10)*M6R)
+T2R = simplify(expm(S{6}*theta6)*M2R);
+T3R = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*M3R);
+T4R = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*M4R);
+T5R = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*expm(S{9}*theta9)*M5R);
+T6R = simplify(expm(S{6}*theta6)*expm(S{7}*theta7)*expm(S{8}*theta8)*expm(S{9}*theta9)*expm(S{10}*theta10)*M6R);
 
 T = {T1,T2L,T3L,T4L,T5L,T6L,T2R,T3R,T4R,T5R,T6R};
 m = {m1,m2,m3,m4,m5,m6,m2,m3,m4,m5,m6};
@@ -170,7 +170,7 @@ z_total = z_total/m_total;
 
 pos = vpa(subs([x_total;y_total;z_total],sub_syms,sub_vals),3)
 
-% The transformation matrixes are for Orin computation
+%% The transformation matrixes are for Orin computation
 % T1 =
 % 
 % [1, 0, 0, C11]

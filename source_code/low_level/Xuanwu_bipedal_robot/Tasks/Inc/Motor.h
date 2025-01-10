@@ -35,6 +35,7 @@ public:
 
 private:
     motor_t motor_info[NUM_MOTORS];
+		uint8_t all_joints_zeroed_flag;
     uint8_t soft_start_flag;
 };
 

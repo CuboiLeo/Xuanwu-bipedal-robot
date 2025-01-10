@@ -59,13 +59,13 @@ Motor::Motor()
 
 uint8_t Motor::returnZeroPos(void)
 {
-	uint8_t all_joints_reached_pos_flag = 1;
+	all_joints_zeroed_flag = 1;
 	for (int i = 0; i < NUM_MOTORS; i++)
 	{
 		motor_info[i].ctrl.pos_set = 0;
 		motor_info[i].ctrl.kp_set = 5;
 		motor_info[i].ctrl.kd_set = 1;
-
+		
 		if (fabs(motor_info[i].para.pos - motor_info[i].ctrl.pos_set) < 0.2f)
 		{
 			motor_info[i].reached_pos_flag = 1;
@@ -75,21 +75,24 @@ uint8_t Motor::returnZeroPos(void)
 			motor_info[i].reached_pos_flag = 0;
 		}
 
-		all_joints_reached_pos_flag = all_joints_reached_pos_flag && motor_info[i].reached_pos_flag;
+		all_joints_zeroed_flag = all_joints_zeroed_flag && motor_info[i].reached_pos_flag;
 	}
 
-	if (all_joints_reached_pos_flag)
+	if (all_joints_zeroed_flag)
 	{
 		for (int i = 0; i < NUM_MOTORS; i++)
 		{
 			motor_info[i].ctrl.pos_set = 0;
-			motor_info[i].ctrl.kp_set = 50;
+			motor_info[i].ctrl.kp_set = 100;
 			motor_info[i].ctrl.kd_set = 2;
-			motor_info[i].ctrl.tor_set = motor_info[i].ctrl.pos_set;
 		}
+		motor_info[Left_Hip_Pitch].ctrl.pos_set = 0.33f;
+		motor_info[Left_Knee_Pitch].ctrl.pos_set = -0.58f;
+		motor_info[Right_Hip_Pitch].ctrl.pos_set = 0.33f;
+		motor_info[Right_Knee_Pitch].ctrl.pos_set = -0.58f;
 	}
 
-	return all_joints_reached_pos_flag;
+	return all_joints_zeroed_flag;
 }
 
 void Motor::createVirtualBoundary(void)

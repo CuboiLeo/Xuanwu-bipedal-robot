@@ -168,46 +168,46 @@ z_total = z_total/m_total;
 
 R = sym('R%d%d',[3 3]);
 sym_X_act = [x_total;y_total;z_total];
-sym_X_act = R*sym_X_act;
-X_ref = [0;0;-0.135];
+%sym_X_act = R*sym_X_act;
+X_ref = [0;0;-0.165];
 sym_theta = [theta2 theta3 theta4 theta7 theta8 theta9];
 val_theta = [val_theta2 val_theta3 val_theta4 val_theta7 val_theta8 val_theta9];
 jacob = simplify(jacobian(sym_X_act,sym_theta));
-jacob11 = jacob(1,1)
-jacob12 = jacob(1,2)
-jacob13 = jacob(1,3)
-jacob14 = jacob(1,4)
-jacob15 = jacob(1,5)
-jacob16 = jacob(1,6)
-jacob21 = jacob(2,1)
-jacob22 = jacob(2,2)
-jacob23 = jacob(2,3)
-jacob24 = jacob(2,4)
-jacob25 = jacob(2,5)
-jacob26 = jacob(2,6)
-jacob31 = jacob(3,1)
-jacob32 = jacob(3,2)
-jacob33 = jacob(3,3)
-jacob34 = jacob(3,4)
-jacob35 = jacob(3,5)
-jacob36 = jacob(3,6)
-% norm_e = 1;
-% epsilon = 0.005;
-% iteration = 0;
-% 
-% while norm_e > epsilon && iteration < 100
-%     val_X_act = vpa(subs(sym_X_act,[sym_theta sub_syms],[val_theta sub_vals]),8);
-%     error_X = vpa(X_ref - val_X_act,8);
-%     norm_e = norm(error_X);
-%     val_jacob = vpa(subs(jacob,[sym_theta sub_syms],[val_theta sub_vals]),8);
-%     inv_jacob = pinv(val_jacob);
-%     delta_theta = inv_jacob*error_X;
-%     val_theta = val_theta + delta_theta';
-%     val_theta = mod(eval(val_theta) + pi, 2*pi) - pi;
-%     iteration = iteration + 1;
-% end
-% val_theta
-% val_X_act
+jacob11 = jacob(1,1);
+jacob12 = jacob(1,2);
+jacob13 = jacob(1,3);
+jacob14 = jacob(1,4);
+jacob15 = jacob(1,5);
+jacob16 = jacob(1,6);
+jacob21 = jacob(2,1);
+jacob22 = jacob(2,2);
+jacob23 = jacob(2,3);
+jacob24 = jacob(2,4);
+jacob25 = jacob(2,5);
+jacob26 = jacob(2,6);
+jacob31 = jacob(3,1);
+jacob32 = jacob(3,2);
+jacob33 = jacob(3,3);
+jacob34 = jacob(3,4);
+jacob35 = jacob(3,5);
+jacob36 = jacob(3,6);
+norm_e = 1;
+epsilon = 0.005;
+iteration = 0;
+
+while norm_e > epsilon && iteration < 100
+    val_X_act = vpa(subs(sym_X_act,[sym_theta sub_syms],[val_theta sub_vals]),8);
+    error_X = vpa(X_ref - val_X_act,8);
+    norm_e = norm(error_X);
+    val_jacob = vpa(subs(jacob,[sym_theta sub_syms],[val_theta sub_vals]),8);
+    inv_jacob = pinv(val_jacob);
+    delta_theta = inv_jacob*error_X;
+    val_theta = val_theta + delta_theta';
+    val_theta = mod(eval(val_theta) + pi, 2*pi) - pi;
+    iteration = iteration + 1;
+end
+val_theta
+val_X_act
 
 % The jacobian matrix are for Orin computation
 % jacob11 =
