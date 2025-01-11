@@ -10,8 +10,8 @@
 class Dynamics
 {
 public:
-    Direction_Vector computeCoMAccel(const Direction_Vector &CoM_pos, const Direction_Vector &accel, const Direction_Vector &gyro, const Direction_Vector &gyro_dot);
-    Direction_Vector computeZMPPos(const Direction_Vector &CoM, const Direction_Vector &CoM_accel);
+    Position computeCoMAccel(const Position &CoM_pos, const Acceleration &accel, const Angular_Velocity &gyro, const Angular_Acceleration &gyro_dot);
+    Position computeZMPPos(const Position &CoM, const Acceleration &CoM_accel);
 };
 
 #endif // DYNAMICS_H

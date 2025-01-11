@@ -57,7 +57,11 @@
         "streambuf": "cpp",
         "typeinfo": "cpp",
         "cholesky": "cpp",
-        "core": "cpp"
+        "core": "cpp",
+        "unordered_set": "cpp",
+        "iomanip": "cpp",
+        "cinttypes": "cpp",
+        "alignedvector3": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

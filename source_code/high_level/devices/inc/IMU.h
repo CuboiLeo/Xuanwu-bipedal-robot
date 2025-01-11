@@ -12,35 +12,34 @@ class IMU
 {
 public:
     IMU();
-    Direction_Vector getAccel() const { return accel; };
-    Direction_Vector getGyro() const { return gyro; };
-    Direction_Vector getGyroDot() const { return gyro_dot; };
-    FusionEuler getEuler() const { return euler_deg; };
-    FusionMatrix getRotationMatrix() const { return rotation_matrix; };
-    
+    Acceleration getAccel() const { return accel; };
+    Angular_Velocity getGyro() const { return gyro; };
+    Angular_Acceleration getGyroDot() const { return gyro_dot; };
+    Orientation getEuler() const { return euler_angles; };
+    Eigen::Matrix3d getRotationMatrix() const { return rotation_matrix; };
 
-    void setAccel(const Direction_Vector accel) { this->accel = accel; };
-    void setGyro(const Direction_Vector gyro) { this->gyro = gyro; };
+    void setAccel(const Acceleration accel) { this->accel = accel; };
+    void setGyro(const Angular_Velocity gyro) { this->gyro = gyro; };
     void computeGyroDot(void);
     void computeRotationMatrix(void);
     double getTimeElapsed(void);
     void processData(void);
 
 private:
-    Direction_Vector accel = {};     // Acceleration in m/s^2
-    Direction_Vector gyro = {};      // Angular velocity in rad/s
-    Direction_Vector prev_gyro = {}; // Previous angular velocity in rad/s
-    Direction_Vector gyro_dot = {};  // Angular acceleration in rad/s^2
+    Acceleration accel = {};            // Acceleration in m/s^2
+    Angular_Velocity gyro = {};         // Angular velocity in rad/s
+    Angular_Velocity prev_gyro = {};    // Previous angular velocity in rad/s
+    Angular_Acceleration gyro_dot = {}; // Angular acceleration in rad/s^2
 
     FusionAhrs ahrs;                   // AHRS algorithm structure
-    FusionEuler euler_deg = {};       // Euler angles in degrees for roll, pitch, and yaw
-    FusionMatrix rotation_matrix = {}; // Rotation matrix from body frame to world frame
+    Orientation euler_angles = {};     // Euler angles in rads for roll, pitch, and yaw
+    Eigen::Matrix3d rotation_matrix; // Rotation matrix from body frame to world frame
 
-    float LPF_coeff = 0.01f; // Low pass filter coefficient
+    double LPF_coeff = 0.01; // Low pass filter coefficient
 
     std::chrono::high_resolution_clock::time_point last_time;    // Time point of the last IMU update
     std::chrono::high_resolution_clock::time_point current_time; // Time point of the current IMU update
-    double delta_t;                  // Time elapsed since the last IMU update
+    double delta_t;                                              // Time elapsed since the last IMU update
 };
 
 #endif

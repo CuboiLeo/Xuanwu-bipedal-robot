@@ -29,53 +29,25 @@ void IMU::computeGyroDot(void)
     prev_gyro = gyro; // Update the previous angular velocity
 }
 
-void IMU::computeRotationMatrix(void)
-{
-    // Compute the rotation matrix from the body frame to the world frame
-    Eigen::Matrix3f Rx, Ry, Rz, R_final;
-
-    Rx << 1, 0, 0,
-        0, cosf(euler_deg.angle.roll*DEG2RAD), -sinf(euler_deg.angle.roll*DEG2RAD),
-        0, sinf(euler_deg.angle.roll*DEG2RAD), cosf(euler_deg.angle.roll*DEG2RAD);
-
-    Ry << cosf(euler_deg.angle.pitch*DEG2RAD), 0, sinf(euler_deg.angle.pitch*DEG2RAD),
-        0, 1, 0,
-        -sinf(euler_deg.angle.pitch*DEG2RAD), 0, cosf(euler_deg.angle.pitch*DEG2RAD);
-
-    Rz << cosf(euler_deg.angle.yaw*DEG2RAD), -sinf(euler_deg.angle.yaw*DEG2RAD), 0,
-        sinf(euler_deg.angle.yaw*DEG2RAD), cosf(euler_deg.angle.yaw*DEG2RAD), 0,
-        0, 0, 1;
-
-    R_final = Rz * Ry * Rx;
-
-    // Convert the Eigen matrix to a Fusion matrix
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            rotation_matrix.array[i][j] = R_final(i, j);
-        }
-    }
-}
-
 void IMU::processData()
 {
     // Get the time elapsed since the last IMU update
     delta_t = getTimeElapsed();
 
     // Normalize the accelerometer and gyroscope data
-    FusionVector accel_fusion = {accel.x / GRAVITY, accel.y / GRAVITY, accel.z / GRAVITY};
-    FusionVector gyro_fusion = {gyro.x * RAD2DEG, gyro.y * RAD2DEG, gyro.z * RAD2DEG};
+    FusionVector accel_fusion = {(float)accel.x / GRAVITY, (float)accel.y / GRAVITY, (float)accel.z / GRAVITY};
+    FusionVector gyro_fusion = {(float)gyro.x * RAD2DEG, (float)gyro.y * RAD2DEG, (float)gyro.z * RAD2DEG};
 
     // Update the AHRS algorithm
     FusionAhrsUpdateNoMagnetometer(&ahrs, gyro_fusion, accel_fusion, delta_t);
 
     // Get the Euler angles in degrees
-    euler_deg = FusionQuaternionToEuler(FusionAhrsGetQuaternion(&ahrs));
+    FusionEuler euler_deg = FusionQuaternionToEuler(FusionAhrsGetQuaternion(&ahrs));
+    euler_angles = {euler_deg.angle.roll * DEG2RAD, euler_deg.angle.pitch * DEG2RAD, euler_deg.angle.yaw * DEG2RAD};
 
     // Compute the angular acceleration
     computeGyroDot();
 
     // Compute the rotation matrix from the body frame to the world frame
-    computeRotationMatrix();
+    rotation_matrix = eul_to_rotm(euler_angles);
 }

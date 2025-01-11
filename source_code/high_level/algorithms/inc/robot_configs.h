@@ -28,12 +28,12 @@ static constexpr float M6 = 0.14f;  // Foot connector
 static constexpr float MT = M1 + 2*M2 + 2*M3 + 2*M4 + 2*M5 + 2*M6; // Total mass of the robot
 
 // Link CoM position offsets in meters (for left leg, right leg is the same but with opposite x sign)
-static constexpr Direction_Vector C1 = {0.0f, 0.0f, 0.027f}; // Base frame to link 1 CoM
-static constexpr Direction_Vector C2 = {-0.0075f, -0.06f, -0.067f}; // Hip yaw motor frame to link 2 CoM
-static constexpr Direction_Vector C3 = {0.0f, 0.084f, 0.0f}; // Hip roll motor frame to link 3 CoM
-static constexpr Direction_Vector C4 = {0.0f, 0.0f, -0.142f}; // Hip pitch motor frame to link 4 CoM
-static constexpr Direction_Vector C5 = {0.0f, 0.0f, -0.142f}; // Knee pitch motor frame to link 5 CoM
-static constexpr Direction_Vector C6 = {0.0f, 0.0f, -0.06f}; // Ankle pitch motor frame to link 6 CoM
+static constexpr Position C1 = {0.0f, 0.0f, 0.027f}; // Base frame to link 1 CoM
+static constexpr Position C2 = {-0.0075f, -0.06f, -0.067f}; // Hip yaw motor frame to link 2 CoM
+static constexpr Position C3 = {0.0f, 0.084f, 0.0f}; // Hip roll motor frame to link 3 CoM
+static constexpr Position C4 = {0.0f, 0.0f, -0.142f}; // Hip pitch motor frame to link 4 CoM
+static constexpr Position C5 = {0.0f, 0.0f, -0.142f}; // Knee pitch motor frame to link 5 CoM
+static constexpr Position C6 = {0.0f, 0.0f, -0.06f}; // Ankle pitch motor frame to link 6 CoM
 static constexpr float COM_HEIGHT = 0.38f; // Height of the CoM from the ground
 
 #endif

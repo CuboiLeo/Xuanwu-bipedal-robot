@@ -70,39 +70,34 @@ void compute_thread()
         Joint_Angles right_act_angle = {shared_data.motor.getActPos(Right_Hip_Yaw), shared_data.motor.getActPos(Right_Hip_Roll), shared_data.motor.getActPos(Right_Hip_Pitch), shared_data.motor.getActPos(Right_Knee_Pitch), shared_data.motor.getActPos(Right_Ankle_Pitch)};
         robot.setLegActAngles(left_act_angle, right_act_angle);
 
-        // // Compute the center of mass position
-        // Direction_Vector CoM_pos = kinematics.computeCoMFK({robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
-        // robot.setCoMActPos(CoM_pos);
+        // Compute the center of mass position
+        Position CoM_pos = kinematics.computeCoMPos({robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
+        robot.setCoMActPos(CoM_pos);
 
-        // // Compute the center of mass acceleration
-        // Direction_Vector CoM_accel = dynamics.computeCoMAccel(robot.getCoMActPos(), shared_data.imu.getAccel(), shared_data.imu.getGyro(), shared_data.imu.getGyroDot());
-        // robot.setCoMActAccel(CoM_accel);
+        // Compute the center of mass acceleration
+        Position CoM_accel = dynamics.computeCoMAccel(robot.getCoMActPos(), shared_data.imu.getAccel(), shared_data.imu.getGyro(), shared_data.imu.getGyroDot());
+        robot.setCoMActAccel(CoM_accel);
 
-        // // Compute the zero moment point position
-        // Direction_Vector ZMP_pos = dynamics.computeZMPPos(robot.getCoMActPos(), robot.getCoMActAccel());
-        // robot.setZMPActPos(ZMP_pos);
+        // Compute the zero moment point position
+        Position ZMP_pos = dynamics.computeZMPPos(robot.getCoMActPos(), robot.getCoMActAccel());
+        robot.setZMPActPos(ZMP_pos);
 
         // std::cout << "CoM Position: " << CoM_pos.x << " " << CoM_pos.y << " " << CoM_pos.z << std::endl;
         // std::cout << "ZMP Position: " << ZMP_pos.x << " " << ZMP_pos.y << std::endl;
 
-        // robot.setCoMRefPos({0.0f, 0.0f, -0.168f});
-        // Joint_Angles_Two_Legs ref_joint_angles = kinematics.computeCoMIK(robot.getCoMActPos(), robot.getCoMRefPos(), {robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
-        // robot.setLegRefAngles(ref_joint_angles.left, ref_joint_angles.right);
-
-        // std::cout << "Left Angles:  " << ref_joint_angles.left.hip_yaw << " | " << ref_joint_angles.left.hip_roll << " | " << ref_joint_angles.left.hip_pitch << " | " << ref_joint_angles.left.knee_pitch << " | " << ref_joint_angles.left.ankle_pitch << std::endl;
-        // std::cout << "Right Angles: " << ref_joint_angles.right.hip_yaw << " | " << ref_joint_angles.right.hip_roll << " | " << ref_joint_angles.right.hip_pitch << " | " << ref_joint_angles.right.knee_pitch << " | " << ref_joint_angles.right.ankle_pitch << std::endl;
-
         // Compute the foot forward kinematics
-        Direction_Vector left_act_pos = kinematics.computeFootFK(robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
-        Direction_Vector right_act_pos = kinematics.computeFootFK(robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
-        robot.setFootActPos(left_act_pos, right_act_pos);
+        Pose left_act_pose = trans_to_pose(kinematics.computeFootFK(robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID));
+        Pose right_act_pose = trans_to_pose(kinematics.computeFootFK(robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID));
+        robot.setFootActPose(left_act_pose, right_act_pose);
 
-        // Set the foot reference position
-        robot.setFootRefPos({-L1 + 0.001f, 0.001f, -(L2 + L4 + L5 + L6) + 0.04f}, {L1 - 0.001f, 0.001f, -(L2 + L4 + L5 + L6) + 0.04f});
+        // Set the foot reference pose
+        Pose left_ref_pose = {{-0.135,0.01,-0.54},{-shared_data.imu.getEuler().roll,0,0}};
+        Pose right_ref_pose = {{0.135,0.01,-0.54},{-shared_data.imu.getEuler().roll,0,0}};
+        robot.setFootRefPose(left_ref_pose, right_ref_pose);
 
-        // Compute the inverse kinematics
-        Joint_Angles left_ref_angle = kinematics.computeFootIK(robot.getFootActPos(LEFT_LEG_ID), robot.getFootRefPos(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
-        Joint_Angles right_ref_angle = kinematics.computeFootIK(robot.getFootActPos(RIGHT_LEG_ID), robot.getFootRefPos(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
+        //Compute the inverse kinematics
+        Joint_Angles left_ref_angle = kinematics.computeFootIK(robot.getFootActPose(LEFT_LEG_ID), robot.getFootRefPose(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+        Joint_Angles right_ref_angle = kinematics.computeFootIK(robot.getFootActPose(RIGHT_LEG_ID), robot.getFootRefPose(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
         robot.setLegRefAngles(left_ref_angle, right_ref_angle);
 
         std::cout << "Left Angles:  " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
@@ -138,7 +133,7 @@ void CAN_send_thread()
     {
         {
             std::lock_guard<std::mutex> lock(shared_data_mutex); // Lock the shared data
-            stm32.encodeData(shared_data.motor);                       // Encode the data to send
+            stm32.encodeData(shared_data.motor);                 // Encode the data to send
         }
         stm32.sendData(can); // Send the data to the STM32
     }
