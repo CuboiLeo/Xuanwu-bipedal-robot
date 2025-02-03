@@ -31,9 +31,9 @@ private:
     Angular_Velocity prev_gyro = {};    // Previous angular velocity in rad/s
     Angular_Acceleration gyro_dot = {}; // Angular acceleration in rad/s^2
 
-    FusionAhrs ahrs;                   // AHRS algorithm structure
-    Orientation euler_angles = {};     // Euler angles in rads for roll, pitch, and yaw
-    Eigen::Matrix3d rotation_matrix; // Rotation matrix from body frame to world frame
+    FusionAhrs ahrs;                 // AHRS algorithm structure
+    Orientation euler_angles = {};   // Euler angles in rads for roll, pitch, and yaw
+    Eigen::Matrix3d rotation_matrix; // Rotation matrix from base frame to world frame
 
     double LPF_coeff = 0.01; // Low pass filter coefficient
 

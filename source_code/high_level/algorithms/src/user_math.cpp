@@ -88,3 +88,52 @@ Eigen::MatrixXd trans_to_adj(Eigen::Matrix4d T)
 	adjoint.block<3, 3>(3, 0) = p_brkt * R;
 	return adjoint;
 }
+
+Eigen::Matrix4d trans_inv(Eigen::Matrix4d T)
+{
+	/* Computes the inverse of a transformation matrix */
+	Eigen::Matrix4d T_inv = Eigen::Matrix4d::Identity();
+	T_inv.block<3, 3>(0, 0) = T.block<3, 3>(0, 0).transpose();
+	T_inv.block<3, 1>(0, 3) = -T_inv.block<3, 3>(0, 0) * T.block<3, 1>(0, 3);
+	return T_inv;
+}
+
+Eigen::Matrix4d trans_log(Eigen::Matrix4d T) // Discarded due to numerical instability
+{
+	/* Computes the matrix logarithm of a transformation matrix */
+	Eigen::Vector3d omega = Eigen::Vector3d::Zero();
+	Eigen::Matrix3d omega_skew = Eigen::Matrix3d::Zero();
+	;
+	Eigen::Vector3d v;
+	double theta;
+	Eigen::Matrix3d R = T.block<3, 3>(0, 0);
+	Eigen::Vector3d p = T.block<3, 1>(0, 3);
+	// Check if the rotation matrix is identity: pure translation
+	if (R.isIdentity())
+	{
+		v = p / p.norm();
+		theta = p.norm();
+	}
+	else
+	{
+		theta = acos((R.trace() - 1) / 2);
+		if (sin(theta) < 1e-3)
+		{
+			omega << sqrt((R(0, 0) + 1 / 2)), sqrt((R(1, 1) + 1 / 2)), sqrt((R(2, 2) + 1 / 2));
+		}
+		else
+		{
+			omega << (R(2, 1) - R(1, 2)) / (2 * sin(theta)), (R(0, 2) - R(2, 0)) / (2 * sin(theta)), (R(1, 0) - R(0, 1)) / (2 * sin(theta));
+		}
+		omega_skew << 0, -omega(2), omega(1),
+			omega(2), 0, -omega(0),
+			-omega(1), omega(0), 0;
+		Eigen::Matrix3d A = (Eigen::Matrix3d::Identity() - R) * omega_skew + omega * omega.transpose() * theta;
+		v = A.inverse() * p;
+	}
+	Eigen::Matrix4d T_log = Eigen::Matrix4d::Zero();
+	T_log.block<3, 3>(0, 0) = omega_skew * theta;
+	T_log.block<3, 1>(0, 3) = v * theta;
+
+	return T_log;
+}

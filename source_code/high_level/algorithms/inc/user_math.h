@@ -19,5 +19,7 @@ Eigen::Matrix4d pose_to_trans(Pose pose);
 Eigen::VectorXd skew_to_twist(Eigen::Matrix4d S);
 Eigen::Matrix4d twist_to_skew(Eigen::VectorXd twist);
 Eigen::MatrixXd trans_to_adj(Eigen::Matrix4d T);
+Eigen::Matrix4d trans_inv(Eigen::Matrix4d T);
+Eigen::Matrix4d trans_log(Eigen::Matrix4d T);
 
 #endif

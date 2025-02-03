@@ -111,16 +111,18 @@ Joint_Angles Kinematics::computeFootIK(const Pose &act_foot_pose, const Pose &re
 {
       Eigen::Matrix4d Tbf = pose_to_trans(act_foot_pose); // Transformation matrix from base frame to current foot frame
       Eigen::Matrix4d Tbd = pose_to_trans(ref_foot_pose); // Transformation matrix from base frame to desired foot frame
-      Eigen::Matrix4d Tfd = Tbf.inverse() * Tbd;          // Transformation matrix from current foot frame to desired foot frame
-      Eigen::VectorXd Vf(6); Vf = skew_to_twist(Tfd.log());   // Twist vector from current foot frame to desired foot frame
-      Eigen::VectorXd Vb(6); Vb = trans_to_adj(Tbf) * Vf;     // Twist vector from base frame to desired foot frame
-      double epsilon_w = Vb.head(3).norm();               // Error tolerance for angular velocity w
-      double epsilon_v = Vb.tail(3).norm();               // Error tolerance for linear velocity v
+      Eigen::Matrix4d Tfd = trans_inv(Tbf) * Tbd;         // Transformation matrix from current foot frame to desired foot frame
+      Eigen::VectorXd Vf(6);
+      Vf = skew_to_twist(Tfd.log()); // Twist vector from current foot frame to desired foot frame
+      Eigen::VectorXd Vb(6);
+      Vb = trans_to_adj(Tbf) * Vf;          // Twist vector from base frame to desired foot frame
+      double epsilon_w = Vb.head(3).norm(); // Error tolerance for angular velocity w
+      double epsilon_v = Vb.tail(3).norm(); // Error tolerance for linear velocity v
 
-      iteration_count = 0;                                   // Reset the iteration count
-      Joint_Angles computed_joint_angles = {0,0,0.3,-0.3,0}; // Initial condition for the joint angles is set so that the knee are bent forward
-      Eigen::MatrixXd Jacobian(6, 5);                        // Initialize the Jacobian matrix
-      Eigen::VectorXd delta_joint_angles(5);                 // Initialize the change in joint angles
+      iteration_count = 0;                                         // Reset the iteration count
+      Joint_Angles computed_joint_angles = {0, 0, 0.3, -0.5, 0.2}; // Initial condition for the joint angles is set so that the knee are bent forward
+      Eigen::MatrixXd Jacobian(6, 5);                              // Initialize the Jacobian matrix
+      Eigen::VectorXd delta_joint_angles(5);                       // Initialize the change in joint angles
       // Newton-Raphson method for inverse kinematics
       while (epsilon_w > EPSILON_W || epsilon_v > EPSILON_V && iteration_count < MAX_ITERATIONS)
       {
@@ -145,8 +147,8 @@ Joint_Angles Kinematics::computeFootIK(const Pose &act_foot_pose, const Pose &re
                   break;
             }
 
-            // SR Inverse using Levenberg-Marquardt method solved using ldlt decomposition as in this Ax = b, A is symmetric and positive definite
-            delta_joint_angles = (Jacobian.transpose() * Jacobian + LAMBDA * Eigen::MatrixXd::Identity(5, 5)).ldlt().solve(Jacobian.transpose() * Vb);
+            // SR Inverse using Levenberg-Marquardt method solved using llt decomposition as in this Ax = b, A is symmetric and positive definite
+            delta_joint_angles = (Jacobian.transpose() * Jacobian + LAMBDA * Eigen::MatrixXd::Identity(5, 5)).llt().solve(Jacobian.transpose() * Vb);
 
             // Update the joint angles
             computed_joint_angles.hip_yaw += delta_joint_angles(0);
@@ -157,9 +159,9 @@ Joint_Angles Kinematics::computeFootIK(const Pose &act_foot_pose, const Pose &re
 
             // Recompute the foot transformation matrix
             Tbf = computeFootFK(computed_joint_angles, leg_id); // Transformation matrix from base frame to current foot frame
-            Tfd = Tbf.inverse() * Tbd;                          // Transformation matrix from current foot frame to desired foot frame
-            Vf = skew_to_twist(Tfd.log());                   // Twist vector from current foot frame to desired foot frame
-            Vb = trans_to_adj(Tbf) * Vf;                     // Twist vector from base frame to desired foot frame
+            Tfd = trans_inv(Tbf) * Tbd;                         // Transformation matrix from current foot frame to desired foot frame
+            Vf = skew_to_twist(Tfd.log());                      // Twist vector from current foot frame to desired foot frame
+            Vb = trans_to_adj(Tbf) * Vf;                        // Twist vector from base frame to desired foot frame
             epsilon_w = Vb.head(3).norm();                      // Error tolerance for angular velocity w
             epsilon_v = Vb.tail(3).norm();                      // Error tolerance for linear velocity v
 

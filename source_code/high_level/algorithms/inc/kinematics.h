@@ -15,11 +15,11 @@ public:
       Joint_Angles computeFootIK(const Pose &act_foot_pos, const Pose &ref_foot_pos, const Joint_Angles &act_joint_angles, const uint8_t &leg_id);
 
 private:
-      int iteration_count = 0;                        // Iteration count for the inverse kinematics
+      int iteration_count = 0;                           // Iteration count for the inverse kinematics
       inline static constexpr int MAX_ITERATIONS = 50;   // Maximum number of iterations for the inverse kinematics
-      inline static constexpr float EPSILON_W = 0.0005f; // Error tolerance for for angular velocity w
-      inline static constexpr float EPSILON_V = 0.0005f; // Error tolerance for for linear velocity v
-      inline static constexpr float LAMBDA = 0.001f;  // Damping factor for the inverse kinematics - SR Inverse Levenberg-Marquardt method
+      inline static constexpr float EPSILON_W = 0.001f; // Error tolerance for for angular velocity w
+      inline static constexpr float EPSILON_V = 0.001f; // Error tolerance for for linear velocity v
+      inline static constexpr float LAMBDA = 0.001f;     // Damping factor for the inverse kinematics - SR Inverse Levenberg-Marquardt method
 };
 
 #endif

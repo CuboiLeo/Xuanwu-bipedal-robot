@@ -37,10 +37,10 @@ struct Vector3D
     double y;
     double z;
 };
-using Position = Vector3D; // Position in 3D space (meters)
-using Velocity = Vector3D; // Velocity in 3D space (m/s)
-using Acceleration = Vector3D; // Acceleration in 3D space (m/s^2)
-using Angular_Velocity = Vector3D; // Angular velocity in 3D space (rad/s)
+using Position = Vector3D;             // Position in 3D space (meters)
+using Velocity = Vector3D;             // Velocity in 3D space (m/s)
+using Acceleration = Vector3D;         // Acceleration in 3D space (m/s^2)
+using Angular_Velocity = Vector3D;     // Angular velocity in 3D space (rad/s)
 using Angular_Acceleration = Vector3D; // Angular acceleration in 3D space (rad/s^2)
 
 struct Position_Data
@@ -50,7 +50,7 @@ struct Position_Data
 };
 
 struct Orientation
-{ // Orientation in euler angles
+{                 // Orientation in euler angles
     double roll;  // rotation around x-axis
     double pitch; // rotation around y-axis
     double yaw;   // rotation around z-axis

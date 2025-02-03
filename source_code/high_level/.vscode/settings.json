@@ -61,7 +61,19 @@
         "unordered_set": "cpp",
         "iomanip": "cpp",
         "cinttypes": "cpp",
-        "alignedvector3": "cpp"
+        "alignedvector3": "cpp",
+        "adolcforward": "cpp",
+        "autodiff": "cpp",
+        "bvh": "cpp",
+        "eulerangles": "cpp",
+        "fft": "cpp",
+        "kroneckerproduct": "cpp",
+        "mprealsupport": "cpp",
+        "nnls": "cpp",
+        "numericaldiff": "cpp",
+        "openglsupport": "cpp",
+        "specialfunctions": "cpp",
+        "splines": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
