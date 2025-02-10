@@ -13,6 +13,7 @@
 #include "dynamics.h"
 #include "controls.h"
 #include "walking_patterns.h"
+#include "estimations.h"
 
 // Shared data between threads
 struct Shared_Data
@@ -54,6 +55,7 @@ void compute_thread()
     Kinematics kinematics; // Kinematics object for kinematics computation
     Dynamics dynamics;     // Dynamics object for dynamics computation
     Controls controls;     // Controls object for control computation
+    Estimations estimations; // Estimation object for estimation computation
 
     while (true)
     {
@@ -82,7 +84,6 @@ void compute_thread()
         // Compute the zero moment point position
         Position ZMP_pos = dynamics.computeZMPPos(robot.getCoMActPos(), robot.getCoMActAccel());
         robot.setZMPActPos(ZMP_pos);
-
         // std::cout << "CoM Position: " << CoM_pos.x << " " << CoM_pos.y << " " << CoM_pos.z << std::endl;
         // std::cout << "ZMP Position: " << ZMP_pos.x << " " << ZMP_pos.y << std::endl;
 
@@ -100,12 +101,15 @@ void compute_thread()
         Joint_Angles left_ref_angle = kinematics.computeFootIK(robot.getFootActPose(LEFT_LEG_ID), robot.getFootRefPose(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
         Joint_Angles right_ref_angle = kinematics.computeFootIK(robot.getFootActPose(RIGHT_LEG_ID), robot.getFootRefPose(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
         robot.setLegRefAngles(left_ref_angle, right_ref_angle);
-
-        std::cout << "Left Angles:  " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
-        std::cout << "Right Angles: " << right_ref_angle.hip_yaw << " | " << right_ref_angle.hip_roll << " | " << right_ref_angle.hip_pitch << " | " << right_ref_angle.knee_pitch << " | " << right_ref_angle.ankle_pitch << std::endl;
+        // std::cout << "Left Angles:  " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
+        // std::cout << "Right Angles: " << right_ref_angle.hip_yaw << " | " << right_ref_angle.hip_roll << " | " << right_ref_angle.hip_pitch << " | " << right_ref_angle.knee_pitch << " | " << right_ref_angle.ankle_pitch << std::endl;
 
         // Set the motor data
-        robot.setMotorData(shared_data.motor);
+        // robot.setMotorData(shared_data.motor);
+        
+        // Estimate the center of mass states
+        estimations.estimateCoMStates(shared_data.imu.getVel(), shared_data.imu.getAccel());
+        Velocity estimated_CoM_vel = estimations.getEstimatedCoMVel();
 
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = end - start;

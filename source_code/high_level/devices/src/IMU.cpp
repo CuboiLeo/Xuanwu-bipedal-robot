@@ -28,8 +28,8 @@ void IMU::computeGyroDot(void)
 
 void IMU::computeVel(void)
 {
-    // Compute the velocity using a low pass filter to reduce noise
-    vel = (1 - LPF_coeff) * vel + LPF_coeff * accel * delta_t;
+    // Integrate the acceleration to get the velocity
+    vel = vel +  accel * delta_t;
 }
 
 void IMU::processData()

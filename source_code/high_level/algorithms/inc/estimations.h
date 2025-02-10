@@ -12,7 +12,7 @@ class Estimations
 {
     public:
     Estimations();
-    void estimateCoMStates(const Velocity measured_CoM_vel, const Acceleration measured_CoM_accel);
+    void estimateCoMStates(const Eigen::Vector3d measured_CoM_vel, const Eigen::Vector3d measured_CoM_accel);
     Position getEstimatedCoMPos(void) const { return estimated_CoM_pos; }
     Velocity getEstimatedCoMVel(void) const { return estimated_CoM_vel; }
 

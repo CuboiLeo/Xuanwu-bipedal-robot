@@ -13,6 +13,7 @@ class IMU
 {
 public:
     IMU();
+    Eigen::Vector3d getVel() const { return vel; };
     Eigen::Vector3d getAccel() const { return accel; };
     Eigen::Vector3d getGyro() const { return gyro; };
     Eigen::Vector3d getGyroDot() const { return gyro_dot; };

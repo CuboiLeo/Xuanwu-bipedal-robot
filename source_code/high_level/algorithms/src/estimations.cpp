@@ -11,11 +11,11 @@ Estimations::Estimations()
         0, 0, 0, 0,
         0, 0, 1, 0,
         0, 0, 0, 1;
-    Q << 0.01, 0, 0, 0,
-        0, 0.01, 0, 0,
-        0, 0, 0.01, 0,
-        0, 0, 0, 0.01;
-    R << 0.01, 0, 0, 0.01,
+    Q << 0.1, 0, 0, 0,
+        0, 0.1, 0, 0,
+        0, 0, 10, 0,
+        0, 0, 0, 10;
+    R << 0.01, 0, 0, 0,
         0, 0.01, 0, 0,
         0, 0, 0.01, 0,
         0, 0, 0, 0.01;
@@ -33,7 +33,7 @@ double Estimations::getTimeElapsed()
     return time_elapsed.count();
 }
 
-void Estimations::estimateCoMStates(const Velocity measured_CoM_vel, const Acceleration measured_CoM_accel)
+void Estimations::estimateCoMStates(const Eigen::Vector3d measured_CoM_vel, const Eigen::Vector3d measured_CoM_accel)
 {
     // Get the time elapsed since the last estimation update
     delta_t = getTimeElapsed();
@@ -48,8 +48,8 @@ void Estimations::estimateCoMStates(const Velocity measured_CoM_vel, const Accel
         0, 0.5 * delta_t * delta_t,
         delta_t, 0,
         0, delta_t;
-    u << measured_CoM_accel.x, measured_CoM_accel.y;
-    y << 0, 0, measured_CoM_vel.x, measured_CoM_vel.y;
+    u << measured_CoM_accel(0), measured_CoM_accel(1);
+    y << 0, 0, measured_CoM_vel(0), measured_CoM_vel(1);
     x_hat = A * x + B * u;
     P = A * P * A.transpose() + R;
     K = P * C.transpose() * (C * P * C.transpose() + Q).inverse();
