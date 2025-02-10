@@ -12,6 +12,7 @@
 #include "kinematics.h"
 #include "dynamics.h"
 #include "controls.h"
+#include "walking_patterns.h"
 
 // Shared data between threads
 struct Shared_Data
@@ -75,7 +76,7 @@ void compute_thread()
         robot.setCoMActPos(CoM_pos);
 
         // Compute the center of mass acceleration
-        Position CoM_accel = dynamics.computeCoMAccel(robot.getCoMActPos(), shared_data.imu.getAccel(), shared_data.imu.getGyro(), shared_data.imu.getGyroDot());
+        Acceleration CoM_accel = dynamics.computeCoMAccel(robot.getCoMActPos(), shared_data.imu.getAccel(), shared_data.imu.getGyro(), shared_data.imu.getGyroDot());
         robot.setCoMActAccel(CoM_accel);
 
         // Compute the zero moment point position

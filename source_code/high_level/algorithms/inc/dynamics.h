@@ -10,7 +10,7 @@
 class Dynamics
 {
 public:
-    Position computeCoMAccel(const Position &CoM_pos, const Acceleration &accel, const Angular_Velocity &gyro, const Angular_Acceleration &gyro_dot);
+    Acceleration computeCoMAccel(const Position &CoM_pos, const Eigen::Vector3d &accel, const Eigen::Vector3d &gyro, const Eigen::Vector3d &gyro_dot);
     Position computeZMPPos(const Position &CoM, const Acceleration &CoM_accel);
 };
 
