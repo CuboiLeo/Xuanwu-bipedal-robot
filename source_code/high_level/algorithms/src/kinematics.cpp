@@ -168,7 +168,7 @@ Joint_Angles Kinematics::computeFootIK(const Pose &act_foot_pose, const Pose &re
             iteration_count++; // Increment the iteration count
       }
 
-      std::cout << "Number of iterations: " << iteration_count << std::endl;
+      // std::cout << "Number of iterations: " << iteration_count << std::endl;
 
       return computed_joint_angles;
 }
