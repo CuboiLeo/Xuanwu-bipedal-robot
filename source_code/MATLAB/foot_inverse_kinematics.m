@@ -84,8 +84,8 @@ for i = 1:5
         Js_right(:,i) = Ad_T_right*S{i+5};
     end
 end
-Js_left = simplify(Js_left)
-Js_right = simplify(Js_right)
+Js_left = simplify(Js_left);
+Js_right = simplify(Js_right);
 
 % value substitution
 val_theta1 = 0.001;
@@ -131,7 +131,7 @@ while norm_ws > epsilon_w || norm_vs > epsilon_v && iteration < 100
     Vb = [Vb_brkt(3,2);Vb_brkt(1,3);Vb_brkt(2,1);Vb_brkt(1,4);Vb_brkt(2,4);Vb_brkt(3,4)];
     Vs = adj_rep(Tsb)*Vb;
     Js = vpa(subs(Js_left,[sub_theta;sub_syms],[val_theta;sub_vals]),3);
-    val_theta = real(val_theta + pinv(Js)*Vs);
+    val_theta = real(val_theta + pinv(Js)*Vs)
 
     norm_ws = norm(Vs(1:3,1));
     norm_vs = norm(Vs(4:6,1));

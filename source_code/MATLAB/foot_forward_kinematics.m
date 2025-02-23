@@ -61,7 +61,7 @@ M_right = [1 0 0 L1;
     0 0 0 1];
 
 % final transformation matrix
-T_left = simplify(expm(S_brkt{1}*theta{1})*expm(S_brkt{2}*theta{2})*expm(S_brkt{3}*theta{3})*expm(S_brkt{4}*theta{4})*expm(S_brkt{5}*theta{5})*M_left)
+T_left = simplify(expand(expm(S_brkt{1}*theta{1})*expm(S_brkt{2}*theta{2})*expm(S_brkt{3}*theta{3})*expm(S_brkt{4}*theta{4})*expm(S_brkt{5}*theta{5})*M_left))
 T_right = simplify(expm(S_brkt{6}*theta{6})*expm(S_brkt{7}*theta{7})*expm(S_brkt{8}*theta{8})*expm(S_brkt{9}*theta{9})*expm(S_brkt{10}*theta{10})*M_right)
 
 %% The transformation matrixes are for Orin computation
