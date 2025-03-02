@@ -56,9 +56,9 @@ Eigen::Matrix4d pose_to_trans(Pose pose)
 
 Eigen::VectorXd skew_to_twist(Eigen::Matrix4d S)
 {
-	/* Converts a 4x4 skew symmetric matrix representation of screw axis [S] to a twist V = [w;v]*/
+	/* Converts a 4x4 skew symmetric matrix representation of screw axis [S] to a twist V = [v;w]*/
 	Eigen::VectorXd twist(6);
-	twist << S(2, 1), S(0, 2), S(1, 0), S(0, 3), S(1, 3), S(2, 3);
+	twist <<  S(0, 3), S(1, 3), S(2, 3), S(2, 1), S(0, 2), S(1, 0);
 	return twist;
 }
 
@@ -84,8 +84,8 @@ Eigen::MatrixXd trans_to_adj(Eigen::Matrix4d T)
 	Eigen::MatrixXd adjoint(6, 6);
 	adjoint.block<3, 3>(0, 0) = R;
 	adjoint.block<3, 3>(3, 3) = R;
-	adjoint.block<3, 3>(0, 3) = Eigen::Matrix3d::Zero();
-	adjoint.block<3, 3>(3, 0) = p_brkt * R;
+	adjoint.block<3, 3>(3, 0) = Eigen::Matrix3d::Zero();
+	adjoint.block<3, 3>(0, 3) = p_brkt * R;
 	return adjoint;
 }
 

@@ -17,6 +17,7 @@ set(SOURCES
     algorithms/src/controls.cpp
     algorithms/src/estimations.cpp
     algorithms/src/robot.cpp
+    data_plotter/data_exporter.cpp
 )
 
 set(CMAKE_BUILD_TYPE Debug)
@@ -36,4 +37,5 @@ target_include_directories(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/algorithms/inc
         ${PROJECT_SOURCE_DIR}/devices/inc
         ${PROJECT_SOURCE_DIR}/third_party
+        ${PROJECT_SOURCE_DIR}/data_plotter
 )

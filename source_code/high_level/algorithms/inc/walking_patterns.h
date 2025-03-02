@@ -10,11 +10,12 @@
 class Walking_Patterns
 {
 public:
-    
     Position computeLIPM(const Position &act_CoM_pos, const Velocity &act_CoM_vel);
 
 private:
     double step_counter = 0; // Odd means left foot next, even means right foot next
+    Eigen::VectorXd sx {{0, 0.3, 0.3, 0.3, 0}};
+    Eigen::VectorXd sy {{0.2, 0.2, 0.2, 0.2, 0.2}};
 
     static constexpr double zc = 0.4;                // CoM height
     static constexpr double Tc = sqrt(zc / GRAVITY); // Time constant
