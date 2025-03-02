@@ -15,8 +15,6 @@ public:
 
 private:
     double step_counter = 0; // Odd means left foot next, even means right foot next
-    Eigen::Vector5d sx;
-    Eigen::Vector5d sy;
 
     static constexpr double zc = 0.4;                // CoM height
     static constexpr double Tc = sqrt(zc / GRAVITY); // Time constant
