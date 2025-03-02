@@ -17,7 +17,6 @@ public:
     // Getter methods for IMU values
     FusionVector getAccel() const { return accel; }
     FusionVector getGyro() const { return gyro; }
-    FusionVector getGyroDot() const { return gyro_dot; }
     FusionEuler getEulerRad() const { return euler_rad; }
     FusionEuler getEulerDeg() const { return euler_deg; }
     FusionMatrix getRotationMatrix() const { return rotation_matrix; }
@@ -28,9 +27,7 @@ private:
     float static constexpr MAX_OUTPUT = 500;
     float static constexpr FILTER_COEFFICIENT = 0.01f;
     FusionVector accel;           // Accelerometer values in m/s^2
-    FusionVector prev_gyro;
     FusionVector gyro;            // Gyroscope values in rad/s
-    FusionVector gyro_dot;        // Angular acceleration values in rad/s^2
     FusionEuler euler_rad;        // Euler angles in radians
     FusionEuler euler_deg;        // Euler angles in degrees
     float temp;                   // Temperature in degrees Celsius
