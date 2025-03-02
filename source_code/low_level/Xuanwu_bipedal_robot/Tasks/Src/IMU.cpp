@@ -30,15 +30,8 @@ void IMU::heatControl()
 
 void IMU::updateRaw(const float accel[3], const float gyro[3], float temperature)
 {
-    this->accel = {(1 - FILTER_COEFFICIENT) * this->accel.axis.x + FILTER_COEFFICIENT * accel[0],
-                   (1 - FILTER_COEFFICIENT) * this->accel.axis.y + FILTER_COEFFICIENT * accel[1],
-                   (1 - FILTER_COEFFICIENT) * this->accel.axis.z + FILTER_COEFFICIENT * accel[2]};
-    prev_gyro = this->gyro;
+    this->accel = {accel[0],accel[1],accel[2]};
     this->gyro = {gyro[0], gyro[1], gyro[2]};
-    gyro_dot = {(1 - FILTER_COEFFICIENT) * gyro_dot.axis.x + FILTER_COEFFICIENT * (this->gyro.axis.x - prev_gyro.axis.x) / IMU_TASK_PERIOD,
-                (1 - FILTER_COEFFICIENT) * gyro_dot.axis.y + FILTER_COEFFICIENT * (this->gyro.axis.y - prev_gyro.axis.y) / IMU_TASK_PERIOD,
-                (1 - FILTER_COEFFICIENT) * gyro_dot.axis.z + FILTER_COEFFICIENT * (this->gyro.axis.z - prev_gyro.axis.z) / IMU_TASK_PERIOD};
-
     temp = temperature;
 }
 

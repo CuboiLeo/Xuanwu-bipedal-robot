@@ -138,7 +138,7 @@ M6R = [1 0 0 L1+C6(1);
     0 0 0 1];
 
 T1 = M1;
-T2L = simplify(expm(S{1}*theta1)*M2L)
+T2L = simplify(expm(S{1}*theta1)*M2L);
 T3L = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*M3L);
 T4L = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*M4L);
 T5L = simplify(expm(S{1}*theta1)*expm(S{2}*theta2)*expm(S{3}*theta3)*expm(S{4}*theta4)*M5L);
