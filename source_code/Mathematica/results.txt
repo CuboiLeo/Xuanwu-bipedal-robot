@@ -1,0 +1,88 @@
+Left Foot FK:
+MatrixForm[{{Cos[\[Theta]1]*Cos[\[Theta]2], Cos[\[Theta]3]*Cos[\[Theta]5]*(Cos[\[Theta]4]*Sin[\[Theta]1] + Cos[\[Theta]1]*Sin[\[Theta]2]*Sin[\[Theta]4]) + 
+     Cos[\[Theta]1]*Sin[\[Theta]2]*(Cos[\[Theta]4]*Cos[\[Theta]5]*Sin[\[Theta]3] + Cos[\[Theta]3 + \[Theta]4]*Sin[\[Theta]5]) - Sin[\[Theta]1]*(Cos[\[Theta]5]*Sin[\[Theta]3]*Sin[\[Theta]4] + Sin[\[Theta]3 + \[Theta]4]*Sin[\[Theta]5]), 
+    Cos[\[Theta]1]*Cos[\[Theta]3 + \[Theta]4 + \[Theta]5]*Sin[\[Theta]2] - Sin[\[Theta]1]*Sin[\[Theta]3 + \[Theta]4 + \[Theta]5], -L1 - Cos[\[Theta]1]*(L4*Cos[\[Theta]3] + L5*Cos[\[Theta]3 + \[Theta]4] + L6*Cos[\[Theta]3 + \[Theta]4 + \[Theta]5])*
+      Sin[\[Theta]2] + Sin[\[Theta]1]*(L4*Sin[\[Theta]3] + L5*Sin[\[Theta]3 + \[Theta]4] + L6*Sin[\[Theta]3 + \[Theta]4 + \[Theta]5])}, 
+   {(-Cos[\[Theta]2])*Sin[\[Theta]1], Cos[\[Theta]1]*Cos[\[Theta]3 + \[Theta]4 + \[Theta]5] - Sin[\[Theta]1]*Sin[\[Theta]2]*Sin[\[Theta]3 + \[Theta]4 + \[Theta]5], 
+    (1/4)*(-Cos[\[Theta]1 - \[Theta]2 - \[Theta]3 - \[Theta]4 - \[Theta]5] + Cos[\[Theta]1 + \[Theta]2 - \[Theta]3 - \[Theta]4 - \[Theta]5] - Cos[\[Theta]1 - \[Theta]2 + \[Theta]3 + \[Theta]4 + \[Theta]5] + Cos[\[Theta]1 + \[Theta]2 + \[Theta]3 + \[Theta]4 + \[Theta]5] + 
+      2*Sin[\[Theta]1 - \[Theta]3 - \[Theta]4 - \[Theta]5] - 2*Sin[\[Theta]1 + \[Theta]3 + \[Theta]4 + \[Theta]5]), 
+    Cos[\[Theta]3]*((L4 + L5*Cos[\[Theta]4] + L6*Cos[\[Theta]4 + \[Theta]5])*Sin[\[Theta]1]*Sin[\[Theta]2] + Cos[\[Theta]1]*(L5*Sin[\[Theta]4] + L6*Sin[\[Theta]4 + \[Theta]5])) + 
+     Sin[\[Theta]3]*(Cos[\[Theta]1]*(L4 + L5*Cos[\[Theta]4] + L6*Cos[\[Theta]4 + \[Theta]5]) - Sin[\[Theta]1]*Sin[\[Theta]2]*(L5*Sin[\[Theta]4] + L6*Sin[\[Theta]4 + \[Theta]5]))}, 
+   {-Sin[\[Theta]2], Cos[\[Theta]2]*Sin[\[Theta]3 + \[Theta]4 + \[Theta]5], Cos[\[Theta]2]*Cos[\[Theta]3 + \[Theta]4 + \[Theta]5], -L2 - Cos[\[Theta]2]*(L4*Cos[\[Theta]3] + L5*Cos[\[Theta]3 + \[Theta]4] + L6*Cos[\[Theta]3 + \[Theta]4 + \[Theta]5])}, 
+   {0, 0, 0, 1}}]
+
+
+Right Foot FK:
+MatrixForm[{{Cos[\[Theta]6]*Cos[\[Theta]7], (1/4)*(Cos[\[Theta]10 - \[Theta]6 - \[Theta]7 + \[Theta]8 + \[Theta]9] + Cos[\[Theta]10 + \[Theta]6 - \[Theta]7 + \[Theta]8 + \[Theta]9] - Cos[\[Theta]10 - \[Theta]6 + \[Theta]7 + \[Theta]8 + \[Theta]9] - 
+      Cos[\[Theta]10 + \[Theta]6 + \[Theta]7 + \[Theta]8 + \[Theta]9] - 2*Sin[\[Theta]10 - \[Theta]6 + \[Theta]8 + \[Theta]9] + 2*Sin[\[Theta]10 + \[Theta]6 + \[Theta]8 + \[Theta]9]), 
+    (1/2)*(-Cos[\[Theta]10 - \[Theta]6 + \[Theta]8 + \[Theta]9] + Cos[\[Theta]10 + \[Theta]6 + \[Theta]8 + \[Theta]9] + 2*Cos[\[Theta]6]*Cos[\[Theta]10 + \[Theta]8 + \[Theta]9]*Sin[\[Theta]7]), 
+    L1 + (L4 + L5*Cos[\[Theta]9] + L6*Cos[\[Theta]10 + \[Theta]9])*Sin[\[Theta]6]*Sin[\[Theta]8] + L6*Cos[\[Theta]6]*Cos[\[Theta]9]*Sin[\[Theta]10]*Sin[\[Theta]7]*Sin[\[Theta]8] + L5*Cos[\[Theta]6]*Sin[\[Theta]7]*Sin[\[Theta]8]*Sin[\[Theta]9] + 
+     L6*Cos[\[Theta]10]*Cos[\[Theta]6]*Sin[\[Theta]7]*Sin[\[Theta]8]*Sin[\[Theta]9] + Cos[\[Theta]8]*(Cos[\[Theta]9]*(L6*Sin[\[Theta]10]*Sin[\[Theta]6] - (L5 + L6*Cos[\[Theta]10])*Cos[\[Theta]6]*Sin[\[Theta]7]) + 
+       (L5 + L6*Cos[\[Theta]10])*Sin[\[Theta]6]*Sin[\[Theta]9] + Cos[\[Theta]6]*Sin[\[Theta]7]*(-L4 + L6*Sin[\[Theta]10]*Sin[\[Theta]9]))}, 
+   {(-Cos[\[Theta]7])*Sin[\[Theta]6], (1/2)*(Cos[\[Theta]10 - \[Theta]6 + \[Theta]8 + \[Theta]9] + Cos[\[Theta]10 + \[Theta]6 + \[Theta]8 + \[Theta]9] - 2*Sin[\[Theta]6]*Sin[\[Theta]7]*Sin[\[Theta]10 + \[Theta]8 + \[Theta]9]), 
+    (1/4)*(Cos[\[Theta]10 - \[Theta]6 - \[Theta]7 + \[Theta]8 + \[Theta]9] - Cos[\[Theta]10 + \[Theta]6 - \[Theta]7 + \[Theta]8 + \[Theta]9] - Cos[\[Theta]10 - \[Theta]6 + \[Theta]7 + \[Theta]8 + \[Theta]9] + Cos[\[Theta]10 + \[Theta]6 + \[Theta]7 + \[Theta]8 + \[Theta]9] - 
+      2*Sin[\[Theta]10 - \[Theta]6 + \[Theta]8 + \[Theta]9] - 2*Sin[\[Theta]10 + \[Theta]6 + \[Theta]8 + \[Theta]9]), (L4*Cos[\[Theta]8] + L5*Cos[\[Theta]8 + \[Theta]9] + L6*Cos[\[Theta]10 + \[Theta]8 + \[Theta]9])*Sin[\[Theta]6]*Sin[\[Theta]7] + 
+     Cos[\[Theta]6]*(L4*Sin[\[Theta]8] + L5*Sin[\[Theta]8 + \[Theta]9] + L6*Sin[\[Theta]10 + \[Theta]8 + \[Theta]9])}, {-Sin[\[Theta]7], Cos[\[Theta]7]*Sin[\[Theta]10 + \[Theta]8 + \[Theta]9], Cos[\[Theta]7]*Cos[\[Theta]10 + \[Theta]8 + \[Theta]9], 
+    -L2 - Cos[\[Theta]7]*(L4*Cos[\[Theta]8] + L5*Cos[\[Theta]8 + \[Theta]9] + L6*Cos[\[Theta]10 + \[Theta]8 + \[Theta]9])}, {0, 0, 0, 1}}]
+
+Left Foot Spatial Jacobian:
+MatrixForm[{{0, L2*Cos[\[Theta]1], (-L2)*Cos[\[Theta]2]*Sin[\[Theta]1], (-L2)*Cos[\[Theta]2]*Sin[\[Theta]1] - L4*(Cos[\[Theta]3]*Sin[\[Theta]1] + Cos[\[Theta]1]*Sin[\[Theta]2]*Sin[\[Theta]3]), 
+    (-L2)*Cos[\[Theta]2]*Sin[\[Theta]1] + Sin[\[Theta]3]*((-Cos[\[Theta]1])*(L4 + L5*Cos[\[Theta]4])*Sin[\[Theta]2] + L5*Sin[\[Theta]1]*Sin[\[Theta]4]) - 
+     Cos[\[Theta]3]*((L4 + L5*Cos[\[Theta]4])*Sin[\[Theta]1] + L5*Cos[\[Theta]1]*Sin[\[Theta]2]*Sin[\[Theta]4])}, 
+   {-L1, (-L2)*Sin[\[Theta]1], (-L2)*Cos[\[Theta]1]*Cos[\[Theta]2] - L1*Sin[\[Theta]2], (-Cos[\[Theta]1])*(L2*Cos[\[Theta]2] + L4*Cos[\[Theta]3]) + 
+     Sin[\[Theta]2]*(-L1 + L4*Sin[\[Theta]1]*Sin[\[Theta]3]), (-Cos[\[Theta]1])*(L2*Cos[\[Theta]2] + L4*Cos[\[Theta]3] + L5*Cos[\[Theta]3 + \[Theta]4]) + 
+     Sin[\[Theta]2]*(-L1 + Sin[\[Theta]1]*(L4*Sin[\[Theta]3] + L5*Sin[\[Theta]3 + \[Theta]4]))}, {0, (-L1)*Cos[\[Theta]1], L1*Cos[\[Theta]2]*Sin[\[Theta]1], 
+    Cos[\[Theta]2]*(L1*Sin[\[Theta]1] - L4*Sin[\[Theta]3]), Cos[\[Theta]2]*(L1*Sin[\[Theta]1] - L4*Sin[\[Theta]3] - L5*Sin[\[Theta]3 + \[Theta]4])}, 
+   {0, Sin[\[Theta]1], Cos[\[Theta]1]*Cos[\[Theta]2], Cos[\[Theta]1]*Cos[\[Theta]2], Cos[\[Theta]1]*Cos[\[Theta]2]}, {0, Cos[\[Theta]1], (-Cos[\[Theta]2])*Sin[\[Theta]1], (-Cos[\[Theta]2])*Sin[\[Theta]1], 
+    (-Cos[\[Theta]2])*Sin[\[Theta]1]}, {-1, 0, -Sin[\[Theta]2], -Sin[\[Theta]2], -Sin[\[Theta]2]}}]
+
+Right Foot Spatial Jacobian:
+MatrixForm[{{0, L2*Cos[\[Theta]6], (-L2)*Cos[\[Theta]7]*Sin[\[Theta]6], (-L2)*Cos[\[Theta]7]*Sin[\[Theta]6] - L4*(Cos[\[Theta]8]*Sin[\[Theta]6] + Cos[\[Theta]6]*Sin[\[Theta]7]*Sin[\[Theta]8]), 
+    (-L2)*Cos[\[Theta]7]*Sin[\[Theta]6] + Sin[\[Theta]8]*((-Cos[\[Theta]6])*(L4 + L5*Cos[\[Theta]9])*Sin[\[Theta]7] + L5*Sin[\[Theta]6]*Sin[\[Theta]9]) - 
+     Cos[\[Theta]8]*((L4 + L5*Cos[\[Theta]9])*Sin[\[Theta]6] + L5*Cos[\[Theta]6]*Sin[\[Theta]7]*Sin[\[Theta]9])}, 
+   {L1, (-L2)*Sin[\[Theta]6], (-L2)*Cos[\[Theta]6]*Cos[\[Theta]7] + L1*Sin[\[Theta]7], (-Cos[\[Theta]6])*(L2*Cos[\[Theta]7] + L4*Cos[\[Theta]8]) + 
+     Sin[\[Theta]7]*(L1 + L4*Sin[\[Theta]6]*Sin[\[Theta]8]), (-Cos[\[Theta]6])*(L2*Cos[\[Theta]7] + L4*Cos[\[Theta]8] + L5*Cos[\[Theta]8 + \[Theta]9]) + 
+     Sin[\[Theta]7]*(L1 + Sin[\[Theta]6]*(L4*Sin[\[Theta]8] + L5*Sin[\[Theta]8 + \[Theta]9]))}, {0, L1*Cos[\[Theta]6], (-L1)*Cos[\[Theta]7]*Sin[\[Theta]6], 
+    (-Cos[\[Theta]7])*(L1*Sin[\[Theta]6] + L4*Sin[\[Theta]8]), (-Cos[\[Theta]7])*(L1*Sin[\[Theta]6] + L4*Sin[\[Theta]8] + L5*Sin[\[Theta]8 + \[Theta]9])}, 
+   {0, Sin[\[Theta]6], Cos[\[Theta]6]*Cos[\[Theta]7], Cos[\[Theta]6]*Cos[\[Theta]7], Cos[\[Theta]6]*Cos[\[Theta]7]}, {0, Cos[\[Theta]6], (-Cos[\[Theta]7])*Sin[\[Theta]6], (-Cos[\[Theta]7])*Sin[\[Theta]6], 
+    (-Cos[\[Theta]7])*Sin[\[Theta]6]}, {-1, 0, -Sin[\[Theta]7], -Sin[\[Theta]7], -Sin[\[Theta]7]}}]
+
+CoM x:
+(1/mt)*(C11*m1 + (C32 - L3)*m3*Sin[\[Theta]1] + C42*m4*Cos[\[Theta]3]*Sin[\[Theta]1] + m2*(-L1 + C21*Cos[\[Theta]1] + C22*Sin[\[Theta]1]) + m3*Cos[\[Theta]1]*(C31*Cos[\[Theta]2] + C33*Sin[\[Theta]2]) - 
+   C43*m4*Sin[\[Theta]1]*Sin[\[Theta]3] + L4*m5*Sin[\[Theta]1]*Sin[\[Theta]3] - C53*m5*Cos[\[Theta]4]*Sin[\[Theta]1]*Sin[\[Theta]3] + m4*Cos[\[Theta]1]*(C41*Cos[\[Theta]2] + Sin[\[Theta]2]*(C43*Cos[\[Theta]3] + C42*Sin[\[Theta]3])) - 
+   C52*m5*Sin[\[Theta]1]*Sin[\[Theta]3]*Sin[\[Theta]4] + m5*Cos[\[Theta]3]*Sin[\[Theta]1]*(C52*Cos[\[Theta]4] - C53*Sin[\[Theta]4]) + 
+   m5*Cos[\[Theta]1]*(C51*Cos[\[Theta]2] + Sin[\[Theta]2]*((-L4)*Cos[\[Theta]3] + C53*Cos[\[Theta]3 + \[Theta]4] + C52*Sin[\[Theta]3 + \[Theta]4])) + 
+   m6*Cos[\[Theta]1]*(C61*Cos[\[Theta]2] + Sin[\[Theta]2]*((-L4)*Cos[\[Theta]3] - L5*Cos[\[Theta]3 + \[Theta]4] + C63*Cos[\[Theta]3 + \[Theta]4 + \[Theta]5] + C62*Sin[\[Theta]3 + \[Theta]4 + \[Theta]5])) + 
+   (1/2)*m6*(-2*L1 + L4*Cos[\[Theta]1 - \[Theta]3] - L4*Cos[\[Theta]1 + \[Theta]3] + L5*Cos[\[Theta]1 - \[Theta]3 - \[Theta]4] - L5*Cos[\[Theta]1 + \[Theta]3 + \[Theta]4] - C63*Cos[\[Theta]1 - \[Theta]3 - \[Theta]4 - \[Theta]5] + 
+     C63*Cos[\[Theta]1 + \[Theta]3 + \[Theta]4 + \[Theta]5] + C62*Sin[\[Theta]1 - \[Theta]3 - \[Theta]4 - \[Theta]5] + C62*Sin[\[Theta]1 + \[Theta]3 + \[Theta]4 + \[Theta]5]) + (C32 - L3)*m3*Sin[\[Theta]6] + C42*m4*Cos[\[Theta]8]*Sin[\[Theta]6] + 
+   m2*(L1 - C21*Cos[\[Theta]6] + C22*Sin[\[Theta]6]) + m3*Cos[\[Theta]6]*(C31*Cos[\[Theta]7] + C33*Sin[\[Theta]7]) - C43*m4*Sin[\[Theta]6]*Sin[\[Theta]8] + L4*m5*Sin[\[Theta]6]*Sin[\[Theta]8] - 
+   C53*m5*Cos[\[Theta]9]*Sin[\[Theta]6]*Sin[\[Theta]8] + m4*Cos[\[Theta]6]*(C41*Cos[\[Theta]7] + Sin[\[Theta]7]*(C43*Cos[\[Theta]8] + C42*Sin[\[Theta]8])) - C52*m5*Sin[\[Theta]6]*Sin[\[Theta]8]*Sin[\[Theta]9] + 
+   m5*Cos[\[Theta]8]*Sin[\[Theta]6]*(C52*Cos[\[Theta]9] - C53*Sin[\[Theta]9]) + m5*Cos[\[Theta]6]*(C51*Cos[\[Theta]7] + Sin[\[Theta]7]*((-L4)*Cos[\[Theta]8] + C53*Cos[\[Theta]8 + \[Theta]9] + C52*Sin[\[Theta]8 + \[Theta]9])) + 
+   m6*Cos[\[Theta]6]*(C61*Cos[\[Theta]7] + Sin[\[Theta]7]*((-L4)*Cos[\[Theta]8] - L5*Cos[\[Theta]8 + \[Theta]9] + C63*Cos[\[Theta]10 + \[Theta]8 + \[Theta]9] + C62*Sin[\[Theta]10 + \[Theta]8 + \[Theta]9])) + 
+   (1/2)*m6*(2*L1 + L4*Cos[\[Theta]6 - \[Theta]8] - L4*Cos[\[Theta]6 + \[Theta]8] + L5*Cos[\[Theta]6 - \[Theta]8 - \[Theta]9] - C63*Cos[\[Theta]10 - \[Theta]6 + \[Theta]8 + \[Theta]9] - L5*Cos[\[Theta]6 + \[Theta]8 + \[Theta]9] + 
+     C63*Cos[\[Theta]10 + \[Theta]6 + \[Theta]8 + \[Theta]9] - C62*Sin[\[Theta]10 - \[Theta]6 + \[Theta]8 + \[Theta]9] + C62*Sin[\[Theta]10 + \[Theta]6 + \[Theta]8 + \[Theta]9]))
+
+CoM y:
+(1/mt)*(C12*m1 + (C32 - L3)*m3*Cos[\[Theta]1] + (C32 - L3)*m3*Cos[\[Theta]6] + m2*(C22*Cos[\[Theta]1] - C21*Sin[\[Theta]1]) - m3*Sin[\[Theta]1]*(C31*Cos[\[Theta]2] + C33*Sin[\[Theta]2]) + 
+   m4*Cos[\[Theta]1]*(C42*Cos[\[Theta]3] - C43*Sin[\[Theta]3]) - m4*Sin[\[Theta]1]*(C41*Cos[\[Theta]2] + Sin[\[Theta]2]*(C43*Cos[\[Theta]3] + C42*Sin[\[Theta]3])) + 
+   m5*Cos[\[Theta]1]*(C52*Cos[\[Theta]3 + \[Theta]4] + L4*Sin[\[Theta]3] - C53*Sin[\[Theta]3 + \[Theta]4]) - 
+   m5*Sin[\[Theta]1]*(C51*Cos[\[Theta]2] + Sin[\[Theta]2]*((-L4)*Cos[\[Theta]3] + C53*Cos[\[Theta]3 + \[Theta]4] + C52*Sin[\[Theta]3 + \[Theta]4])) + 
+   m6*Cos[\[Theta]1]*(C62*Cos[\[Theta]3 + \[Theta]4 + \[Theta]5] + L4*Sin[\[Theta]3] + L5*Sin[\[Theta]3 + \[Theta]4] - C63*Sin[\[Theta]3 + \[Theta]4 + \[Theta]5]) - 
+   m6*Sin[\[Theta]1]*(C61*Cos[\[Theta]2] + Sin[\[Theta]2]*((-L4)*Cos[\[Theta]3] - L5*Cos[\[Theta]3 + \[Theta]4] + C63*Cos[\[Theta]3 + \[Theta]4 + \[Theta]5] + C62*Sin[\[Theta]3 + \[Theta]4 + \[Theta]5])) + 
+   m2*(C22*Cos[\[Theta]6] + C21*Sin[\[Theta]6]) - m3*Sin[\[Theta]6]*(C31*Cos[\[Theta]7] + C33*Sin[\[Theta]7]) + m4*Cos[\[Theta]6]*(C42*Cos[\[Theta]8] - C43*Sin[\[Theta]8]) - 
+   m4*Sin[\[Theta]6]*(C41*Cos[\[Theta]7] + Sin[\[Theta]7]*(C43*Cos[\[Theta]8] + C42*Sin[\[Theta]8])) + m6*Cos[\[Theta]6]*(Sin[\[Theta]8]*(L4 + Cos[\[Theta]9]*(L5 - C62*Sin[\[Theta]10]) + C63*Sin[\[Theta]10]*Sin[\[Theta]9]) - 
+     Cos[\[Theta]8]*(C63*Cos[\[Theta]9]*Sin[\[Theta]10] + (-L5 + C62*Sin[\[Theta]10])*Sin[\[Theta]9])) + 
+   m6*Sin[\[Theta]6]*((-C61)*Cos[\[Theta]7] + Sin[\[Theta]7]*(Cos[\[Theta]8]*(L4 + Cos[\[Theta]9]*(L5 - C62*Sin[\[Theta]10]) + C63*Sin[\[Theta]10]*Sin[\[Theta]9]) + 
+       Sin[\[Theta]8]*(C63*Cos[\[Theta]9]*Sin[\[Theta]10] + (-L5 + C62*Sin[\[Theta]10])*Sin[\[Theta]9]))) + m5*Cos[\[Theta]6]*(C52*Cos[\[Theta]8 + \[Theta]9] + L4*Sin[\[Theta]8] - C53*Sin[\[Theta]8 + \[Theta]9]) - 
+   m5*Sin[\[Theta]6]*(C51*Cos[\[Theta]7] + Sin[\[Theta]7]*((-L4)*Cos[\[Theta]8] + C53*Cos[\[Theta]8 + \[Theta]9] + C52*Sin[\[Theta]8 + \[Theta]9])) + 
+   m6*Cos[\[Theta]10]*((-Sin[\[Theta]6])*Sin[\[Theta]7]*(C63*Cos[\[Theta]8 + \[Theta]9] + C62*Sin[\[Theta]8 + \[Theta]9]) + Cos[\[Theta]6]*(C62*Cos[\[Theta]8 + \[Theta]9] - C63*Sin[\[Theta]8 + \[Theta]9])))
+
+CoM z:
+-((1/mt)*((-C13)*m1 - 2*C23*m2 + 2*L2*m4 + 2*L2*m5 + C41*m4*Sin[\[Theta]2] + C51*m5*Sin[\[Theta]2] + m3*(L2 - C33*Cos[\[Theta]2] + C31*Sin[\[Theta]2]) - 
+    m4*Cos[\[Theta]2]*(C43*Cos[\[Theta]3] + C42*Sin[\[Theta]3]) + m5*Cos[\[Theta]2]*(L4*Cos[\[Theta]3] - C53*Cos[\[Theta]3 + \[Theta]4] - C52*Sin[\[Theta]3 + \[Theta]4]) + 
+    (1/2)*m6*(2*L2 + L4*Cos[\[Theta]2 - \[Theta]3] + L4*Cos[\[Theta]2 + \[Theta]3] + L5*Cos[\[Theta]2 - \[Theta]3 - \[Theta]4] + L5*Cos[\[Theta]2 + \[Theta]3 + \[Theta]4] - C63*Cos[\[Theta]2 - \[Theta]3 - \[Theta]4 - \[Theta]5] - 
+      C63*Cos[\[Theta]2 + \[Theta]3 + \[Theta]4 + \[Theta]5] + 2*C61*Sin[\[Theta]2] + C62*Sin[\[Theta]2 - \[Theta]3 - \[Theta]4 - \[Theta]5] - C62*Sin[\[Theta]2 + \[Theta]3 + \[Theta]4 + \[Theta]5]) + C41*m4*Sin[\[Theta]7] + C51*m5*Sin[\[Theta]7] + 
+    m3*(L2 - C33*Cos[\[Theta]7] + C31*Sin[\[Theta]7]) - m4*Cos[\[Theta]7]*(C43*Cos[\[Theta]8] + C42*Sin[\[Theta]8]) + m5*Cos[\[Theta]7]*(L4*Cos[\[Theta]8] - C53*Cos[\[Theta]8 + \[Theta]9] - C52*Sin[\[Theta]8 + \[Theta]9]) + 
+    (1/2)*m6*(2*L2 + L4*Cos[\[Theta]7 - \[Theta]8] + L4*Cos[\[Theta]7 + \[Theta]8] + L5*Cos[\[Theta]7 - \[Theta]8 - \[Theta]9] - C63*Cos[\[Theta]10 - \[Theta]7 + \[Theta]8 + \[Theta]9] + L5*Cos[\[Theta]7 + \[Theta]8 + \[Theta]9] - 
+      C63*Cos[\[Theta]10 + \[Theta]7 + \[Theta]8 + \[Theta]9] + 2*C61*Sin[\[Theta]7] - C62*Sin[\[Theta]10 - \[Theta]7 + \[Theta]8 + \[Theta]9] - C62*Sin[\[Theta]10 + \[Theta]7 + \[Theta]8 + \[Theta]9])))
+
