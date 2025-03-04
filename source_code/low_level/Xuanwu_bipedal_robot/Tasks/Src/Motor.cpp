@@ -83,8 +83,8 @@ uint8_t Motor::returnZeroPos(void)
 		for (int i = 0; i < NUM_MOTORS; i++)
 		{
 			motor_info[i].ctrl.pos_set = 0;
-			motor_info[i].ctrl.kp_set = 100;
-			motor_info[i].ctrl.kd_set = 2;
+			motor_info[i].ctrl.kp_set = 30;
+			motor_info[i].ctrl.kd_set = 1.0f;
 		}
 		motor_info[Left_Hip_Pitch].ctrl.pos_set = 0.33f;
 		motor_info[Left_Knee_Pitch].ctrl.pos_set = -0.58f;

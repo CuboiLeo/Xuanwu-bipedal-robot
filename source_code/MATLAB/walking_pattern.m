@@ -1,7 +1,7 @@
 clear; clc; close all;
 
-sx = [0 0.3 0.3 0.3 0.3 0.2 0.4 0];      % [m] nominal step offsets in x
-sy = [0.2 0.2 0.2 0.2 0.2 0.2 0.2 0.2];  % [m] nominal step offsets in y
+sx = [0 0.1 0.1 0.2 0.1 0.3 0.1 0.2 0.2 0 0 ];      % [m] nominal step offsets in x
+sy = [0.28 0.28 0.28 0.28 0.28 0.28 0.28 0.28 0.28 0.28 0.28];  % [m] nominal step offsets in y
 
 zc = 0.4;      % [m] CoM height
 g  = 9.81;     % [m/s^2]
