@@ -20,6 +20,7 @@ class RealTimePlotter:
         self.data2 = deque(maxlen=MAX_SAMPLES)
         self.data3 = deque(maxlen=MAX_SAMPLES)
         self.data4 = deque(maxlen=MAX_SAMPLES)
+        self.data5 = deque(maxlen=MAX_SAMPLES)
         self.last_line_count = 0
 
         # Create the PyQtGraph window
@@ -36,6 +37,7 @@ class RealTimePlotter:
         self.curve2 = self.plot.plot(pen='g', name="data2")
         self.curve3 = self.plot.plot(pen='b', name="data3")
         self.curve4 = self.plot.plot(pen='y', name="data4")
+        self.curve5 = self.plot.plot(pen='c', name="data5")
 
         # Timer to periodically update the plot
         self.timer = QtCore.QTimer()
@@ -56,18 +58,20 @@ class RealTimePlotter:
                     new_lines = all_lines[self.last_line_count:current_line_count]
 
                     for row in new_lines:
-                        # Expect 5 columns: [timestamp, data1, data2, data3, data4]
-                        if len(row) < 5:
+                        # Expect 5 columns: [timestamp, data1, data2, data3, data4, data5]
+                        if len(row) < 6:
                             continue
                         try:
                             val1 = float(row[1])
                             val2 = float(row[2])
                             val3 = float(row[3])
                             val4 = float(row[4])
+                            val5 = float(row[5])
                             self.data1.append(val1)
                             self.data2.append(val2)
                             self.data3.append(val3)
                             self.data4.append(val4)
+                            self.data5.append(val5)
                         except ValueError:
                             # Skip lines that aren't purely numeric in the data columns
                             continue
@@ -89,6 +93,7 @@ class RealTimePlotter:
         self.curve2.setData(x=list(x_range), y=list(self.data2))
         self.curve3.setData(x=list(x_range), y=list(self.data3))
         self.curve4.setData(x=list(x_range), y=list(self.data4))
+        self.curve5.setData(x=list(x_range), y=list(self.data5))
 
     def run(self):
         sys.exit(self.app.exec())  # Note: PyQt6 uses 'exec()' instead of 'exec_()'

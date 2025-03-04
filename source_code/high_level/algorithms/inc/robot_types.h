@@ -68,6 +68,12 @@ struct Pose_Data
     Pose act;
 };
 
+struct Pose_Two_Foots
+{
+    Pose left;
+    Pose right;
+};
+
 struct Foot_Data
 {
     Pose_Data left;

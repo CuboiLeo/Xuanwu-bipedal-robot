@@ -1,29 +1,72 @@
 #include "walking_patterns.h"
 
-Position Walking_Patterns::gaitPlanner(const Position &act_CoM_pos, const Velocity &act_CoM_vel, const Position &stance_foot_pos)
+Pose_Two_Foots Walking_Patterns::gaitPlanner(const Position &act_CoM_pos, const Velocity &act_CoM_vel, const Pose_Two_Foots &foot_poses, const double &roll_angle)
 {
-    if(step_counter > sx.size())
+    duration = std::chrono::high_resolution_clock::now() - start_time;
+    gait_phase = duration.count();
+    if (gait_phase >= Tsup + Tdbl)
     {
-        step_counter = 0;
-    }
-    if(duration.count() >= Tsup)
-    {
-        next_step = computeLIPM(act_CoM_pos, act_CoM_vel, stance_foot_pos);
+        next_step = step_counter % 2 == 0 ? computeLIPM(act_CoM_pos, act_CoM_vel, foot_poses.right.position) : computeLIPM(act_CoM_pos, act_CoM_vel, foot_poses.left.position);
         start_time = std::chrono::high_resolution_clock::now();
+        gait_phase = 0;
         step_counter++;
     }
-    duration = std::chrono::high_resolution_clock::now() - start_time;
-    
-    current_pos = generateFootTrajectory(next_step, duration.count());
 
-    return current_pos;
+    std::cout << "Gait Phase: " << gait_phase << std::endl;
+
+    Pose left_ref_pose;
+    Pose right_ref_pose;
+
+    if (step_counter > sx.size())
+        step_counter = 0;
+
+    if (step_counter % 2 == 0)
+    {
+        if (gait_phase < Tdbl)
+        {
+            left_ref_pose.position = generateFootTrajectory(foot_poses.left.position, {-0.135, 0.01, -0.55}, gait_phase / Tdbl);
+            left_ref_pose.orientation = {-roll_angle, 0, 0};
+            right_ref_pose.position = generateFootTrajectory(foot_poses.right.position, {0.135, 0.01, -0.53}, gait_phase / Tdbl);
+            right_ref_pose.orientation = {-roll_angle, 0, 0};
+        }
+        else
+        {
+            left_ref_pose.position = generateFootTrajectory(foot_poses.left.position, next_step, (gait_phase - Tdbl) / Tsup);
+            left_ref_pose.orientation = {-roll_angle, 0, 0};
+            left_ref_pose.position.x = -0.135;
+            left_ref_pose.position.z = foot_poses.left.position.z + ((-0.53 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup)) - foot_poses.left.position.z)*(gait_phase - Tdbl) / Tsup;
+            right_ref_pose.position = generateFootTrajectory(foot_poses.right.position, {0.135, 0.01, -0.53}, (gait_phase - Tdbl) / Tsup);
+            right_ref_pose.orientation = {-roll_angle, 0, 0};
+        }
+    }
+    else
+    {
+        if (gait_phase < Tdbl)
+        {
+            left_ref_pose.position = generateFootTrajectory(foot_poses.left.position, {-0.135, 0.01, -0.53}, gait_phase / Tdbl);
+            left_ref_pose.orientation = {-roll_angle, 0, 0};
+            right_ref_pose.position = generateFootTrajectory(foot_poses.right.position, {0.135, 0.01, -0.55}, gait_phase / Tdbl);
+            right_ref_pose.orientation = {-roll_angle, 0, 0};
+        }
+        else
+        {
+            right_ref_pose.position = generateFootTrajectory(foot_poses.right.position, next_step, (gait_phase - Tdbl) / Tsup);
+            right_ref_pose.orientation = {-roll_angle, 0, 0};
+            right_ref_pose.position.x = -0.135;
+            right_ref_pose.position.z = foot_poses.right.position.z + ((-0.53 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup)) - foot_poses.right.position.z)*(gait_phase - Tdbl) / Tsup;
+            left_ref_pose.position = generateFootTrajectory(foot_poses.left.position, {-0.135, 0.01, -0.53}, (gait_phase - Tdbl) / Tsup);
+            left_ref_pose.orientation = {-roll_angle, 0, 0};
+        }
+    }
+
+    return {left_ref_pose, right_ref_pose};
 }
 
-Position Walking_Patterns::generateFootTrajectory(const Position &next_step, const double &time)
+Position Walking_Patterns::generateFootTrajectory(const Position &initial_pos, const Position &final_pos, const double &phase_percentage)
 {
-    current_pos.x = next_step.x;
-    current_pos.y = next_step.y*(time/Tsup);
-    current_pos.z = -0.53+foot_lift*sin(M_PI*time/Tsup);
+    current_pos.x = initial_pos.x + (final_pos.x - initial_pos.x) * phase_percentage;
+    current_pos.y = initial_pos.y + (final_pos.y - initial_pos.y) * phase_percentage;
+    current_pos.z = initial_pos.z + (final_pos.z - initial_pos.z) * phase_percentage;
 
     return current_pos;
 }
@@ -40,10 +83,10 @@ Position Walking_Patterns::computeLIPM(const Position &act_CoM_pos, const Veloci
     xdot_free = S / Tc * x_local + C * xdot_local;
     ydot_free = S / Tc * y_local + C * ydot_local;
 
-    double px = -sx[step_counter] * pow((-1),step_counter);
+    double px = -sx[step_counter] * pow((-1), step_counter);
     double py = sy[step_counter];
 
-    double x_bar = sx[step_counter + 1] / 2 * pow((-1),step_counter);
+    double x_bar = sx[step_counter + 1] / 2 * pow((-1), step_counter);
     double y_bar = sy[step_counter + 1] / 2;
     double vx_bar = (C - 1) / (Tc * S) * x_bar;
     double vy_bar = (C + 1) / (Tc * S) * y_bar;
