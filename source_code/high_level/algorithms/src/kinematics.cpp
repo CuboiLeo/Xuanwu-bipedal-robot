@@ -46,7 +46,7 @@ Eigen::Matrix4d Kinematics::computeFootFK(const Joint_Angles &joint_angles, cons
       return Tbf;
 }
 
-Joint_Angles Kinematics::computeFootIK(const Pose &act_foot_pose, const Pose &ref_foot_pose, const uint8_t &leg_id)
+Joint_Angles Kinematics::computeFootIK(const Pose &act_foot_pose, const Pose &ref_foot_pose, const Joint_Angles &act_joint_angles, const uint8_t &leg_id)
 {
       Eigen::Matrix4d Tbf = pose_to_trans(act_foot_pose); // Transformation matrix from base frame to current foot frame
       Eigen::Matrix4d Tbd = pose_to_trans(ref_foot_pose); // Transformation matrix from base frame to desired foot frame
@@ -59,7 +59,11 @@ Joint_Angles Kinematics::computeFootIK(const Pose &act_foot_pose, const Pose &re
       double epsilon_w = Vb.tail(3).norm(); // Error tolerance for angular velocity w
 
       iteration_count = 0;                                         // Reset the iteration count
-      Joint_Angles computed_joint_angles = {0, 0, 0.3, -0.5, 0.2}; // Initial condition for the joint angles is set so that the knee are bent forward
+      Joint_Angles computed_joint_angles = act_joint_angles;       // Initial condition for the joint angles is set so that the knee are bent forward
+      computed_joint_angles.hip_pitch += 0.3;
+      computed_joint_angles.knee_pitch -= 0.3;
+      computed_joint_angles.ankle_pitch += 0.2;
+
       Eigen::MatrixXd Jacobian(6, 5);                              // Initialize the Jacobian matrix
       Eigen::VectorXd delta_joint_angles(5);                       // Initialize the change in joint angles
       // Newton-Raphson method for inverse kinematics
