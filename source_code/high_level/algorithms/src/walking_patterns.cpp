@@ -6,10 +6,10 @@ Pose_Two_Foots Walking_Patterns::gaitPlanner(const Position &act_CoM_pos, const 
     gait_phase = duration.count();
     if (gait_phase >= Tsup + Tdbl)
     {
+        step_counter++;
         next_step = step_counter % 2 == 0 ? computeLIPM(act_CoM_pos, act_CoM_vel, foot_poses.right.position) : computeLIPM(act_CoM_pos, act_CoM_vel, foot_poses.left.position);
         start_time = std::chrono::high_resolution_clock::now();
         gait_phase = 0;
-        step_counter++;
     }
 
     std::cout << "Gait Phase: " << gait_phase << std::endl;
@@ -24,18 +24,18 @@ Pose_Two_Foots Walking_Patterns::gaitPlanner(const Position &act_CoM_pos, const 
     {
         if (gait_phase < Tdbl)
         {
-            left_ref_pose.position = generateFootTrajectory(foot_poses.left.position, {-0.135, 0.01, -0.55}, gait_phase / Tdbl);
+            left_ref_pose.position = generateFootTrajectory({-0.135, -0.01, -0.51}, {-0.135, -0.01, -0.55}, gait_phase / Tdbl);
             left_ref_pose.orientation = {-roll_angle, 0, 0};
-            right_ref_pose.position = generateFootTrajectory(foot_poses.right.position, {0.135, 0.01, -0.53}, gait_phase / Tdbl);
+            right_ref_pose.position = generateFootTrajectory({0.135, -0.01, -0.55}, {0.135, -0.01, -0.51}, gait_phase / Tdbl);
             right_ref_pose.orientation = {-roll_angle, 0, 0};
         }
         else
         {
-            left_ref_pose.position = generateFootTrajectory(foot_poses.left.position, next_step, (gait_phase - Tdbl) / Tsup);
+            left_ref_pose.position = generateFootTrajectory({-0.135, -0.01, -0.55}, next_step, (gait_phase - Tdbl) / Tsup);
             left_ref_pose.orientation = {-roll_angle, 0, 0};
             left_ref_pose.position.x = -0.135;
-            left_ref_pose.position.z = foot_poses.left.position.z + ((-0.53 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup)) - foot_poses.left.position.z)*(gait_phase - Tdbl) / Tsup;
-            right_ref_pose.position = generateFootTrajectory(foot_poses.right.position, {0.135, 0.01, -0.53}, (gait_phase - Tdbl) / Tsup);
+            left_ref_pose.position.z = -0.55 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup);
+            right_ref_pose.position = {0.135, -0.01, -0.51};
             right_ref_pose.orientation = {-roll_angle, 0, 0};
         }
     }
@@ -43,18 +43,18 @@ Pose_Two_Foots Walking_Patterns::gaitPlanner(const Position &act_CoM_pos, const 
     {
         if (gait_phase < Tdbl)
         {
-            left_ref_pose.position = generateFootTrajectory(foot_poses.left.position, {-0.135, 0.01, -0.53}, gait_phase / Tdbl);
+            left_ref_pose.position = generateFootTrajectory({-0.135, -0.01, -0.55}, {-0.135, -0.01, -0.51}, gait_phase / Tdbl);
             left_ref_pose.orientation = {-roll_angle, 0, 0};
-            right_ref_pose.position = generateFootTrajectory(foot_poses.right.position, {0.135, 0.01, -0.55}, gait_phase / Tdbl);
+            right_ref_pose.position = generateFootTrajectory({0.135, -0.01, -0.51}, {0.135, -0.01, -0.55}, gait_phase / Tdbl);
             right_ref_pose.orientation = {-roll_angle, 0, 0};
         }
         else
         {
-            right_ref_pose.position = generateFootTrajectory(foot_poses.right.position, next_step, (gait_phase - Tdbl) / Tsup);
+            right_ref_pose.position = generateFootTrajectory({0.135, -0.01, -0.55}, next_step, (gait_phase - Tdbl) / Tsup);
             right_ref_pose.orientation = {-roll_angle, 0, 0};
-            right_ref_pose.position.x = -0.135;
-            right_ref_pose.position.z = foot_poses.right.position.z + ((-0.53 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup)) - foot_poses.right.position.z)*(gait_phase - Tdbl) / Tsup;
-            left_ref_pose.position = generateFootTrajectory(foot_poses.left.position, {-0.135, 0.01, -0.53}, (gait_phase - Tdbl) / Tsup);
+            right_ref_pose.position.x = 0.135;
+            right_ref_pose.position.z = -0.55 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup);
+            left_ref_pose.position = {-0.135, -0.01, -0.51};
             left_ref_pose.orientation = {-roll_angle, 0, 0};
         }
     }
@@ -64,9 +64,10 @@ Pose_Two_Foots Walking_Patterns::gaitPlanner(const Position &act_CoM_pos, const 
 
 Position Walking_Patterns::generateFootTrajectory(const Position &initial_pos, const Position &final_pos, const double &phase_percentage)
 {
-    current_pos.x = initial_pos.x + (final_pos.x - initial_pos.x) * phase_percentage;
-    current_pos.y = initial_pos.y + (final_pos.y - initial_pos.y) * phase_percentage;
-    current_pos.z = initial_pos.z + (final_pos.z - initial_pos.z) * phase_percentage;
+    // Cubic Bezier Curve
+    current_pos.x = initial_pos.x + (final_pos.x - initial_pos.x) * (3*pow(phase_percentage, 2) - 2*pow(phase_percentage, 3));
+    current_pos.y = initial_pos.y + (final_pos.y - initial_pos.y) * (3*pow(phase_percentage, 2) - 2*pow(phase_percentage, 3));
+    current_pos.z = initial_pos.z + (final_pos.z - initial_pos.z) * (3*pow(phase_percentage, 2) - 2*pow(phase_percentage, 3));
 
     return current_pos;
 }

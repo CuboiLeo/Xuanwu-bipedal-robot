@@ -103,11 +103,13 @@ void compute_thread()
 
         // std::cout << "Left Position:  " << left_ref_pose.position.x << " | " << left_ref_pose.position.y << " | " << left_ref_pose.position.z << std::endl;
         // std::cout << "Right Position: " << right_ref_pose.position.x << " | " << right_ref_pose.position.y << " | " << right_ref_pose.position.z << std::endl;
-        // Pose left_ref_pose = {{-0.135,0.01,-0.54},{-shared_data.imu.getEuler().roll,0,0}};
-        // Pose right_ref_pose = {{0.135,0.01,-0.54},{-shared_data.imu.getEuler().roll,0,0}};
+        // Pose left_ref_pose = {{-0.135,0.01,-0.55},{-shared_data.imu.getEuler().roll,0,0}};
+        // Pose right_ref_pose = {{0.135,0.01,-0.53},{-shared_data.imu.getEuler().roll,0,0}};
+        // robot.setFootRefPose(left_ref_pose, right_ref_pose);
         robot.setFootRefPose(foot_ref_poses.left, foot_ref_poses.right);
 
         // Compute the inverse kinematics
+        double gait_phase = walking_patterns.getGaitPhase();
         Joint_Angles left_ref_angle = kinematics.computeFootIK(robot.getFootActPose(LEFT_LEG_ID), robot.getFootRefPose(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
         Joint_Angles right_ref_angle = kinematics.computeFootIK(robot.getFootActPose(RIGHT_LEG_ID), robot.getFootRefPose(RIGHT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), RIGHT_LEG_ID);
         robot.setLegRefAngles(left_ref_angle, right_ref_angle);
