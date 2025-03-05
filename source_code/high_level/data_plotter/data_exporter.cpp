@@ -6,7 +6,7 @@
 #include <sstream>
 #include <iostream>
 
-void logDataToCSV(double data1, double data2, double data3, double data4, double data5, const std::string& filename)
+void logDataToCSV(double data1, double data2, double data3, double data4, double data5, double data6, const std::string& filename)
 {
     // Get current time
     std::time_t now = std::time(nullptr);
@@ -32,7 +32,8 @@ void logDataToCSV(double data1, double data2, double data3, double data4, double
             << data2 << ","
             << data3 << ","
             << data4 << ","
-            << data5
+            << data5 << ","
+            << data6
             << "\n";
 
     // Close the file

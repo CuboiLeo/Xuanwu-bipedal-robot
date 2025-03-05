@@ -21,6 +21,7 @@ class RealTimePlotter:
         self.data3 = deque(maxlen=MAX_SAMPLES)
         self.data4 = deque(maxlen=MAX_SAMPLES)
         self.data5 = deque(maxlen=MAX_SAMPLES)
+        self.data6 = deque(maxlen=MAX_SAMPLES)
         self.last_line_count = 0
 
         # Create the PyQtGraph window
@@ -38,6 +39,7 @@ class RealTimePlotter:
         self.curve3 = self.plot.plot(pen='b', name="data3")
         self.curve4 = self.plot.plot(pen='y', name="data4")
         self.curve5 = self.plot.plot(pen='c', name="data5")
+        self.curve6 = self.plot.plot(pen='m', name="data6")
 
         # Timer to periodically update the plot
         self.timer = QtCore.QTimer()
@@ -67,11 +69,13 @@ class RealTimePlotter:
                             val3 = float(row[3])
                             val4 = float(row[4])
                             val5 = float(row[5])
+                            val6 = float(row[6])
                             self.data1.append(val1)
                             self.data2.append(val2)
                             self.data3.append(val3)
                             self.data4.append(val4)
                             self.data5.append(val5)
+                            self.data6.append(val6)
                         except ValueError:
                             # Skip lines that aren't purely numeric in the data columns
                             continue
@@ -94,6 +98,7 @@ class RealTimePlotter:
         self.curve3.setData(x=list(x_range), y=list(self.data3))
         self.curve4.setData(x=list(x_range), y=list(self.data4))
         self.curve5.setData(x=list(x_range), y=list(self.data5))
+        self.curve6.setData(x=list(x_range), y=list(self.data6))
 
     def run(self):
         sys.exit(self.app.exec())  # Note: PyQt6 uses 'exec()' instead of 'exec_()'

@@ -13,6 +13,18 @@ public:
     Joint_Angles getLegActAngles(const uint8_t leg) const { return leg == LEFT_LEG_ID ? leg_angles.left.act : leg_angles.right.act; }
     void setLegRefAngles(const Joint_Angles &left, const Joint_Angles &right) { leg_angles.left.ref = left; leg_angles.right.ref = right; }
     Joint_Angles getLegRefAngles(const uint8_t leg) const { return leg == LEFT_LEG_ID ? leg_angles.left.ref : leg_angles.right.ref; }
+
+    // Setter and getter functions for the leg velocities
+    void setLegActVel(const Joint_Velocities &left, const Joint_Velocities &right) { leg_velocities.left.act = left; leg_velocities.right.act = right; }
+    Joint_Velocities getLegActVel(const uint8_t leg) const { return leg == LEFT_LEG_ID ? leg_velocities.left.act : leg_velocities.right.act; }
+    void setLegRefVel(const Joint_Velocities &left, const Joint_Velocities &right) { leg_velocities.left.ref = left; leg_velocities.right.ref = right; }
+    Joint_Velocities getLegRefVel(const uint8_t leg) const { return leg == LEFT_LEG_ID ? leg_velocities.left.ref : leg_velocities.right.ref; }
+
+    // Setter and getter functions for the leg torques
+    void setLegActTorque(const Joint_Torques &left, const Joint_Torques &right) { leg_torques.left.act = left; leg_torques.right.act = right; }
+    Joint_Torques getLegActTorque(const uint8_t leg) const { return leg == LEFT_LEG_ID ? leg_torques.left.act : leg_torques.right.act; }
+    void setLegRefTorque(const Joint_Torques &left, const Joint_Torques &right) { leg_torques.left.ref = left; leg_torques.right.ref = right; }
+    Joint_Torques getLegRefTorque(const uint8_t leg) const { return leg == LEFT_LEG_ID ? leg_torques.left.ref : leg_torques.right.ref; }
     
     // Setter and getter functions for the foot positions
     void setFootActPose(const Pose &left, const Pose &right) { foot_poses.left.act = left; foot_poses.right.act = right; }
@@ -43,6 +55,8 @@ public:
 
 private:
     Leg_Data leg_angles = {};
+    Leg_Data leg_velocities = {};
+    Leg_Data leg_torques = {};
     Foot_Data foot_poses = {};
     Position_Data CoM_pos = {};
     Position_Data CoM_accel = {};

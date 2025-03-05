@@ -23,9 +23,16 @@ private:
     std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
     std::chrono::duration<double> duration;
 
-    double foot_lift = 0.04;                                 // Foot lift height (m)
+    double foot_lift = 0.03;                                 // Foot lift height (m)
     int step_counter = 0;                                    // Odd means right foot next, even means left foot next
     double gait_phase = 0;                                   // Step phase
+    Position left_retract_pos = {-0.1, -0.01, -0.51};     // Left foot retract position
+    Position right_retract_pos = {0.1, -0.01, -0.51};     // Right foot retract position
+    Position left_extend_pos = {-0.135, -0.01, -0.54};      // Left foot extend position
+    Position right_extend_pos = {0.135, -0.01, -0.54};      // Right foot extend position
+    Position left_swing_pos = {-0.135, 0.06, -0.54};         // Left foot swing position
+    Position right_swing_pos = {0.135, 0.06, -0.54};         // Right foot swing position
+
     std::vector<double> sx = {0.2, 0.2, 0.2, 0.2, 0.2};      // nominal step offset in x (m)
     std::vector<double> sy = {0.28, 0.28, 0.28, 0.28, 0.28}; // nominal step offset in y (m)
     double x_local = 0;
@@ -42,7 +49,8 @@ private:
     static constexpr double zc = 0.4;                // CoM height
     static constexpr double Tc = sqrt(zc / GRAVITY); // Time constant
     static constexpr double Tsup = 2.0;              // Single support phase time
-    static constexpr double Tdbl = 1.0;              // Double support phase time
+    static constexpr double Tdbl = 1.5;              // Double support phase time
+    static constexpr double Tstb = 1.5;              // Stabilization time
     static constexpr double C = cosh(Tsup / Tc);
     static constexpr double S = sinh(Tsup / Tc);
     static constexpr double a = 10;                                              // Weighting factor of the evaluation function

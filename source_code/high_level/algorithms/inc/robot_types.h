@@ -42,6 +42,8 @@ using Velocity = Vector3D;             // Velocity in 3D space (m/s)
 using Acceleration = Vector3D;         // Acceleration in 3D space (m/s^2)
 using Angular_Velocity = Vector3D;     // Angular velocity in 3D space (rad/s)
 using Angular_Acceleration = Vector3D; // Angular acceleration in 3D space (rad/s^2)
+using Joint_Velocities = Joint_Angles; // Joint velocities in radians/s
+using Joint_Torques = Joint_Angles;     // Joint torques in Nm
 
 struct Position_Data
 {
@@ -78,6 +80,12 @@ struct Foot_Data
 {
     Pose_Data left;
     Pose_Data right;
+};
+
+struct Wrench
+{ // Wrench in 3D space
+    Vector3D force;
+    Vector3D torque;
 };
 
 #endif // ROBOT_TYPES_H
