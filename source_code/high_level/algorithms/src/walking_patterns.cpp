@@ -24,40 +24,34 @@ Pose_Two_Foots Walking_Patterns::gaitPlanner(const Position &act_CoM_pos, const 
     {
         if (gait_phase < Tdbl)
         {
-            // left_ref_pose.position = generateFootTrajectory(left_retract_pos, left_extend_pos, gait_phase / Tdbl);
-            // left_ref_pose.orientation = {0, 0, 0};
-            // right_ref_pose.position = generateFootTrajectory(right_swing_pos, right_retract_pos, gait_phase / Tdbl);
-            // right_ref_pose.orientation = {0, 0, 0};
-            left_ref_pose = {left_extend_pos, {0, 0, 0}};
-            right_ref_pose = {right_extend_pos, {0, 0, 0}};
+            left_ref_pose = left_extend_pose;
+            left_ref_pose.position.z = -0.55;
+            right_ref_pose = right_extend_pose;
         }
         else
         {
-            left_ref_pose.position = generateFootTrajectory(left_extend_pos, next_step, (gait_phase - Tdbl) / Tsup);
+            left_ref_pose.position = generateFootTrajectory(left_extend_pose.position, next_step, (gait_phase - Tdbl) / Tsup);
             left_ref_pose.orientation = {0, 0, 0};
-            left_ref_pose.position.z = -0.54 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup);
-            right_ref_pose.position = right_extend_pos;
-            right_ref_pose.orientation = {0, 0, 0};
+            left_ref_pose.position.x = -0.135;
+            left_ref_pose.position.z = -0.53 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup);
+            right_ref_pose = right_extend_pose;
         }
     }
     else
     {
         if (gait_phase < Tdbl)
         {
-            // left_ref_pose.position = generateFootTrajectory(left_swing_pos, left_retract_pos, gait_phase / Tdbl);
-            // left_ref_pose.orientation = {0, 0, 0};
-            // right_ref_pose.position = generateFootTrajectory(right_retract_pos, right_extend_pos, gait_phase / Tdbl);
-            // right_ref_pose.orientation = {0, 0, 0};
-            left_ref_pose = {left_extend_pos, {0, 0, 0}};
-            right_ref_pose = {right_extend_pos, {0, 0, 0}};
+            left_ref_pose = left_extend_pose;
+            right_ref_pose = right_extend_pose;
+            right_ref_pose.position.z = -0.55;
         }
         else
         {
-            right_ref_pose.position = generateFootTrajectory(right_extend_pos, next_step, (gait_phase - Tdbl) / Tsup);
+            right_ref_pose.position = generateFootTrajectory(right_extend_pose.position, next_step, (gait_phase - Tdbl) / Tsup);
             right_ref_pose.orientation = {0, 0, 0};
-            right_ref_pose.position.z = -0.54 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup);
-            left_ref_pose.position = left_extend_pos;
-            left_ref_pose.orientation = {0, 0, 0};
+            right_ref_pose.position.x = 0.135;
+            right_ref_pose.position.z = -0.53 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup);
+            left_ref_pose = left_extend_pose;
         }
     }
 

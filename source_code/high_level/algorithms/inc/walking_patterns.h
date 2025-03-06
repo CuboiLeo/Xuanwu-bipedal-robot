@@ -15,8 +15,8 @@ public:
     Pose_Two_Foots gaitPlanner(const Position &act_CoM_pos, const Velocity &act_CoM_vel, const Pose_Two_Foots &foot_poses, const double &roll_angle);
     double getGaitPhase() { return gait_phase; };
     double getStepCounter() { return step_counter; };
-    static constexpr double Tsup = 0.8;              // Single support phase time
-    static constexpr double Tdbl = 0.2;              // Double support phase time
+    static constexpr double Tsup = 0.4; // Single support phase time
+    static constexpr double Tdbl = 0.05; // Double support phase time
 
 private:
     Position computeLIPM(const Position &act_CoM_pos, const Velocity &act_CoM_vel, const Position &stance_foot_pos);
@@ -27,15 +27,11 @@ private:
     std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
     std::chrono::duration<double> duration;
 
-    double foot_lift = 0.03;                                 // Foot lift height (m)
-    int step_counter = 0;                                    // Odd means right foot next, even means left foot next
-    double gait_phase = 0;                                   // Step phase
-    Position left_retract_pos = {-0.1, -0.01, -0.51};     // Left foot retract position
-    Position right_retract_pos = {0.1, -0.01, -0.51};     // Right foot retract position
-    Position left_extend_pos = {-0.135, -0.01, -0.54};      // Left foot extend position
-    Position right_extend_pos = {0.135, -0.01, -0.54};      // Right foot extend position
-    Position left_swing_pos = {-0.135, 0.06, -0.54};         // Left foot swing position
-    Position right_swing_pos = {0.135, 0.06, -0.54};         // Right foot swing position
+    double foot_lift = 0.03;                                     // Foot lift height (m)
+    int step_counter = 0;                                        // Odd means right foot next, even means left foot next
+    double gait_phase = 0;                                       // Step phase
+    Pose left_extend_pose = {{-0.135, -0.01, -0.53}, {0, 0, 0}}; // Left foot extend position
+    Pose right_extend_pose = {{0.135, -0.01, -0.53}, {0, 0, 0}}; // Right foot extend position
 
     std::vector<double> sx = {0.2, 0.2, 0.2, 0.2, 0.2};      // nominal step offset in x (m)
     std::vector<double> sy = {0.27, 0.27, 0.27, 0.27, 0.27}; // nominal step offset in y (m)

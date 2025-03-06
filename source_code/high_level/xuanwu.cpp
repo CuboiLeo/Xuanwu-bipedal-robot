@@ -112,8 +112,8 @@ void compute_thread()
         Pose_Two_Foots foot_ref_poses = walking_patterns.gaitPlanner(robot.getCoMActPos(), estimations.getEstimatedCoMVel(), {robot.getFootActPose(LEFT_LEG_ID), robot.getFootActPose(RIGHT_LEG_ID)}, shared_data.imu.getEuler().roll);
         robot.setFootRefPose(foot_ref_poses.left, foot_ref_poses.right);
 
-        // Pose left_ref_pose = {{-0.135,-0.01,-0.54},{0,0,0}};
-        // Pose right_ref_pose = {{0.135,-0.01,-0.54},{0,0,0}};
+        // Pose left_ref_pose = {{-0.1, -0.01, -0.55}, {0, -PI / 12, 0}};;
+        // Pose right_ref_pose = {{0.17, -0.01, -0.55}, {0, -PI / 12, 0}};
         // robot.setFootRefPose(left_ref_pose, right_ref_pose);
 
         // Compute the inverse kinematics
@@ -156,9 +156,9 @@ void compute_thread()
         robot.setMotorData(shared_data.motor);
 
         // Test the foot wrench computation (checked)
-        // Wrench left_foot_wrench = dynamics.computeFootWrench(robot.getLegActTorque(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+        // Wrench right_foot_wrench = dynamics.computeFootWrench(robot.getLegActTorque(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
 
-        logDataToCSV(foot_ref_poses.left.position.x, foot_ref_poses.left.position.y, foot_ref_poses.right.position.x, foot_ref_poses.right.position.y);
+        // logDataToCSV(right_foot_wrench.force.x, right_foot_wrench.force.y, right_foot_wrench.force.z, right_foot_wrench.torque.x, right_foot_wrench.torque.y, right_foot_wrench.torque.z);
 
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = end - start;
