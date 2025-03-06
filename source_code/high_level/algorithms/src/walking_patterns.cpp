@@ -4,7 +4,7 @@ Pose_Two_Foots Walking_Patterns::gaitPlanner(const Position &act_CoM_pos, const 
 {
     duration = std::chrono::high_resolution_clock::now() - start_time;
     gait_phase = duration.count();
-    if (gait_phase >= Tsup + Tdbl + Tstb)
+    if (gait_phase >= Tsup + Tdbl)
     {
         step_counter++;
         next_step = step_counter % 2 == 0 ? computeLIPM(act_CoM_pos, act_CoM_vel, foot_poses.right.position) : computeLIPM(act_CoM_pos, act_CoM_vel, foot_poses.left.position);
@@ -24,46 +24,40 @@ Pose_Two_Foots Walking_Patterns::gaitPlanner(const Position &act_CoM_pos, const 
     {
         if (gait_phase < Tdbl)
         {
-            left_ref_pose.position = generateFootTrajectory(left_retract_pos, left_extend_pos, gait_phase / Tdbl);
-            left_ref_pose.orientation = {-roll_angle, 0, 0};
-            right_ref_pose.position = generateFootTrajectory(right_swing_pos, right_retract_pos, gait_phase / Tdbl);
-            right_ref_pose.orientation = {-roll_angle, 0, 0};
-        }
-        else if (gait_phase < Tstb+Tdbl)
-        {
-            left_ref_pose = {left_extend_pos, {-roll_angle, 0, 0}};
-            right_ref_pose = {right_retract_pos, {-roll_angle, 0, 0}};
+            // left_ref_pose.position = generateFootTrajectory(left_retract_pos, left_extend_pos, gait_phase / Tdbl);
+            // left_ref_pose.orientation = {0, 0, 0};
+            // right_ref_pose.position = generateFootTrajectory(right_swing_pos, right_retract_pos, gait_phase / Tdbl);
+            // right_ref_pose.orientation = {0, 0, 0};
+            left_ref_pose = {left_extend_pos, {0, 0, 0}};
+            right_ref_pose = {right_extend_pos, {0, 0, 0}};
         }
         else
         {
-            left_ref_pose.position = generateFootTrajectory(left_extend_pos, left_swing_pos, (gait_phase - Tdbl - Tstb) / Tsup);
-            left_ref_pose.orientation = {-roll_angle, 0, 0};
-            left_ref_pose.position.z = -0.54 + foot_lift * sin(M_PI * (gait_phase - Tdbl - Tstb) / Tsup);
-            right_ref_pose.position = right_retract_pos;
-            right_ref_pose.orientation = {-roll_angle, 0, 0};
+            left_ref_pose.position = generateFootTrajectory(left_extend_pos, next_step, (gait_phase - Tdbl) / Tsup);
+            left_ref_pose.orientation = {0, 0, 0};
+            left_ref_pose.position.z = -0.54 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup);
+            right_ref_pose.position = right_extend_pos;
+            right_ref_pose.orientation = {0, 0, 0};
         }
     }
     else
     {
         if (gait_phase < Tdbl)
         {
-            left_ref_pose.position = generateFootTrajectory(left_swing_pos, left_retract_pos, gait_phase / Tdbl);
-            left_ref_pose.orientation = {-roll_angle, 0, 0};
-            right_ref_pose.position = generateFootTrajectory(right_retract_pos, right_extend_pos, gait_phase / Tdbl);
-            right_ref_pose.orientation = {-roll_angle, 0, 0};
-        }
-        else if (gait_phase < Tstb+Tdbl)
-        {
-            left_ref_pose = {left_retract_pos, {-roll_angle, 0, 0}};
-            right_ref_pose = {right_extend_pos, {-roll_angle, 0, 0}};
+            // left_ref_pose.position = generateFootTrajectory(left_swing_pos, left_retract_pos, gait_phase / Tdbl);
+            // left_ref_pose.orientation = {0, 0, 0};
+            // right_ref_pose.position = generateFootTrajectory(right_retract_pos, right_extend_pos, gait_phase / Tdbl);
+            // right_ref_pose.orientation = {0, 0, 0};
+            left_ref_pose = {left_extend_pos, {0, 0, 0}};
+            right_ref_pose = {right_extend_pos, {0, 0, 0}};
         }
         else
         {
-            right_ref_pose.position = generateFootTrajectory(right_extend_pos, right_swing_pos, (gait_phase - Tdbl - Tstb) / Tsup);
-            right_ref_pose.orientation = {-roll_angle, 0, 0};
-            right_ref_pose.position.z = -0.54 + foot_lift * sin(M_PI * (gait_phase - Tdbl - Tstb) / Tsup);
-            left_ref_pose.position = left_retract_pos;
-            left_ref_pose.orientation = {-roll_angle, 0, 0};
+            right_ref_pose.position = generateFootTrajectory(right_extend_pos, next_step, (gait_phase - Tdbl) / Tsup);
+            right_ref_pose.orientation = {0, 0, 0};
+            right_ref_pose.position.z = -0.54 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup);
+            left_ref_pose.position = left_extend_pos;
+            left_ref_pose.orientation = {0, 0, 0};
         }
     }
 

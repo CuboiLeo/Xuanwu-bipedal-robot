@@ -14,6 +14,10 @@ public:
     Walking_Patterns() { start_time = std::chrono::high_resolution_clock::now(); };
     Pose_Two_Foots gaitPlanner(const Position &act_CoM_pos, const Velocity &act_CoM_vel, const Pose_Two_Foots &foot_poses, const double &roll_angle);
     double getGaitPhase() { return gait_phase; };
+    double getStepCounter() { return step_counter; };
+    static constexpr double Tsup = 0.8;              // Single support phase time
+    static constexpr double Tdbl = 0.2;              // Double support phase time
+
 private:
     Position computeLIPM(const Position &act_CoM_pos, const Velocity &act_CoM_vel, const Position &stance_foot_pos);
     Position generateFootTrajectory(const Position &initial_pos, const Position &final_pos, const double &phase_percentage);
@@ -34,7 +38,7 @@ private:
     Position right_swing_pos = {0.135, 0.06, -0.54};         // Right foot swing position
 
     std::vector<double> sx = {0.2, 0.2, 0.2, 0.2, 0.2};      // nominal step offset in x (m)
-    std::vector<double> sy = {0.28, 0.28, 0.28, 0.28, 0.28}; // nominal step offset in y (m)
+    std::vector<double> sy = {0.27, 0.27, 0.27, 0.27, 0.27}; // nominal step offset in y (m)
     double x_local = 0;
     double y_local = 0;
     double xdot_local = 0;
@@ -48,9 +52,6 @@ private:
 
     static constexpr double zc = 0.4;                // CoM height
     static constexpr double Tc = sqrt(zc / GRAVITY); // Time constant
-    static constexpr double Tsup = 2.0;              // Single support phase time
-    static constexpr double Tdbl = 1.5;              // Double support phase time
-    static constexpr double Tstb = 1.5;              // Stabilization time
     static constexpr double C = cosh(Tsup / Tc);
     static constexpr double S = sinh(Tsup / Tc);
     static constexpr double a = 10;                                              // Weighting factor of the evaluation function
