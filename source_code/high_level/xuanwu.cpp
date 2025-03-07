@@ -96,8 +96,8 @@ void compute_thread()
         // Compute the zero moment point position
         Position ZMP_pos = dynamics.computeZMPPos(robot.getCoMActPos(), robot.getCoMActAccel());
         robot.setZMPActPos(ZMP_pos);
-        std::cout << "CoM Position: " << CoM_pos.x << " " << CoM_pos.y << " " << CoM_pos.z << std::endl;
-        std::cout << "ZMP Position: " << ZMP_pos.x << " " << ZMP_pos.y << std::endl;
+        // std::cout << "CoM Position: " << CoM_pos.x << " " << CoM_pos.y << " " << CoM_pos.z << std::endl;
+        // std::cout << "ZMP Position: " << ZMP_pos.x << " " << ZMP_pos.y << std::endl;
 
         // Estimate the center of mass states
         estimations.estimateCoMStates(shared_data.imu.getVel(), shared_data.imu.getAccel());
@@ -112,16 +112,16 @@ void compute_thread()
         Pose_Two_Foots foot_ref_poses = walking_patterns.gaitPlanner(robot.getCoMActPos(), estimations.getEstimatedCoMVel(), {robot.getFootActPose(LEFT_LEG_ID), robot.getFootActPose(RIGHT_LEG_ID)}, shared_data.imu.getEuler().roll);
         robot.setFootRefPose(foot_ref_poses.left, foot_ref_poses.right);
 
-        // Pose left_ref_pose = {{-0.075, -0.01, -0.55}, {0, 0, 0}};
-        // Pose right_ref_pose = {{0.075, -0.01, -0.55}, {0, 0, 0}};
+        // Pose left_ref_pose = {{-0.10, -0.01, -0.55}, {0, PI/36, 0}};
+        // Pose right_ref_pose = {{0.10, -0.01, -0.55}, {0, -PI/36, 0}};
         // robot.setFootRefPose(left_ref_pose, right_ref_pose);
 
         // Compute the inverse kinematics
         Joint_Angles left_ref_angle = kinematics.computeFootIK(robot.getFootActPose(LEFT_LEG_ID), robot.getFootRefPose(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
         Joint_Angles right_ref_angle = kinematics.computeFootIK(robot.getFootActPose(RIGHT_LEG_ID), robot.getFootRefPose(RIGHT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), RIGHT_LEG_ID);
         robot.setLegRefAngles(left_ref_angle, right_ref_angle);
-        // std::cout << "Left Angles:  " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
-        // std::cout << "Right Angles: " << right_ref_angle.hip_yaw << " | " << right_ref_angle.hip_roll << " | " << right_ref_angle.hip_pitch << " | " << right_ref_angle.knee_pitch << " | " << right_ref_angle.ankle_pitch << std::endl;
+        std::cout << "Left Angles:  " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
+        std::cout << "Right Angles: " << right_ref_angle.hip_yaw << " | " << right_ref_angle.hip_roll << " | " << right_ref_angle.hip_pitch << " | " << right_ref_angle.knee_pitch << " | " << right_ref_angle.ankle_pitch << std::endl;
 
         // Set the leg reference velocities
         robot.setLegRefVel({0, 0, 0, 0, 0}, {0, 0, 0, 0, 0});

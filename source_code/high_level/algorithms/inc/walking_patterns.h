@@ -16,7 +16,7 @@ public:
     double getGaitPhase() { return gait_phase; };
     double getStepCounter() { return step_counter; };
     static constexpr double Tsup = 0.5; // Single support phase time
-    static constexpr double Tdbl = 0.05; // Double support phase time
+    static constexpr double Tdbl = 0.1; // Double support phase time
 
 private:
     Position computeLIPM(const Position &act_CoM_pos, const Velocity &act_CoM_vel, const Position &stance_foot_pos);
@@ -27,13 +27,13 @@ private:
     std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
     std::chrono::duration<double> duration;
 
-    double foot_lift = 0.04;                                     // Foot lift height (m)
+    double foot_lift = 0.02 ;                                     // Foot lift height (m)
     int step_counter = 0;                                        // Odd means right foot next, even means left foot next
     double gait_phase = 0;                                       // Step phase
-    Pose left_extend_pose = {{-0.075, -0.01, -0.55}, {0, 0, 0}}; // Left foot extend position
-    Pose right_extend_pose = {{0.075, -0.01, -0.55}, {0, 0, 0}}; // Right foot extend position
+    Pose left_extend_pose = {{-0.10, -0.05, -0.55}, {0, PI/36, 0}}; // Left foot extend position
+    Pose right_extend_pose = {{0.10, -0.05, -0.55}, {0, -PI/36, 0}}; // Right foot extend position
 
-    std::vector<double> sx = {0.2, 0.2, 0.2, 0.2, 0.2};      // nominal step offset in x (m)
+    std::vector<double> sx = {0.05, 0.05, 0.05, 0.05, 0.05};      // nominal step offset in x (m)
     std::vector<double> sy = {0.15, 0.15, 0.15, 0.15, 0.15}; // nominal step offset in y (m)
     double x_local = 0;
     double y_local = 0;
