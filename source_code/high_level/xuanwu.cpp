@@ -112,8 +112,8 @@ void compute_thread()
         Pose_Two_Foots foot_ref_poses = walking_patterns.gaitPlanner(robot.getCoMActPos(), estimations.getEstimatedCoMVel(), {robot.getFootActPose(LEFT_LEG_ID), robot.getFootActPose(RIGHT_LEG_ID)}, shared_data.imu.getEuler().roll);
         robot.setFootRefPose(foot_ref_poses.left, foot_ref_poses.right);
 
-        // Pose left_ref_pose = {{-0.1, -0.01, -0.55}, {0, -PI / 12, 0}};;
-        // Pose right_ref_pose = {{0.17, -0.01, -0.55}, {0, -PI / 12, 0}};
+        // Pose left_ref_pose = {{-0.075, -0.01, -0.55}, {0, 0, 0}};
+        // Pose right_ref_pose = {{0.075, -0.01, -0.55}, {0, 0, 0}};
         // robot.setFootRefPose(left_ref_pose, right_ref_pose);
 
         // Compute the inverse kinematics
@@ -133,19 +133,19 @@ void compute_thread()
         Joint_Torques right_ref_torque;
         if (gait_phase < walking_patterns.Tdbl)
         {
-            left_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY / 2, 0, MT * GRAVITY / 2 * 0.135, 0}, robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
-            right_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY / 2, 0, -MT * GRAVITY / 2 * 0.135, 0}, robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
+            left_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY / 2, 0, MT * GRAVITY / 2 * L1, 0}, robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+            right_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY / 2, 0, -MT * GRAVITY / 2 * L1, 0}, robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
         }
         else
         {
             if (step_counter % 2 == 0)
             {
                 left_ref_torque = {0, 0, 0, 0, 0};
-                right_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY, 0, -MT * GRAVITY * 0.135, 0}, robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
+                right_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY, 0, -MT * GRAVITY * L1, 0}, robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
             }
             else
             {
-                left_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY, 0, MT * GRAVITY * 0.135, 0}, robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+                left_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY, 0, MT * GRAVITY * L1, 0}, robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
                 right_ref_torque = {0, 0, 0, 0, 0};
             }
         }
