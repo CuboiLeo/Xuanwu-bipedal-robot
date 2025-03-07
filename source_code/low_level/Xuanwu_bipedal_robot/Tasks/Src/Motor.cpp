@@ -86,6 +86,8 @@ uint8_t Motor::returnZeroPos(void)
 			motor_info[i].ctrl.kp_set = 30;
 			motor_info[i].ctrl.kd_set = 1.0f;
 		}
+		motor_info[Left_Hip_Roll].ctrl.kp_set = 120;
+		motor_info[Right_Hip_Roll].ctrl.kp_set = 120;
 		motor_info[Left_Hip_Pitch].ctrl.pos_set = 0.33f;
 		motor_info[Left_Knee_Pitch].ctrl.pos_set = -0.58f;
 		motor_info[Right_Hip_Pitch].ctrl.pos_set = 0.33f;

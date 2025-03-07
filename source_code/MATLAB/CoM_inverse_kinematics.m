@@ -73,7 +73,7 @@ val_m5 = 0.53;
 val_m6 = 0.14;
 
 % link's relative offset from the last joint
-syms C11 C12 C13 C21 C22 C23 C31 C32 C33 C41 C42 C43 C51 C52 C53 C61 C62 C63
+syms C11 C12 C13 C21 C22 C 23 C31 C32 C33 C41 C42 C43 C51 C52 C53 C61 C62 C63
 C1 = [C11 C12 C13];
 C2 = [C21 C22 C23];
 C3 = [C31 C32 C33];
