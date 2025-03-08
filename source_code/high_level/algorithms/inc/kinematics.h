@@ -16,7 +16,7 @@ public:
 
 private:
       int iteration_count = 0;                           // Iteration count for the inverse kinematics
-      inline static constexpr int MAX_ITERATIONS = 5;   // Maximum number of iterations for the inverse kinematics
+      inline static constexpr int MAX_ITERATIONS = 50;   // Maximum number of iterations for the inverse kinematics
       inline static constexpr float EPSILON_W = 0.001f; // Error tolerance for for angular velocity w
       inline static constexpr float EPSILON_V = 0.001f; // Error tolerance for for linear velocity v
       inline static constexpr float LAMBDA = 0.001f;     // Damping factor for the inverse kinematics - SR Inverse Levenberg-Marquardt method

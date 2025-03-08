@@ -107,13 +107,15 @@ void compute_thread()
         Pose left_act_pose = trans_to_pose(kinematics.computeFootFK(robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID));
         Pose right_act_pose = trans_to_pose(kinematics.computeFootFK(robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID));
         robot.setFootActPose(left_act_pose, right_act_pose);
+        std::cout << "Left Foot Pose: " << left_act_pose.position.x << " " << left_act_pose.position.y << " " << left_act_pose.position.z << " " << left_act_pose.orientation.roll << " " << left_act_pose.orientation.pitch << " " << left_act_pose.orientation.yaw << std::endl;
+        std::cout << "Right Foot Pose: " << right_act_pose.position.x << " " << right_act_pose.position.y << " " << right_act_pose.position.z << " " << right_act_pose.orientation.roll << " " << right_act_pose.orientation.pitch << " " << right_act_pose.orientation.yaw << std::endl;
 
         // Set the foot reference pose with walking pattern generator
         Pose_Two_Foots foot_ref_poses = walking_patterns.gaitPlanner(robot.getCoMActPos(), estimations.getEstimatedCoMVel(), {robot.getFootActPose(LEFT_LEG_ID), robot.getFootActPose(RIGHT_LEG_ID)}, shared_data.imu.getEuler().roll);
         robot.setFootRefPose(foot_ref_poses.left, foot_ref_poses.right);
 
-        // Pose left_ref_pose = {{-0.10, -0.01, -0.55}, {0, PI/36, 0}};
-        // Pose right_ref_pose = {{0.10, -0.01, -0.55}, {0, -PI/36, 0}};
+        // Pose left_ref_pose = {{-L1, -0.001, -0.55}, {0, 0, 0}};
+        // Pose right_ref_pose = {{L1, -0.001, -0.55}, {0, 0, 0}};
         // robot.setFootRefPose(left_ref_pose, right_ref_pose);
 
         // Compute the inverse kinematics

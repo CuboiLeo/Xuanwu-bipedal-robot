@@ -15,26 +15,29 @@ public:
     Pose_Two_Foots gaitPlanner(const Position &act_CoM_pos, const Velocity &act_CoM_vel, const Pose_Two_Foots &foot_poses, const double &roll_angle);
     double getGaitPhase() { return gait_phase; };
     double getStepCounter() { return step_counter; };
-    static constexpr double Tsup = 0.5; // Single support phase time
-    static constexpr double Tdbl = 0.1; // Double support phase time
+    static constexpr double Tsup = 1.5; // Single support phase time
+    static constexpr double Tdbl = 1.5; // Double support phase time
 
 private:
     Position computeLIPM(const Position &act_CoM_pos, const Velocity &act_CoM_vel, const Position &stance_foot_pos);
     Position generateFootTrajectory(const Position &initial_pos, const Position &final_pos, const double &phase_percentage);
 
     Position next_step;
+    Position last_step;
     Position current_pos;
     std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
     std::chrono::duration<double> duration;
 
-    double foot_lift = 0.02 ;                                     // Foot lift height (m)
+    double foot_lift = 0.03;                                     // Foot lift height (m)
     int step_counter = 0;                                        // Odd means right foot next, even means left foot next
     double gait_phase = 0;                                       // Step phase
-    Pose left_extend_pose = {{-0.10, -0.05, -0.55}, {0, PI/36, 0}}; // Left foot extend position
-    Pose right_extend_pose = {{0.10, -0.05, -0.55}, {0, -PI/36, 0}}; // Right foot extend position
-
-    std::vector<double> sx = {0.05, 0.05, 0.05, 0.05, 0.05};      // nominal step offset in x (m)
-    std::vector<double> sy = {0.15, 0.15, 0.15, 0.15, 0.15}; // nominal step offset in y (m)
+    Pose left_extended_pose = {{-0.085, -0.05, -0.55}, {0, PI/60, 0}}; // Left foot extend position
+    Pose right_extended_pose = {{0.085, -0.05, -0.55}, {0, -PI/60, 0}}; // Right foot extend position
+    Pose left_retracted_pose = {{-0.085, -0.05, -0.53}, {0, PI/60, 0}}; // Left foot retract position
+    Pose right_retracted_pose = {{0.085, -0.05, -0.53}, {0, -PI/60, 0}}; // Right foot retract position
+    
+    std::vector<double> sx = {0.0, 0.0, 0.0};      // nominal step offset in x (m)
+    std::vector<double> sy = {0.15, 0.15, 0.15}; // nominal step offset in y (m)
     double x_local = 0;
     double y_local = 0;
     double xdot_local = 0;
