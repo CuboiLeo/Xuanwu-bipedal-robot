@@ -4,6 +4,9 @@
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
   name="Xuanwu">
+  <mujoco>
+     <compiler meshdir="./meshes" balanceinertia="true" discardvisual="false"/>
+  </mujoco>
   <link
     name="base_link">
     <inertial>
@@ -26,7 +29,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/base_link.STL" />
+          filename="./meshes/base_link.STL" />
       </geometry>
       <material
         name="">
@@ -40,7 +43,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/base_link.STL" />
+          filename="./meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -66,7 +69,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_1.STL" />
+          filename="./meshes/link_1.STL" />
       </geometry>
       <material
         name="">
@@ -80,7 +83,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_1.STL" />
+          filename="./meshes/link_1.STL" />
       </geometry>
     </collision>
   </link>
@@ -111,12 +114,12 @@
       <mass
         value="0.378" />
       <inertia
-        ixx="0"
+        ixx="0.0001"
         ixy="0"
         ixz="0"
-        iyy="0"
+        iyy="0.0001"
         iyz="0"
-        izz="0" />
+        izz="0.0001" />
     </inertial>
     <visual>
       <origin
@@ -124,7 +127,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_2.STL" />
+          filename="./meshes/link_2.STL" />
       </geometry>
       <material
         name="">
@@ -138,7 +141,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_2.STL" />
+          filename="./meshes/link_2.STL" />
       </geometry>
     </collision>
   </link>
@@ -174,7 +177,7 @@
         ixz="0"
         iyy="0.001"
         iyz="0"
-        izz="0" />
+        izz="0.0001" />
     </inertial>
     <visual>
       <origin
@@ -182,7 +185,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_3.STL" />
+          filename="./meshes/link_3.STL" />
       </geometry>
       <material
         name="">
@@ -196,7 +199,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_3.STL" />
+          filename="./meshes/link_3.STL" />
       </geometry>
     </collision>
   </link>
@@ -232,7 +235,7 @@
         ixz="0"
         iyy="0.001"
         iyz="0"
-        izz="0" />
+        izz="0.0001" />
     </inertial>
     <visual>
       <origin
@@ -240,7 +243,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_4.STL" />
+          filename="./meshes/link_4.STL" />
       </geometry>
       <material
         name="">
@@ -254,7 +257,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_4.STL" />
+          filename="./meshes/link_4.STL" />
       </geometry>
     </collision>
   </link>
@@ -285,12 +288,12 @@
       <mass
         value="0.105" />
       <inertia
-        ixx="0"
+        ixx="0.0001"
         ixy="0"
         ixz="0"
-        iyy="0"
+        iyy="0.0001"
         iyz="0"
-        izz="0" />
+        izz="0.0001" />
     </inertial>
     <visual>
       <origin
@@ -298,7 +301,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_5.STL" />
+          filename="./meshes/link_5.STL" />
       </geometry>
       <material
         name="">
@@ -312,7 +315,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_5.STL" />
+          filename="./meshes/link_5.STL" />
       </geometry>
     </collision>
   </link>
@@ -356,7 +359,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_6.STL" />
+          filename="./meshes/link_6.STL" />
       </geometry>
       <material
         name="">
@@ -370,7 +373,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_6.STL" />
+          filename="./meshes/link_6.STL" />
       </geometry>
     </collision>
   </link>
@@ -401,12 +404,12 @@
       <mass
         value="0.378" />
       <inertia
-        ixx="0"
+        ixx="0.0001"
         ixy="0"
         ixz="0"
-        iyy="0"
+        iyy="0.0001"
         iyz="0"
-        izz="0" />
+        izz="0.0001" />
     </inertial>
     <visual>
       <origin
@@ -414,7 +417,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_7.STL" />
+          filename="./meshes/link_7.STL" />
       </geometry>
       <material
         name="">
@@ -428,7 +431,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_7.STL" />
+          filename="./meshes/link_7.STL" />
       </geometry>
     </collision>
   </link>
@@ -464,7 +467,7 @@
         ixz="0"
         iyy="0.001"
         iyz="0"
-        izz="0" />
+        izz="0.0001" />
     </inertial>
     <visual>
       <origin
@@ -472,7 +475,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_8.STL" />
+          filename="./meshes/link_8.STL" />
       </geometry>
       <material
         name="">
@@ -486,7 +489,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_8.STL" />
+          filename="./meshes/link_8.STL" />
       </geometry>
     </collision>
   </link>
@@ -522,7 +525,7 @@
         ixz="0"
         iyy="0.001"
         iyz="0"
-        izz="0" />
+        izz="0.0001" />
     </inertial>
     <visual>
       <origin
@@ -530,7 +533,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_9.STL" />
+          filename="./meshes/link_9.STL" />
       </geometry>
       <material
         name="">
@@ -544,7 +547,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_9.STL" />
+          filename="./meshes/link_9.STL" />
       </geometry>
     </collision>
   </link>
@@ -575,12 +578,12 @@
       <mass
         value="0.105" />
       <inertia
-        ixx="0"
+        ixx="0.0001"
         ixy="0"
         ixz="0"
-        iyy="0"
+        iyy="0.0001"
         iyz="0"
-        izz="0" />
+        izz="0.0001" />
     </inertial>
     <visual>
       <origin
@@ -588,7 +591,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_10.STL" />
+          filename="./meshes/link_10.STL" />
       </geometry>
       <material
         name="">
@@ -602,7 +605,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="meshes/link_10.STL" />
+          filename="./meshes/link_10.STL" />
       </geometry>
     </collision>
   </link>
