@@ -1,5 +1,5 @@
 <mujoco model="Xuanwu">
-  <compiler angle="radian" meshdir="../urdf/meshes/"/>
+  <compiler angle="radian" meshdir="../meshes/"/>
   <size njmax="500" nconmax="100" />
   <option timestep="0.001" iterations="50" solver="PGS" gravity="0 0 -9.81" noslip_iterations="20">
   </option>
@@ -11,17 +11,8 @@
       <global realtime="1"/>
   </visual>
   <asset>
-    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="512"/>
-    <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2"
-            width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
-    <texture name="texplane2" type="2d" builtin="checker" rgb1="1 0.3137 0.1843" rgb2="0.0 0.30196 0.38039"
-            width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
-
+    <texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
     <material name="matplane" reflectance="0." texture="texplane" texrepeat="1 1" texuniform="true"/>
-    <material name="matplane2" reflectance="0.1" texture="texplane2" texrepeat="1 1" texuniform="true"/>
-    <material name='obstacle'  rgba='0.9 0.6 0.2 1'/>
-    <material name='visualgeom'  rgba='0.5 0.9 0.2 1'/>
-    <material name='visualgeom2'  rgba='0.5 0.9 0.2 1'/>
 
     <mesh name="base_link" file="base_link.STL"/>
     <mesh name="link_1" file="link_1.STL"/>

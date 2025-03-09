@@ -1,3 +1,5 @@
+import os
+os.environ["MUJOCO_GL"] = "egl"
 import mujoco
 import mujoco.viewer as viewer
 import numpy as np
