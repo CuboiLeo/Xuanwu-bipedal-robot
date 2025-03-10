@@ -1,7 +1,10 @@
 <mujoco model="Xuanwu">
+  <option>
+    <flag multiccd="enable"/>
+  </option>
   <compiler angle="radian" meshdir="../meshes/"/>
   <size njmax="500" nconmax="100" />
-  <option timestep="0.001" iterations="50" solver="PGS" gravity="0 0 0" noslip_iterations="20">
+  <option timestep="0.001" iterations="50" solver="PGS" gravity="0 0 -9.81" noslip_iterations="20">
   </option>
   <default>
       <geom contype="1" conaffinity="1" condim="1" solref="0.005 1"/>
@@ -35,27 +38,33 @@
       <freejoint/>
       <site name="imu" pos="0 0 0"/>
       <inertial pos="0.001 0 0.07" mass="1.894" diaginertia="0.0154432 0.0102813 0.00634051"/>
-      <geom type="mesh" group="1" density="0" rgba="1 1 1 1" mesh="base_link"/>
+      <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="base_link"/>
+      <geom size="0.08 0.05 0.05" pos="0 0 0.1" type="box" rgba="1 1 1 0" />
       <body name="link_1" pos="-0.073 0 -0.001" quat="1 0 0 0">
         <inertial pos="-0.007 -0.06 -0.073" mass="0.547" diaginertia="0.00246365 0.00239847 0.000392878"/>
-        <joint name="joint_1" pos="0 0 0" axis="0 0 1" range="-0.5 0.5" actuatorfrcrange="-7 7" damping="0.01" frictionloss="0.01" armature="0.01"/>
-        <geom type="mesh" group="1" density="0" rgba="1 1 1 1" mesh="link_1"/>
+        <joint name="joint_1" pos="0 0 0" axis="0 0 1" range="-0.5 0.5" damping="0.01" frictionloss="0.01" armature="0.01"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="link_1"/>
+        <geom size="0.04 0.08 0.04" pos="0 -0.04 0" type="box" rgba="1 1 1 0" />
         <body name="link_2" pos="0 -0.083 -0.11" quat="1 0 0 0">
           <inertial pos="0 0.077 0" mass="0.378" diaginertia="0.000167 0.000152 0.000106"/>
-          <joint name="joint_2" pos="0 0 0" axis="0 1 0" range="-0.7 0.7" actuatorfrcrange="-7 7" damping="0.01" frictionloss="0.01" armature="0.01"/>
-          <geom type="mesh" group="1" density="0" rgba="1 1 1 1" mesh="link_2"/>
+          <joint name="joint_2" pos="0 0 0" axis="0 1 0" range="-0.7 0.7" damping="0.01" frictionloss="0.01" armature="0.01"/>
+          <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="link_2"/>
+          <geom size="0.03 0.05 0.03" pos="0 0.07 0.02" type="box" rgba="1 1 1 0" />
           <body name="link_3" pos="0 0.082 0" quat="1 0 0 0">
             <inertial pos="0 0 -0.1504" mass="0.436" diaginertia="0.001465 0.00140348 0.000206519"/>
-            <joint name="joint_3" pos="0 0 0" axis="1 0 0" range="-0.25 1.57" actuatorfrcrange="-7 7" damping="0.01" frictionloss="0.01" armature="0.01"/>
-            <geom type="mesh" group="1" density="0" rgba="1 1 1 1" mesh="link_3"/>
+            <joint name="joint_3" pos="0 0 0" axis="1 0 0" range="-0.25 1.57" damping="0.01" frictionloss="0.01" armature="0.01"/>
+            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="link_3"/>
+            <geom size="0.04 0.03 0.07" pos="0 0 -0.09" type="box" rgba="1 1 1 0" />
             <body name="link_4" pos="0 0 -0.18" quat="1 0 0 0">
               <inertial pos="0 0 -0.1504" mass="0.436" diaginertia="0.001465 0.00140348 0.000206519"/>
-              <joint name="joint_4" pos="0 0 0" axis="1 0 0" range="-1.57 1.57" actuatorfrcrange="-7 7" damping="0.01" frictionloss="0.01" armature="0.01"/>
-              <geom type="mesh" group="1" density="0" rgba="1 1 1 1" mesh="link_4"/>
+              <joint name="joint_4" pos="0 0 0" axis="1 0 0" range="-1.57 1.57" damping="0.01" frictionloss="0.01" armature="0.01"/>
+              <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="link_4"/>
+              <geom size="0.04 0.03 0.07" pos="0 0 -0.09" type="box" rgba="1 1 1 0" />
               <body name="link_5" pos="0 0 -0.18" quat="1 0 0 0">
                 <inertial pos="0 0 -0.053" mass="0.105" diaginertia="0.000215679 0.000197321 0.000197"/>
-                <joint name="joint_5" pos="0 0 0" axis="1 0 0" range="-1.57 1.57" actuatorfrcrange="-7 7" damping="0.01" frictionloss="0.01" armature="0.01"/>
-                <geom type="mesh" group="1" density="0" rgba="1 1 1 1" mesh="link_5"/>
+                <joint name="joint_5" pos="0 0 0" axis="1 0 0" range="-1.57 1.57" damping="0.01" frictionloss="0.01" armature="0.01"/>
+                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="link_5"/>
+                <geom size="0.05 0.05 0.01" pos="0 0 -0.06" type="box" rgba="1 1 1 0" />
               </body>
             </body>
           </body>
@@ -63,24 +72,29 @@
       </body>
       <body name="link_6" pos="0.073 0 -0.001" quat="1 0 0 0">
         <inertial pos="0.007 -0.06 -0.074" mass="0.547" diaginertia="0.00246307 0.00239882 0.000393103"/>
-        <joint name="joint_6" pos="0 0 0" axis="0 0 1" range="-0.5 0.5" actuatorfrcrange="-7 7" damping="0.01" frictionloss="0.01" armature="0.01"/>
-        <geom type="mesh" group="1" density="0" rgba="1 1 1 1" mesh="link_6"/>
+        <joint name="joint_6" pos="0 0 0" axis="0 0 1" range="-0.5 0.5" damping="0.01" frictionloss="0.01" armature="0.01"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="link_6"/>
+        <geom size="0.04 0.08 0.04" pos="0 -0.04 0" type="box" rgba="1 1 1 0" />
         <body name="link_7" pos="0 -0.083 -0.11" quat="1 0 0 0">
           <inertial pos="0 0.077 0" mass="0.378" diaginertia="0.000167 0.000152 0.000106"/>
-          <joint name="joint_7" pos="0 0 0" axis="0 1 0" range="-0.7 0.7" actuatorfrcrange="-7 7" damping="0.01" frictionloss="0.01" armature="0.01"/>
-          <geom type="mesh" group="1" density="0" rgba="1 1 1 1" mesh="link_7"/>
+          <joint name="joint_7" pos="0 0 0" axis="0 1 0" range="-0.7 0.7" damping="0.01" frictionloss="0.01" armature="0.01"/>
+          <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="link_7"/>
+          <geom size="0.03 0.05 0.03" pos="0 0.07 0.02" type="box" rgba="1 1 1 0" />
           <body name="link_8" pos="0 0.082 0" quat="1 0 0 0"> 
             <inertial pos="0 0 -0.1504" mass="0.436" diaginertia="0.001465 0.00140348 0.000206519"/>
-            <joint name="joint_8" pos="0 0 0" axis="1 0 0" range="-0.25 1.57" actuatorfrcrange="-7 7" damping="0.01" frictionloss="0.01" armature="0.01"/>
-            <geom type="mesh" group="1" density="0" rgba="1 1 1 1" mesh="link_8"/>
+            <joint name="joint_8" pos="0 0 0" axis="1 0 0" range="-0.25 1.57" damping="0.01" frictionloss="0.01" armature="0.01"/>
+            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="link_8"/>
+            <geom size="0.04 0.03 0.07" pos="0 0 -0.09" type="box" rgba="1 1 1 0" />
             <body name="link_9" pos="0 0 -0.18" quat="1 0 0 0">
               <inertial pos="0 0 -0.1504" mass="0.436" diaginertia="0.001465 0.00140348 0.000206519"/>
-              <joint name="joint_9" pos="0 0 0" axis="1 0 0" range="-1.57 1.57" actuatorfrcrange="-7 7" damping="0.01" frictionloss="0.01" armature="0.01"/>
-              <geom type="mesh" group="1" density="0" rgba="1 1 1 1" mesh="link_9"/>
+              <joint name="joint_9" pos="0 0 0" axis="1 0 0" range="-1.57 1.57" damping="0.01" frictionloss="0.01" armature="0.01"/>
+              <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="link_9"/>
+              <geom size="0.04 0.03 0.07" pos="0 0 -0.09" type="box" rgba="1 1 1 0" />
               <body name="link_10" pos="0 0 -0.18" quat="1 0 0 0">
                 <inertial pos="0 0 -0.053" mass="0.105" diaginertia="0.000215679 0.000197321 0.000197"/>
-                <joint name="joint_10" pos="0 0 0" axis="1 0 0" range="-1.57 1.57" actuatorfrcrange="-7 7" damping="0.01" frictionloss="0.01" armature="0.01"/>
-                <geom type="mesh" group="1" density="0" rgba="1 1 1 1" mesh="link_10"/>
+                <joint name="joint_10" pos="0 0 0" axis="1 0 0" range="-1.57 1.57" damping="0.01" frictionloss="0.01" armature="0.01"/>
+                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="link_10"/>
+                <geom size="0.055 0.07 0.005" pos="0 0 -0.075" type="box" rgba="1 1 1 0" />
               </body>
             </body>
           </body>
