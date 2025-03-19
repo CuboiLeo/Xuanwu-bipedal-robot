@@ -4,9 +4,6 @@
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
   name="Xuanwu">
-  <mujoco>
-     <compiler meshdir="../meshes" balanceinertia="true" discardvisual="false"/>
-  </mujoco>
   <link
     name="base_link">
     <inertial>
@@ -29,21 +26,20 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename=".../meshes/base_link.STL" />
+          filename="../meshes/base_link.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.75294 0.75294 0.75294 1" />
+          rgba="1 1 1 1" />
       </material>
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
+        xyz="0 0 0.2"
         rpy="0 0 0" />
       <geometry>
-        <mesh
-          filename=".../meshes/base_link.STL" />
+        <box size="0.1 0.2 0.2"/>
       </geometry>
     </collision>
   </link>
@@ -69,7 +65,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename=".../meshes/link_1.STL" />
+          filename="../meshes/link_1.STL" />
       </geometry>
       <material
         name="">
@@ -77,15 +73,15 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename=".../meshes/link_1.STL" />
+          filename="../meshes/link_1.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="joint_1"
@@ -135,7 +131,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -143,7 +139,7 @@
         <mesh
           filename="../meshes/link_2.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="joint_2"
@@ -193,7 +189,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -201,7 +197,7 @@
         <mesh
           filename="../meshes/link_3.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="joint_3"
@@ -251,7 +247,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -259,7 +255,7 @@
         <mesh
           filename="../meshes/link_4.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="joint_4"
@@ -367,7 +363,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -375,7 +371,7 @@
         <mesh
           filename="../meshes/link_6.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="joint_6"
@@ -425,7 +421,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -433,7 +429,7 @@
         <mesh
           filename="../meshes/link_7.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="joint_7"
@@ -483,7 +479,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -491,7 +487,7 @@
         <mesh
           filename="../meshes/link_8.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="joint_8"
@@ -541,7 +537,7 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
+    <!-- <collision>
       <origin
         xyz="0 0 0"
         rpy="0 0 0" />
@@ -549,7 +545,7 @@
         <mesh
           filename="../meshes/link_9.STL" />
       </geometry>
-    </collision>
+    </collision> -->
   </link>
   <joint
     name="joint_9"
