@@ -46,7 +46,7 @@ Pose_Two_Foots Walking_Patterns::gaitPlanner(const Position &act_CoM_pos, const 
             right_ref_pose = right_extended_pose;//generateFootTrajectory(right_extend_pose.position, next_step, (gait_phase - Tdbl) / Tsup);
             right_ref_pose.position.z = -0.55 + foot_lift * sin(M_PI * (gait_phase - Tdbl) / Tsup);
             left_ref_pose = left_retracted_pose;
-        }6g
+        }
     }
 
     return {left_ref_pose, right_ref_pose};

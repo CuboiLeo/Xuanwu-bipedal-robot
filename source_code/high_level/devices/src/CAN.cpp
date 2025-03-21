@@ -4,7 +4,7 @@ CAN::CAN(const char *interface)
 {
     // Open a socket
     can_socket = socket(PF_CAN, SOCK_RAW, CAN_RAW);
-    if (socket < 0)
+    if (can_socket < 0)
     {
         std::cerr << "Error while opening socket: " << strerror(errno) << std::endl;
         return;
