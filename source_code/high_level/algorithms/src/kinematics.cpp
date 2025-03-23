@@ -69,7 +69,7 @@ Joint_Angles Kinematics::computeFootIK(const Pose &act_foot_pose, const Pose &re
       // Newton-Raphson method for inverse kinematics
       while ((epsilon_w > EPSILON_W || epsilon_v > EPSILON_V) && iteration_count < MAX_ITERATIONS)
       {
-            // Initialize the Jacobian matrix
+            // Initialize the Spatial Jacobian matrix
             switch (leg_id)
             {
             case LEFT_LEG_ID:
@@ -89,7 +89,7 @@ Joint_Angles Kinematics::computeFootIK(const Pose &act_foot_pose, const Pose &re
                               -1, 0, -sin(computed_joint_angles.hip_roll), -sin(computed_joint_angles.hip_roll), -sin(computed_joint_angles.hip_roll); 
                   break;
             }
-            // SR Inverse using Levenberg-Marquardt method solved using llt decomposition as in this Ax = b, A is symmetric and positive definite
+            // SR Inverse using Levenberg-Marquardt method solved using Cholesky decomposition as in this Ax = b, A is symmetric and positive definite
             delta_joint_angles = (Jacobian.transpose() * Jacobian + LAMBDA * Eigen::MatrixXd::Identity(5, 5)).llt().solve(Jacobian.transpose() * Vb);
 
             // Update the joint angles

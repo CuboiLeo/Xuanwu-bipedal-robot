@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(xuanwu VERSION 1.2)
+project(xuanwu VERSION 1.3)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_BUILD_TYPE Debug)
 
 set(SOURCES
     xuanwu.cpp
@@ -19,8 +20,11 @@ set(SOURCES
     algorithms/src/robot.cpp
     data_plotter/data_exporter.cpp
 )
-
-set(CMAKE_BUILD_TYPE Debug)
+list(APPEND CMAKE_PREFIX_PATH "/usr/src/pytorch/torch/share/cmake/Torch")
+set(Boost_USE_MULTITHREADED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+find_package(Torch REQUIRED)
+include_directories(${TORCH_INCLUDE_DIRS})
 
 add_subdirectory(third_party/Fusion)
 
@@ -30,6 +34,7 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE 
         pthread
         Fusion
+        ${TORCH_LIBRARIES}
 )
 
 target_include_directories(${PROJECT_NAME} 

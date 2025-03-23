@@ -15,6 +15,7 @@
 #include "walking_patterns.h"
 #include "estimations.h"
 #include "data_exporter.h"
+#include <ATen/ATen.h>
 
 // Shared data between threads
 struct Shared_Data

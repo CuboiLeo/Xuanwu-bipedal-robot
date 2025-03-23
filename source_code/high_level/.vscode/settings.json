@@ -73,7 +73,23 @@
         "numericaldiff": "cpp",
         "openglsupport": "cpp",
         "specialfunctions": "cpp",
-        "splines": "cpp"
+        "splines": "cpp",
+        "csignal": "cpp",
+        "bitset": "cpp",
+        "codecvt": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "forward_list": "cpp",
+        "regex": "cpp",
+        "source_location": "cpp",
+        "future": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "shared_mutex": "cpp",
+        "stop_token": "cpp",
+        "typeindex": "cpp",
+        "valarray": "cpp",
+        "variant": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
