@@ -18,6 +18,7 @@ set(SOURCES
     algorithms/src/controls.cpp
     algorithms/src/estimations.cpp
     algorithms/src/robot.cpp
+    algorithms/src/RL_inference.cpp
     data_plotter/data_exporter.cpp
 )
 list(APPEND CMAKE_PREFIX_PATH "/usr/src/pytorch/torch/share/cmake/Torch")

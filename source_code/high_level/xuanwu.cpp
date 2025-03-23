@@ -15,7 +15,7 @@
 #include "walking_patterns.h"
 #include "estimations.h"
 #include "data_exporter.h"
-#include <ATen/ATen.h>
+#include "RL_inference.h"
 
 // Shared data between threads
 struct Shared_Data
@@ -53,16 +53,17 @@ int main()
 
 void compute_thread()
 {
-    Robot robot;                       // Robot object for robot state
-    Kinematics kinematics;             // Kinematics object for kinematics computation
-    Dynamics dynamics;                 // Dynamics object for dynamics computation
-    Controls controls;                 // Controls object for control computation
-    Estimations estimations;           // Estimation object for estimation computation
-    Walking_Patterns walking_patterns; // Walking patterns object for walking pattern computation
+    Robot robot;                                         // Robot object for robot state
+    Kinematics kinematics;                               // Kinematics object for kinematics computation
+    Dynamics dynamics;                                   // Dynamics object for dynamics computation
+    Controls controls;                                   // Controls object for control computation
+    Estimations estimations;                             // Estimation object for estimation computation
+    Walking_Patterns walking_patterns;                   // Walking patterns object for walking pattern computation
+    RL_Inference rl_inference("../../RL/trained_policy/flat_ground_walking.pt"); // RL inference object for RL policy inference
+    auto start = std::chrono::high_resolution_clock::now();
 
     while (true)
     {
-        auto start = std::chrono::high_resolution_clock::now();
         std::unique_lock<std::mutex> lock(shared_data_mutex); // Lock the shared data
         shared_data_cv.wait(lock, []
                             { return shared_data.new_data; }); // Wait for new data
@@ -87,85 +88,100 @@ void compute_thread()
         robot.setLegActTorque(left_act_torque, right_act_torque);
 
         // Compute the center of mass position
-        Position CoM_pos = kinematics.computeCoMPos({robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
-        robot.setCoMActPos(CoM_pos);
+        // Position CoM_pos = kinematics.computeCoMPos({robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
+        // robot.setCoMActPos(CoM_pos);
 
         // Compute the center of mass acceleration
-        Acceleration CoM_accel = dynamics.computeCoMAccel(robot.getCoMActPos(), shared_data.imu.getAccel(), shared_data.imu.getGyro(), shared_data.imu.getGyroDot());
-        robot.setCoMActAccel(CoM_accel);
+        // Acceleration CoM_accel = dynamics.computeCoMAccel(robot.getCoMActPos(), shared_data.imu.getAccel(), shared_data.imu.getGyro(), shared_data.imu.getGyroDot());
+        // robot.setCoMActAccel(CoM_accel);
 
         // Compute the zero moment point position
-        Position ZMP_pos = dynamics.computeZMPPos(robot.getCoMActPos(), robot.getCoMActAccel());
-        robot.setZMPActPos(ZMP_pos);
+        // Position ZMP_pos = dynamics.computeZMPPos(robot.getCoMActPos(), robot.getCoMActAccel());
+        // robot.setZMPActPos(ZMP_pos);
         // std::cout << "CoM Position: " << CoM_pos.x << " " << CoM_pos.y << " " << CoM_pos.z << std::endl;
         // std::cout << "ZMP Position: " << ZMP_pos.x << " " << ZMP_pos.y << std::endl;
 
         // Estimate the center of mass states
-        estimations.estimateCoMStates(shared_data.imu.getVel(), shared_data.imu.getAccel());
-        Velocity estimated_CoM_vel = estimations.getEstimatedCoMVel();
+        // estimations.estimateCoMStates(shared_data.imu.getVel(), shared_data.imu.getAccel());
+        // Velocity estimated_CoM_vel = estimations.getEstimatedCoMVel();
 
         // Compute the foot forward kinematics
-        Pose left_act_pose = trans_to_pose(kinematics.computeFootFK(robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID));
-        Pose right_act_pose = trans_to_pose(kinematics.computeFootFK(robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID));
-        robot.setFootActPose(left_act_pose, right_act_pose);
-        std::cout << "Left Foot Pose: " << left_act_pose.position.x << " " << left_act_pose.position.y << " " << left_act_pose.position.z << " " << left_act_pose.orientation.roll << " " << left_act_pose.orientation.pitch << " " << left_act_pose.orientation.yaw << std::endl;
-        std::cout << "Right Foot Pose: " << right_act_pose.position.x << " " << right_act_pose.position.y << " " << right_act_pose.position.z << " " << right_act_pose.orientation.roll << " " << right_act_pose.orientation.pitch << " " << right_act_pose.orientation.yaw << std::endl;
+        // Pose left_act_pose = trans_to_pose(kinematics.computeFootFK(robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID));
+        // Pose right_act_pose = trans_to_pose(kinematics.computeFootFK(robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID));
+        // robot.setFootActPose(left_act_pose, right_act_pose);
+        // std::cout << "Left Foot Pose: " << left_act_pose.position.x << " " << left_act_pose.position.y << " " << left_act_pose.position.z << " " << left_act_pose.orientation.roll << " " << left_act_pose.orientation.pitch << " " << left_act_pose.orientation.yaw << std::endl;
+        // std::cout << "Right Foot Pose: " << right_act_pose.position.x << " " << right_act_pose.position.y << " " << right_act_pose.position.z << " " << right_act_pose.orientation.roll << " " << right_act_pose.orientation.pitch << " " << right_act_pose.orientation.yaw << std::endl;
 
         // Set the foot reference pose with walking pattern generator
-        Pose_Two_Foots foot_ref_poses = walking_patterns.gaitPlanner(robot.getCoMActPos(), estimations.getEstimatedCoMVel(), {robot.getFootActPose(LEFT_LEG_ID), robot.getFootActPose(RIGHT_LEG_ID)}, shared_data.imu.getEuler().roll);
-        robot.setFootRefPose(foot_ref_poses.left, foot_ref_poses.right);
+        // Pose_Two_Foots foot_ref_poses = walking_patterns.gaitPlanner(robot.getCoMActPos(), estimations.getEstimatedCoMVel(), {robot.getFootActPose(LEFT_LEG_ID), robot.getFootActPose(RIGHT_LEG_ID)}, shared_data.imu.getEuler().roll);
+        // robot.setFootRefPose(foot_ref_poses.left, foot_ref_poses.right);
 
         // Pose left_ref_pose = {{-L1, -0.001, -0.55}, {0, 0, 0}};
         // Pose right_ref_pose = {{L1, -0.001, -0.55}, {0, 0, 0}};
         // robot.setFootRefPose(left_ref_pose, right_ref_pose);
 
         // Compute the inverse kinematics
-        Joint_Angles left_ref_angle = kinematics.computeFootIK(robot.getFootActPose(LEFT_LEG_ID), robot.getFootRefPose(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
-        Joint_Angles right_ref_angle = kinematics.computeFootIK(robot.getFootActPose(RIGHT_LEG_ID), robot.getFootRefPose(RIGHT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), RIGHT_LEG_ID);
-        robot.setLegRefAngles(left_ref_angle, right_ref_angle);
-        std::cout << "Left Angles:  " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
-        std::cout << "Right Angles: " << right_ref_angle.hip_yaw << " | " << right_ref_angle.hip_roll << " | " << right_ref_angle.hip_pitch << " | " << right_ref_angle.knee_pitch << " | " << right_ref_angle.ankle_pitch << std::endl;
+        // Joint_Angles left_ref_angle = kinematics.computeFootIK(robot.getFootActPose(LEFT_LEG_ID), robot.getFootRefPose(LEFT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+        // Joint_Angles right_ref_angle = kinematics.computeFootIK(robot.getFootActPose(RIGHT_LEG_ID), robot.getFootRefPose(RIGHT_LEG_ID), robot.getLegActAngles(LEFT_LEG_ID), RIGHT_LEG_ID);
+        // robot.setLegRefAngles(left_ref_angle, right_ref_angle);
+        // std::cout << "Left Angles:  " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
+        // std::cout << "Right Angles: " << right_ref_angle.hip_yaw << " | " << right_ref_angle.hip_roll << " | " << right_ref_angle.hip_pitch << " | " << right_ref_angle.knee_pitch << " | " << right_ref_angle.ankle_pitch << std::endl;
 
         // Set the leg reference velocities
-        robot.setLegRefVel({0, 0, 0, 0, 0}, {0, 0, 0, 0, 0});
+        // robot.setLegRefVel({0, 0, 0, 0, 0}, {0, 0, 0, 0, 0});
 
         // Set the leg reference torques
-        double gait_phase = walking_patterns.getGaitPhase();
-        int step_counter = walking_patterns.getStepCounter();
-        Joint_Torques left_ref_torque;
-        Joint_Torques right_ref_torque;
-        if (gait_phase < walking_patterns.Tdbl)
-        {
-            left_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY / 2, 0, MT * GRAVITY / 2 * L1, 0}, robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
-            right_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY / 2, 0, -MT * GRAVITY / 2 * L1, 0}, robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
-        }
-        else
-        {
-            if (step_counter % 2 == 0)
-            {
-                left_ref_torque = {0, 0, 0, 0, 0};
-                right_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY, 0, -MT * GRAVITY * L1, 0}, robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
-            }
-            else
-            {
-                left_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY, 0, MT * GRAVITY * L1, 0}, robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
-                right_ref_torque = {0, 0, 0, 0, 0};
-            }
-        }
-        robot.setLegRefTorque(left_ref_torque, right_ref_torque);
+        // double gait_phase = walking_patterns.getGaitPhase();
+        // int step_counter = walking_patterns.getStepCounter();
+        // Joint_Torques left_ref_torque;
+        // Joint_Torques right_ref_torque;
+        // if (gait_phase < walking_patterns.Tdbl)
+        // {
+        //     left_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY / 2, 0, MT * GRAVITY / 2 * L1, 0}, robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+        //     right_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY / 2, 0, -MT * GRAVITY / 2 * L1, 0}, robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
+        // }
+        // else
+        // {
+        //     if (step_counter % 2 == 0)
+        //     {
+        //         left_ref_torque = {0, 0, 0, 0, 0};
+        //         right_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY, 0, -MT * GRAVITY * L1, 0}, robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
+        //     }
+        //     else
+        //     {
+        //         left_ref_torque = dynamics.computeGRFTorques({0, 0, MT * GRAVITY, 0, MT * GRAVITY * L1, 0}, robot.getLegActAngles(LEFT_LEG_ID), LEFT_LEG_ID);
+        //         right_ref_torque = {0, 0, 0, 0, 0};
+        //     }
+        // }
+        // robot.setLegRefTorque(left_ref_torque, right_ref_torque);
         // robot.setLegRefTorque({0, 0, 0, 0, 0}, {0, 0, 0, 0, 0});
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
+
+        std::vector<float> cmd = {0.0f, 0.3f, 0.0f};
+        std::vector<float> q = {(float)left_act_angle.hip_yaw, (float)left_act_angle.hip_roll, (float)left_act_angle.hip_pitch, (float)left_act_angle.knee_pitch, (float)left_act_angle.ankle_pitch, (float)right_act_angle.hip_yaw, (float)right_act_angle.hip_roll, (float)right_act_angle.hip_pitch, (float)right_act_angle.knee_pitch, (float)right_act_angle.ankle_pitch};
+        std::vector<float> dq = {(float)left_act_vel.hip_yaw, (float)left_act_vel.hip_roll, (float)left_act_vel.hip_pitch, (float)left_act_vel.knee_pitch, (float)left_act_vel.ankle_pitch, (float)right_act_vel.hip_yaw, (float)right_act_vel.hip_roll, (float)right_act_vel.hip_pitch, (float)right_act_vel.knee_pitch, (float)right_act_vel.ankle_pitch};
+        std::vector<float> omega = {(float)shared_data.imu.getRawGyro().x, (float)shared_data.imu.getRawGyro().y, (float)shared_data.imu.getRawGyro().z};
+        std::vector<float> eul_ang = {(float)shared_data.imu.getEuler().roll, (float)shared_data.imu.getEuler().pitch, (float)shared_data.imu.getEuler().yaw};
+        std::vector<float> tau = rl_inference.infer(elapsed.count(), cmd, q, dq, omega, eul_ang);
+
+        Joint_Torques left_ref_torque = {tau[0], tau[1], tau[2], tau[3], tau[4]};
+        Joint_Torques right_ref_torque = {tau[5], tau[6], tau[7], tau[8], tau[9]};
+
+        std::cout << "Left Torques: " << left_ref_torque.hip_yaw << " | " << left_ref_torque.hip_roll << " | " << left_ref_torque.hip_pitch << " | " << left_ref_torque.knee_pitch << " | " << left_ref_torque.ankle_pitch << std::endl;
+        std::cout << "Right Torques: " << right_ref_torque.hip_yaw << " | " << right_ref_torque.hip_roll << " | " << right_ref_torque.hip_pitch << " | " << right_ref_torque.knee_pitch << " | " << right_ref_torque.ankle_pitch << std::endl;
 
         // Set the motor data
-        robot.setMotorData(shared_data.motor);
+        // robot.setMotorData(shared_data.motor);
 
         // Test the foot wrench computation (checked)
         // Wrench right_foot_wrench = dynamics.computeFootWrench(robot.getLegActTorque(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
 
         // logDataToCSV(right_foot_wrench.force.x, right_foot_wrench.force.y, right_foot_wrench.force.z, right_foot_wrench.torque.x, right_foot_wrench.torque.y, right_foot_wrench.torque.z);
 
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> elapsed = end - start;
-        std::cout << "Elapsed time: " << elapsed.count() << " seconds" << std::endl;
+        // auto end = std::chrono::high_resolution_clock::now();
+        // std::chrono::duration<double> elapsed = end - start;
+        std::cout << "Current time: " << elapsed.count() << " seconds" << std::endl;
         lock.unlock(); // Unlock the shared data
     }
 }

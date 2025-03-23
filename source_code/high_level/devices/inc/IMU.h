@@ -19,6 +19,7 @@ public:
     Eigen::Vector3d getGyroDot() const { return gyro_dot; };
     Orientation getEuler() const { return euler_angles; };
     Eigen::Matrix3d getRotationMatrix() const { return rotation_matrix; };
+    Angular_Velocity getRawGyro() const { return raw_gyro; };
 
     void setAccel(const Acceleration accel) { this->raw_accel = accel; };
     void setGyro(const Angular_Velocity gyro) { this->raw_gyro = gyro; };
