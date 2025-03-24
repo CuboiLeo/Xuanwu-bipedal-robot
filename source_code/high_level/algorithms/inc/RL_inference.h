@@ -43,7 +43,7 @@ private:
     std::vector<float> default_angles = {0.0f, 0.0f, 0.152f, -0.36f, 0.208f, 0.0f, 0.0f, 0.152f, -0.36f, 0.208f};
     std::vector<float> kps = {30.0f, 30.0f, 30.0f, 30.0f, 10.0f, 30.0f, 30.0f, 30.0f, 30.0f, 10.0f};
     std::vector<float> kds = std::vector<float>(10, 1.0f);
-    float torque_limit = 7.0f;
+    float torque_limit = 3.0f;
 };
 
 #endif // RL_INFERENCE_H

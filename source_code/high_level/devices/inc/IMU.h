@@ -19,7 +19,6 @@ public:
     Eigen::Vector3d getGyroDot() const { return gyro_dot; };
     Orientation getEuler() const { return euler_angles; };
     Eigen::Matrix3d getRotationMatrix() const { return rotation_matrix; };
-    Angular_Velocity getRawGyro() const { return raw_gyro; };
 
     void setAccel(const Acceleration accel) { this->raw_accel = accel; };
     void setGyro(const Angular_Velocity gyro) { this->raw_gyro = gyro; };
@@ -42,7 +41,7 @@ private:
     Orientation euler_angles = {};   // Euler angles in rads for roll, pitch, and yaw
     Eigen::Matrix3d rotation_matrix; // Rotation matrix from base frame to world frame
 
-    double LPF_coeff = 0.01; // Low pass filter coefficient
+    double LPF_coeff = 0.0001; // Low pass filter coefficient
 
     std::chrono::high_resolution_clock::time_point last_time;    // Time point of the last IMU update
     std::chrono::high_resolution_clock::time_point current_time; // Time point of the current IMU update

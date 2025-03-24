@@ -50,7 +50,6 @@ std::vector<float> RL_Inference::infer(double time, std::vector<float> &cmd, std
     clip(obs_data, -normalization.clip_obs, normalization.clip_obs);
     hist_obs.push_back(obs_data);
     hist_obs.pop_front();
-
     for (int i = 0; i < FRAME_STACK; i++)
     {
         for (int j = 0; j < OBS_DIM; j++)
@@ -70,9 +69,10 @@ std::vector<float> RL_Inference::infer(double time, std::vector<float> &cmd, std
     for (int i = 0; i < ACT_DIM; i++)
     {
         target_q[i] = action[i] * normalization.action_scale + default_angles[i];
-        tau[i] = kps[i] * (target_q[i] - q[i]) + kds[i] * (target_dq[i] - dq[i]);
+        // tau[i] = kps[i] * (target_q[i] - q[i]) + kds[i] * (target_dq[i] - dq[i]);
     }
-    clip(tau, -torque_limit, torque_limit);
+    
+    // clip(tau, -torque_limit, torque_limit);
 
-    return tau;
+    return target_q;
 }

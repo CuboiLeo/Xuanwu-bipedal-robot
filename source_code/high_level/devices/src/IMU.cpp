@@ -58,7 +58,8 @@ void IMU::processData()
 
     // Compute the angular velocity in the world frame
     Eigen::Vector3d v_raw_gyro = {raw_gyro.x, raw_gyro.y, raw_gyro.z};
-    gyro = rotation_matrix * v_raw_gyro;
+    // gyro = rotation_matrix * v_raw_gyro;
+    gyro = (1-LPF_coeff)*gyro + LPF_coeff * v_raw_gyro;
 
     // Compute the angular acceleration
     computeGyroDot();

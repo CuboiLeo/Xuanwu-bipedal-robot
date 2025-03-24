@@ -138,7 +138,7 @@ Eigen::Matrix4d trans_log(Eigen::Matrix4d T) // Discarded due to numerical insta
 	return T_log;
 }
 
-void clip(std::vector<float> vec, float min, float max)
+void clip(std::vector<float> &vec, float min, float max)
 {
 	/* Clips the values of a vector to a given range */
 	for (float& element : vec) {
