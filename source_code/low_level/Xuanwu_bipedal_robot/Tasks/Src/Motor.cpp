@@ -7,12 +7,12 @@ Motor::Motor()
 	motor_info[Left_Hip_Yaw].can_bus = 1;
 	motor_info[Left_Hip_Yaw].id = 0x01;
 	motor_info[Left_Hip_Yaw].ctrl.mode = 0; // 0: MIT, 1: Pos, 2: Vel
-	motor_info[Left_Hip_Yaw].range = 0.3f;
+	motor_info[Left_Hip_Yaw].range = 0.5f;
 
 	motor_info[Left_Hip_Roll].can_bus = 1;
 	motor_info[Left_Hip_Roll].id = 0x02;
 	motor_info[Left_Hip_Roll].ctrl.mode = 0;
-	motor_info[Left_Hip_Roll].range = 0.4f;
+	motor_info[Left_Hip_Roll].range = 0.7f;
 
 	motor_info[Left_Hip_Pitch].can_bus = 1;
 	motor_info[Left_Hip_Pitch].id = 0x03;
@@ -27,17 +27,17 @@ Motor::Motor()
 	motor_info[Left_Ankle_Pitch].can_bus = 1;
 	motor_info[Left_Ankle_Pitch].id = 0x05;
 	motor_info[Left_Ankle_Pitch].ctrl.mode = 0;
-	motor_info[Left_Ankle_Pitch].range = 1.2f;
+	motor_info[Left_Ankle_Pitch].range = 1.5f;
 
 	motor_info[Right_Hip_Yaw].can_bus = 2;
 	motor_info[Right_Hip_Yaw].id = 0x21;
 	motor_info[Right_Hip_Yaw].ctrl.mode = 0;
-	motor_info[Right_Hip_Yaw].range = 0.3f;
+	motor_info[Right_Hip_Yaw].range = 0.5f;
 
 	motor_info[Right_Hip_Roll].can_bus = 2;
 	motor_info[Right_Hip_Roll].id = 0x22;
 	motor_info[Right_Hip_Roll].ctrl.mode = 0;
-	motor_info[Right_Hip_Roll].range = 0.4f;
+	motor_info[Right_Hip_Roll].range = 0.7f;
 
 	motor_info[Right_Hip_Pitch].can_bus = 2;
 	motor_info[Right_Hip_Pitch].id = 0x23;
@@ -52,7 +52,7 @@ Motor::Motor()
 	motor_info[Right_Ankle_Pitch].can_bus = 2;
 	motor_info[Right_Ankle_Pitch].id = 0x25;
 	motor_info[Right_Ankle_Pitch].ctrl.mode = 0;
-	motor_info[Right_Ankle_Pitch].range = 1.2f;
+	motor_info[Right_Ankle_Pitch].range = 1.5f;
 
 	soft_start_flag = 0;
 }
@@ -63,8 +63,15 @@ uint8_t Motor::returnZeroPos(void)
 	for (int i = 0; i < NUM_MOTORS; i++)
 	{
 		motor_info[i].ctrl.pos_set = 0;
-		motor_info[i].ctrl.kp_set = 5;
-		motor_info[i].ctrl.kd_set = 1;
+		motor_info[Left_Hip_Pitch].ctrl.pos_set = 0.152f;
+		motor_info[Left_Knee_Pitch].ctrl.pos_set = -0.36f;
+		motor_info[Left_Ankle_Pitch].ctrl.pos_set = 0.208f;
+		motor_info[Right_Hip_Pitch].ctrl.pos_set = 0.152f;
+		motor_info[Right_Knee_Pitch].ctrl.pos_set = -0.36f;
+		motor_info[Right_Ankle_Pitch].ctrl.pos_set = 0.208f;
+		
+		motor_info[i].ctrl.kp_set = 10.0f;
+		motor_info[i].ctrl.kd_set = 1.0f;
 		
 		if (fabs(motor_info[i].para.pos - motor_info[i].ctrl.pos_set) < 0.2f)
 		{
@@ -82,16 +89,13 @@ uint8_t Motor::returnZeroPos(void)
 	{
 		for (int i = 0; i < NUM_MOTORS; i++)
 		{
-			motor_info[i].ctrl.pos_set = 0;
-			motor_info[i].ctrl.kp_set = 30;
+			motor_info[i].ctrl.kp_set = 30.0f;
 			motor_info[i].ctrl.kd_set = 1.0f;
+//			motor_info[i].ctrl.kp_set = 0.0f;
+//			motor_info[i].ctrl.kd_set = 0.0f;
 		}
-		motor_info[Left_Hip_Roll].ctrl.kp_set = 120;
-		motor_info[Right_Hip_Roll].ctrl.kp_set = 120;
-		motor_info[Left_Hip_Pitch].ctrl.pos_set = 0.33f;
-		motor_info[Left_Knee_Pitch].ctrl.pos_set = -0.58f;
-		motor_info[Right_Hip_Pitch].ctrl.pos_set = 0.33f;
-		motor_info[Right_Knee_Pitch].ctrl.pos_set = -0.58f;
+		motor_info[Left_Ankle_Pitch].ctrl.kp_set = 10.0f;
+		motor_info[Right_Ankle_Pitch].ctrl.kp_set = 10.0f;
 	}
 
 	return all_joints_zeroed_flag;
@@ -110,7 +114,7 @@ void Motor::createVirtualBoundary(void)
 			motor_info[i].ctrl.vel_set = 0;
 			motor_info[i].ctrl.tor_set = 0;
 			motor_info[i].ctrl.kp_set = 10;
-			motor_info[i].ctrl.kd_set = 2;
+			motor_info[i].ctrl.kd_set = 1;
 		}
 		else if (motor_info[i].para.pos < -motor_info[i].range)
 		{
@@ -118,7 +122,16 @@ void Motor::createVirtualBoundary(void)
 			motor_info[i].ctrl.vel_set = 0;
 			motor_info[i].ctrl.tor_set = 0;
 			motor_info[i].ctrl.kp_set = 10;
-			motor_info[i].ctrl.kd_set = 2;
+			motor_info[i].ctrl.kd_set = 1;
+		}
+		else
+		{
+			motor_info[i].ctrl.kp_set = 30.0f;
+			motor_info[i].ctrl.kd_set = 1.0f;
+			motor_info[Left_Ankle_Pitch].ctrl.kp_set = 10.0f;
+			motor_info[Right_Ankle_Pitch].ctrl.kp_set = 10.0f;
+//			motor_info[i].ctrl.kp_set = 0.0f;
+//			motor_info[i].ctrl.kd_set = 0.0f;
 		}
 	}
 }
