@@ -67,8 +67,9 @@ void Motor_Ctrl_Task(void *argument)
             soft_start_flag = motor.returnZeroPos();
             motor.setSoftStartFlag(soft_start_flag);
         }
-
-        motor.createVirtualBoundary();
+				else
+					motor.createVirtualBoundary();
+				
         motor.sendAll();
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
