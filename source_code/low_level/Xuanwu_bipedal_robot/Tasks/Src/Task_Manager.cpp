@@ -32,7 +32,11 @@ void Robot_Task(void *argument)
 
         if (motor.getSoftStartFlag() == motor.ALL_JOINTS_ZEROED_FLAG)
         {
+            #ifdef USE_LITE_PACKAGE
+            orin.decodeDataLite(motor);
+            #else
             orin.decodeData(motor);
+            #endif
         }
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
@@ -161,7 +165,11 @@ void Orin_Task(void *argument)
 
     for (;;)
     {
+        #ifdef USE_LITE_PACKAGE
+        orin.sendDataLite(motor, imu, robot.getRefRobotVel(), robot.getRefRobotAngVel());
+        #else
         orin.sendData(motor, imu, robot.getRefRobotVel(), robot.getRefRobotAngVel());
+        #endif
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
 }
@@ -218,7 +226,11 @@ void fdcan2_rx_callback(void)
 
 void fdcan3_rx_callback(void)
 {
+    #ifdef USE_LITE_PACKAGE
+    orin.receiveDataLite();
+    #else
     orin.receiveData();
+    #endif
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
