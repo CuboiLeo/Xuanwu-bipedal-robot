@@ -53,12 +53,12 @@ int main()
 
 void compute_thread()
 {
-    Robot robot;                                         // Robot object for robot state
-    Kinematics kinematics;                               // Kinematics object for kinematics computation
-    Dynamics dynamics;                                   // Dynamics object for dynamics computation
-    Controls controls;                                   // Controls object for control computation
-    Estimations estimations;                             // Estimation object for estimation computation
-    Walking_Patterns walking_patterns;                   // Walking patterns object for walking pattern computation
+    Robot robot;                                                                 // Robot object for robot state
+    Kinematics kinematics;                                                       // Kinematics object for kinematics computation
+    Dynamics dynamics;                                                           // Dynamics object for dynamics computation
+    Controls controls;                                                           // Controls object for control computation
+    Estimations estimations;                                                     // Estimation object for estimation computation
+    Walking_Patterns walking_patterns;                                           // Walking patterns object for walking pattern computation
     RL_Inference rl_inference("../../RL/trained_policy/flat_ground_walking.pt"); // RL inference object for RL policy inference
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -83,9 +83,9 @@ void compute_thread()
         robot.setLegActVel(left_act_vel, right_act_vel);
 
         // Set the leg act torques
-        Joint_Torques left_act_torque = {shared_data.motor.getActTor(Left_Hip_Yaw), shared_data.motor.getActTor(Left_Hip_Roll), shared_data.motor.getActTor(Left_Hip_Pitch), shared_data.motor.getActTor(Left_Knee_Pitch), shared_data.motor.getActTor(Left_Ankle_Pitch)};
-        Joint_Torques right_act_torque = {shared_data.motor.getActTor(Right_Hip_Yaw), shared_data.motor.getActTor(Right_Hip_Roll), shared_data.motor.getActTor(Right_Hip_Pitch), shared_data.motor.getActTor(Right_Knee_Pitch), shared_data.motor.getActTor(Right_Ankle_Pitch)};
-        robot.setLegActTorque(left_act_torque, right_act_torque);
+        // Joint_Torques left_act_torque = {shared_data.motor.getActTor(Left_Hip_Yaw), shared_data.motor.getActTor(Left_Hip_Roll), shared_data.motor.getActTor(Left_Hip_Pitch), shared_data.motor.getActTor(Left_Knee_Pitch), shared_data.motor.getActTor(Left_Ankle_Pitch)};
+        // Joint_Torques right_act_torque = {shared_data.motor.getActTor(Right_Hip_Yaw), shared_data.motor.getActTor(Right_Hip_Roll), shared_data.motor.getActTor(Right_Hip_Pitch), shared_data.motor.getActTor(Right_Knee_Pitch), shared_data.motor.getActTor(Right_Ankle_Pitch)};
+        // robot.setLegActTorque(left_act_torque, right_act_torque);
 
         // Compute the center of mass position
         // Position CoM_pos = kinematics.computeCoMPos({robot.getLegActAngles(LEFT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID)}, shared_data.imu.getRotationMatrix());
@@ -158,19 +158,20 @@ void compute_thread()
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = end - start;
 
-        std::vector<float> cmd = {0.0f, 0.2f, 0.0f};
+        std::vector<float> cmd = {0.0f, 0.3f, 0.0f};
         std::vector<float> q = {(float)left_act_angle.hip_yaw, (float)left_act_angle.hip_roll, (float)left_act_angle.hip_pitch, (float)left_act_angle.knee_pitch, (float)left_act_angle.ankle_pitch, (float)right_act_angle.hip_yaw, (float)right_act_angle.hip_roll, (float)right_act_angle.hip_pitch, (float)right_act_angle.knee_pitch, (float)right_act_angle.ankle_pitch};
         std::vector<float> dq = {(float)left_act_vel.hip_yaw, (float)left_act_vel.hip_roll, (float)left_act_vel.hip_pitch, (float)left_act_vel.knee_pitch, (float)left_act_vel.ankle_pitch, (float)right_act_vel.hip_yaw, (float)right_act_vel.hip_roll, (float)right_act_vel.hip_pitch, (float)right_act_vel.knee_pitch, (float)right_act_vel.ankle_pitch};
         Eigen::Vector3d gyro = shared_data.imu.getGyro();
         std::vector<float> omega = {(float)gyro(0), (float)gyro(1), (float)gyro(2)};
         std::vector<float> eul_ang = {(float)shared_data.imu.getEuler().roll, (float)shared_data.imu.getEuler().pitch, (float)shared_data.imu.getEuler().yaw};
-        
+
         std::vector<float> target_q = rl_inference.infer(elapsed.count(), cmd, q, dq, omega, eul_ang);
-        Joint_Angles left_ref_angle = {target_q[0], target_q[1], target_q[2], target_q[3], target_q[4]};
-        Joint_Angles right_ref_angle = {target_q[5], target_q[6], target_q[7], target_q[8], target_q[9]};
-        robot.setLegRefTorque({0, 0, 0, 0, 0}, {0, 0, 0, 0, 0});
+        // Joint_Angles left_ref_angle = {target_q[0], target_q[1], target_q[2], target_q[3], target_q[4]};
+        // Joint_Angles right_ref_angle = {target_q[5], target_q[6], target_q[7], target_q[8], target_q[9]};
+
+        Joint_Angles left_ref_angle = {0, 0, 0, sin(2 * PI * elapsed.count() / 2.0), 0};
+        Joint_Angles right_ref_angle = {0, 0, 0, 0, 0};
         robot.setLegRefAngles(left_ref_angle, right_ref_angle);
-        robot.setLegRefVel({0, 0, 0, 0, 0}, {0, 0, 0, 0, 0});
         std::cout << "Left Angles: " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
         std::cout << "Right Angle: " << right_ref_angle.hip_yaw << " | " << right_ref_angle.hip_roll << " | " << right_ref_angle.hip_pitch << " | " << right_ref_angle.knee_pitch << " | " << right_ref_angle.ankle_pitch << std::endl;
 
@@ -189,37 +190,55 @@ void compute_thread()
         // Test the foot wrench computation (checked)
         // Wrench right_foot_wrench = dynamics.computeFootWrench(robot.getLegActTorque(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
 
-        // logDataToCSV(right_foot_wrench.force.x, right_foot_wrench.force.y, right_foot_wrench.force.z, right_foot_wrench.torque.x, right_foot_wrench.torque.y, right_foot_wrench.torque.z);
-
+        // logDataToCSV(left_ref_angle.hip_yaw, left_ref_angle.hip_roll, left_ref_angle.hip_pitch, left_ref_angle.knee_pitch, left_ref_angle.ankle_pitch);
+        logDataToCSV(elapsed.count(), left_act_angle.knee_pitch, left_ref_angle.knee_pitch);
         // auto end = std::chrono::high_resolution_clock::now();
         // std::chrono::duration<double> elapsed = end - start;
-        std::cout << "Current time: " << elapsed.count() << " seconds" << std::endl;
+        // std::cout << "Current time: " << elapsed.count() << " seconds" << std::endl;
         lock.unlock(); // Unlock the shared data
     }
 }
 
 void CAN_receive_thread()
 {
+    auto start = std::chrono::high_resolution_clock::now();
     while (true)
     {
         stm32.receiveData(can); // Receive data from the STM32
         {
-            std::lock_guard<std::mutex> lock(shared_data_mutex);                       // Lock the shared data
+            std::lock_guard<std::mutex> lock(shared_data_mutex); // Lock the shared data
+#ifdef USE_LITE_PACKAGE
+            stm32.decodeDataLite(shared_data.motor, shared_data.imu, shared_data.command); // Decode the received data
+#else
             stm32.decodeData(shared_data.motor, shared_data.imu, shared_data.command); // Decode the received data
-            shared_data.new_data = true;                                               // Set the new data flag
+#endif
+            shared_data.new_data = true; // Set the new data flag
         }
         shared_data_cv.notify_one(); // Notify the compute thread that new data is available
+        
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
+        // std::cout << "Current time: " << elapsed.count() << " seconds" << std::endl;
     }
 }
 
 void CAN_send_thread()
 {
+    auto start = std::chrono::high_resolution_clock::now();
     while (true)
     {
         {
             std::lock_guard<std::mutex> lock(shared_data_mutex); // Lock the shared data
-            stm32.encodeData(shared_data.motor);                 // Encode the data to send
+#ifdef USE_LITE_PACKAGE
+            stm32.encodeDataLite(shared_data.motor); // Encode the data to send
+#else
+            stm32.encodeData(shared_data.motor); // Encode the data to send
+#endif
         }
         stm32.sendData(can); // Send the data to the STM32
+
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> elapsed = end - start;
+        std::cout << "Current time: " << elapsed.count() << " seconds" << std::endl;
     }
 }

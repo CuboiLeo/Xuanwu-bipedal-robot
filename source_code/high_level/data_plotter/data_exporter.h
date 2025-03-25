@@ -4,6 +4,7 @@
 #include <string>
 
 void logDataToCSV(
+    double time = 0,
     double data1 = 0,
     double data2 = 0,
     double data3 = 0,
