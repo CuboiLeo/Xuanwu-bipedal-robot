@@ -91,19 +91,19 @@ void Debug_Task(void *argument)
 {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(10);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(1000);
 
     HAL_UART_Init(&huart7);
 
     for (;;)
     {
-        char buffer[128]; // Adjust the size based on the data you need to print
+//        char buffer[128]; // Adjust the size based on the data you need to print
 
-        // Format the string using sprintf
-        sprintf(buffer, "/*%d, %f, %f*/\n", elapsed_time, motor.getRefPos(Left_Knee_Pitch), motor.getPos(Left_Knee_Pitch));
+//        // Format the string using sprintf
+//        sprintf(buffer, "/*%d, %f, %f*/\n", elapsed_time, motor.getRefPos(Left_Knee_Pitch), motor.getPos(Left_Knee_Pitch));
 
-        // Transmit the formatted string over UART
-        HAL_UART_Transmit(&huart7, (uint8_t *)buffer, strlen(buffer), 0xFFFF);
+//        // Transmit the formatted string over UART
+//        HAL_UART_Transmit(&huart7, (uint8_t *)buffer, strlen(buffer), 0xFFFF);
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }

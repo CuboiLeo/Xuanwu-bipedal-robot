@@ -94,8 +94,8 @@ uint8_t Motor::returnZeroPos(void)
 //			motor_info[i].ctrl.kp_set = 0.0f;
 //			motor_info[i].ctrl.kd_set = 0.0f;
 		}
-		motor_info[Left_Hip_Roll].ctrl.kp_set = 40.0f;
-		motor_info[Right_Hip_Roll].ctrl.kp_set = 40.0f;
+		motor_info[Left_Hip_Roll].ctrl.kp_set = 80.0f;
+		motor_info[Right_Hip_Roll].ctrl.kp_set = 80.0f;
 		motor_info[Left_Ankle_Pitch].ctrl.kp_set = 10.0f;
 		motor_info[Right_Ankle_Pitch].ctrl.kp_set = 10.0f;
 	}
@@ -126,12 +126,12 @@ void Motor::createVirtualBoundary(void)
 			motor_info[i].ctrl.kp_set = 10;
 			motor_info[i].ctrl.kd_set = 1;
 		}
-		else
+		else 
 		{
 			motor_info[i].ctrl.kp_set = 20.0f;
 			motor_info[i].ctrl.kd_set = 2.0f;
-			motor_info[Left_Hip_Roll].ctrl.kp_set = 40.0f;
-			motor_info[Right_Hip_Roll].ctrl.kp_set = 40.0f;
+			motor_info[Left_Hip_Roll].ctrl.kp_set = 80.0f;
+			motor_info[Right_Hip_Roll].ctrl.kp_set = 80.0f;
 			motor_info[Left_Ankle_Pitch].ctrl.kp_set = 10.0f;
 			motor_info[Right_Ankle_Pitch].ctrl.kp_set = 10.0f;
 			
