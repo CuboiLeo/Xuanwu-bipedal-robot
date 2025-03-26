@@ -7,6 +7,10 @@ extern "C" {
 
 #include "cmsis_os.h"
 #include "tim.h"
+	
+extern uint32_t last_time;
+extern uint32_t curr_time;
+extern uint32_t elapsed_time;
 
 extern void Debug_Task(void *argument);
 extern void IMU_Task(void *argument);

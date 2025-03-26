@@ -14,6 +14,9 @@ Remote remote;
 IMU imu;
 Buzzer buzzer;
 Orin orin;
+uint32_t last_time;
+uint32_t curr_time;
+uint32_t elapsed_time;
 
 void Robot_Task(void *argument)
 {
@@ -27,16 +30,16 @@ void Robot_Task(void *argument)
     {
         remote.checkWatchdog(&REMOTE_UART);
 
-        robot.setRefRobotVel({remote.getLeftStickX()/Remote::CHANNEL_MAX_VALUE * ROBOT_MAX_VEL, remote.getLeftStickY()/Remote::CHANNEL_MAX_VALUE * ROBOT_MAX_VEL, 0});
-        robot.setRefRobotAngVel({0, 0, remote.getRightStickX()/Remote::CHANNEL_MAX_VALUE * ROBOT_MAX_ANG_VEL});
+        robot.setRefRobotVel({remote.getLeftStickX() / Remote::CHANNEL_MAX_VALUE * ROBOT_MAX_VEL, remote.getLeftStickY() / Remote::CHANNEL_MAX_VALUE * ROBOT_MAX_VEL, 0});
+        robot.setRefRobotAngVel({0, 0, remote.getRightStickX() / Remote::CHANNEL_MAX_VALUE * ROBOT_MAX_ANG_VEL});
 
         if (motor.getSoftStartFlag() == motor.ALL_JOINTS_ZEROED_FLAG)
         {
-            #ifdef USE_LITE_PACKAGE
+#ifdef USE_LITE_PACKAGE
             orin.decodeDataLite(motor);
-            #else
+#else
             orin.decodeData(motor);
-            #endif
+#endif
         }
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
@@ -71,10 +74,13 @@ void Motor_Ctrl_Task(void *argument)
             soft_start_flag = motor.returnZeroPos();
             motor.setSoftStartFlag(soft_start_flag);
         }
-				else
-					motor.createVirtualBoundary();
-				
+        else
+            motor.createVirtualBoundary();
+
         motor.sendAll();
+				curr_time = HAL_GetTick();
+				elapsed_time = curr_time - last_time;
+				last_time = curr_time;
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
@@ -85,20 +91,19 @@ void Debug_Task(void *argument)
 {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(1000);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(10);
 
     HAL_UART_Init(&huart7);
 
     for (;;)
     {
-        //    char buffer[128]; // Adjust the size based on the data you need to print
+        char buffer[128]; // Adjust the size based on the data you need to print
 
-        //    // Format the string using sprintf
-        //    sprintf(buffer, "/*%f, %f, %f, %f*/\n",
-        //            robot.getRefFootPosLeft().y, robot.getActFootPosLeft().y,robot.getRefFootPosLeft().z, robot.getActFootPosLeft().z);
+        // Format the string using sprintf
+        sprintf(buffer, "/*%d, %f, %f*/\n", elapsed_time, motor.getRefPos(Left_Knee_Pitch), motor.getPos(Left_Knee_Pitch));
 
-        //    // Transmit the formatted string over UART
-        //    HAL_UART_Transmit(&huart7, (uint8_t *)buffer, strlen(buffer), 0xFFFF);
+        // Transmit the formatted string over UART
+        HAL_UART_Transmit(&huart7, (uint8_t *)buffer, strlen(buffer), 0xFFFF);
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
@@ -130,7 +135,7 @@ void IMU_Task(void *argument)
         imu.updateRaw(accel, gyro, temperature);
         // Process IMU to update orientation
         imu.processData();
-
+			
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
 }
@@ -150,7 +155,7 @@ void System_Monitor_Task(void *argument)
         //  Low battery voltage warning
         if (battery_voltage < 22.2f)
         {
-					buzzer.Beep();
+            buzzer.Beep();
         }
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
@@ -165,11 +170,11 @@ void Orin_Task(void *argument)
 
     for (;;)
     {
-        #ifdef USE_LITE_PACKAGE
+#ifdef USE_LITE_PACKAGE
         orin.sendDataLite(motor, imu, robot.getRefRobotVel(), robot.getRefRobotAngVel());
-        #else
+#else
         orin.sendData(motor, imu, robot.getRefRobotVel(), robot.getRefRobotAngVel());
-        #endif
+#endif
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
 }
@@ -226,11 +231,11 @@ void fdcan2_rx_callback(void)
 
 void fdcan3_rx_callback(void)
 {
-    #ifdef USE_LITE_PACKAGE
+#ifdef USE_LITE_PACKAGE
     orin.receiveDataLite();
-    #else
+#else
     orin.receiveData();
-    #endif
+#endif
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)

@@ -155,19 +155,19 @@ void Motor::sendAll(void)
 {
 	dm4310_ctrl_send(&motor_info[Left_Hip_Yaw]);
 	dm4310_ctrl_send(&motor_info[Left_Hip_Roll]);
-	delay_us(300);
+	delay_us(200);
 	dm4310_ctrl_send(&motor_info[Left_Hip_Pitch]);
 	dm4310_ctrl_send(&motor_info[Left_Knee_Pitch]);
-	delay_us(300);
+	delay_us(200);
 	dm4310_ctrl_send(&motor_info[Left_Ankle_Pitch]);
 	dm4310_ctrl_send(&motor_info[Right_Hip_Yaw]);
-	delay_us(300);
+	delay_us(200);
 	dm4310_ctrl_send(&motor_info[Right_Hip_Roll]);
 	dm4310_ctrl_send(&motor_info[Right_Hip_Pitch]);
-	delay_us(300);
+	delay_us(200);
 	dm4310_ctrl_send(&motor_info[Right_Knee_Pitch]);
 	dm4310_ctrl_send(&motor_info[Right_Ankle_Pitch]);
-	delay_us(300);
+	delay_us(200);
 }
 
 void Motor::disableAll(void)
@@ -193,17 +193,17 @@ void Motor::enableAll(void)
 {
 	dm4310_enable(&motor_info[Left_Hip_Yaw]);
 	dm4310_enable(&motor_info[Left_Hip_Roll]);
-	delay_us(300);
+	delay_us(200);
 	dm4310_enable(&motor_info[Left_Hip_Pitch]);
 	dm4310_enable(&motor_info[Left_Knee_Pitch]);
-	delay_us(300);
+	delay_us(200);
 	dm4310_enable(&motor_info[Left_Ankle_Pitch]);
 	dm4310_enable(&motor_info[Right_Hip_Yaw]);
-	delay_us(300);
+	delay_us(200);
 	dm4310_enable(&motor_info[Right_Hip_Roll]);
 	dm4310_enable(&motor_info[Right_Hip_Pitch]);
-	delay_us(300);
+	delay_us(200);
 	dm4310_enable(&motor_info[Right_Knee_Pitch]);
 	dm4310_enable(&motor_info[Right_Ankle_Pitch]);
-	delay_us(300);
+	delay_us(200);
 }
