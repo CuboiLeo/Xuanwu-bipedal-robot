@@ -427,7 +427,7 @@ void Orin::decodeDataLite(Motor &motor)
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
         pos = (1-filter_coeff)*motor.getRefPos(Left_Ankle_Pitch) + filter_coeff*pos;
         motor.setPos(Left_Ankle_Pitch, pos);
-        motor.setVel(Left_Ankle_Pitch, 0.0f);
+        motor.setVel(Left_Ankle_Pitch, 0.0f); 
         motor.setTor(Left_Ankle_Pitch, 0.0f);
 
         pos_tmp = receive_data_lite[1][3] << 8 | receive_data_lite[1][4];
