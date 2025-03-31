@@ -8,3 +8,13 @@ float WRAP2_2PI(float x)
         x += 2 * PI;  
 	return x - PI;
 }
+
+float CLIP(float x, float min, float max)
+{
+	if (x > max) 
+		return max;
+	else if (x < min) 
+		return min;
+	else 
+		return x;
+}

@@ -9,5 +9,6 @@
 #define GRAVITY (9.81f)
 
 extern float WRAP2_2PI(float x);
+extern float CLIP(float x, float min, float max);
 
 #endif

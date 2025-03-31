@@ -36,6 +36,10 @@ private:
 
     uint8_t send_data_lite[SEND_PACKAGE_NUM_LITE][PACKAGE_SIZE] = {};
     uint8_t receive_data_lite[RECEIVE_PACKAGE_NUM_LITE][PACKAGE_SIZE] = {};
+
+    float kps[10] = {40.0f, 40.0f, 40.0f, 40.0f, 10.0f, 40.0f, 40.0f, 40.0f, 40.0f, 10.0f};
+    float kds[10] = {0.25f, 0.25f, 0.25f, 0.25f, 0.15f, 0.25f, 0.25f, 0.25f, 0.25f, 0.15f};
+    float tor_limit = 5.0f;
 };
 
 #endif

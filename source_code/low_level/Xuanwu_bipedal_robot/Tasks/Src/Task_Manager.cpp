@@ -22,7 +22,7 @@ void Robot_Task(void *argument)
 {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(1);
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(10);
 
     remote.Init(&REMOTE_UART); // Initialize the remote
 
@@ -32,15 +32,6 @@ void Robot_Task(void *argument)
 
         robot.setRefRobotVel({remote.getLeftStickX() / Remote::CHANNEL_MAX_VALUE * ROBOT_MAX_VEL, remote.getLeftStickY() / Remote::CHANNEL_MAX_VALUE * ROBOT_MAX_VEL, 0});
         robot.setRefRobotAngVel({0, 0, remote.getRightStickX() / Remote::CHANNEL_MAX_VALUE * ROBOT_MAX_ANG_VEL});
-
-        if (motor.getSoftStartFlag() == motor.ALL_JOINTS_ZEROED_FLAG)
-        {
-#ifdef USE_LITE_PACKAGE
-            orin.decodeDataLite(motor);
-#else
-            orin.decodeData(motor);
-#endif
-        }
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
@@ -75,7 +66,14 @@ void Motor_Ctrl_Task(void *argument)
             motor.setSoftStartFlag(soft_start_flag);
         }
         else
+				{
             motor.createVirtualBoundary();
+#ifdef USE_LITE_PACKAGE
+            orin.decodeDataLite(motor);
+#else
+            orin.decodeData(motor);
+#endif
+				} 
 
         motor.sendAll();
 				curr_time = HAL_GetTick();
