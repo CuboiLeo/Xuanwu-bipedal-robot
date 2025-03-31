@@ -4,6 +4,8 @@
 #include <mutex>
 #include <condition_variable>
 #include <chrono>
+#include <sched.h>
+#include <pthread.h>
 #include "STM32_protocol.h"
 #include "motor.h"
 #include "IMU.h"
@@ -37,12 +39,22 @@ CAN can("can0");                        // CAN object for communication
 void CAN_receive_thread();
 void CAN_send_thread();
 void compute_thread();
+void set_thread_realtime(std::thread &thread, int priority);
+void pinThreadToCore(std::thread &thr, int core_id);
 
 int main()
 {
     std::thread CAN_receive(CAN_receive_thread);
     std::thread compute(compute_thread);
     std::thread CAN_send(CAN_send_thread);
+
+    set_thread_realtime(CAN_receive, 99);
+    set_thread_realtime(compute, 99);
+    set_thread_realtime(CAN_send, 99);
+
+    pinThreadToCore(CAN_receive, 1);
+    pinThreadToCore(compute, 2);
+    pinThreadToCore(CAN_send, 3);
 
     CAN_receive.join();
     compute.join();
@@ -59,11 +71,14 @@ void compute_thread()
     Controls controls;                                                           // Controls object for control computation
     Estimations estimations;                                                     // Estimation object for estimation computation
     Walking_Patterns walking_patterns;                                           // Walking patterns object for walking pattern computation
-    RL_Inference rl_inference("../../RL/trained_policy/flat_ground_walking.pt"); // RL inference object for RL policy inference
+    RL_Inference rl_inference("../../RL/trained_policy/flat_ground_walking_v7.pt"); // RL inference object for RL policy inference
     auto start = std::chrono::high_resolution_clock::now();
+    auto next_cycle = std::chrono::steady_clock::now();
 
     while (true)
     {
+        next_cycle += std::chrono::milliseconds(10); // 100 Hz
+
         std::unique_lock<std::mutex> lock(shared_data_mutex); // Lock the shared data
         shared_data_cv.wait(lock, []
                             { return shared_data.new_data; }); // Wait for new data
@@ -157,6 +172,7 @@ void compute_thread()
         // robot.setLegRefTorque({0, 0, 0, 0, 0}, {0, 0, 0, 0, 0});
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = end - start;
+        std::cout << "Current time: " << elapsed.count() << " seconds" << std::endl;
 
         std::vector<float> cmd = {0.0f, 0.3f, 0.0f};
         std::vector<float> q = {(float)left_act_angle.hip_yaw, (float)left_act_angle.hip_roll, (float)left_act_angle.hip_pitch, (float)left_act_angle.knee_pitch, (float)left_act_angle.ankle_pitch, (float)right_act_angle.hip_yaw, (float)right_act_angle.hip_roll, (float)right_act_angle.hip_pitch, (float)right_act_angle.knee_pitch, (float)right_act_angle.ankle_pitch};
@@ -166,11 +182,11 @@ void compute_thread()
         std::vector<float> eul_ang = {(float)shared_data.imu.getEuler().roll, (float)shared_data.imu.getEuler().pitch, (float)shared_data.imu.getEuler().yaw};
 
         std::vector<float> target_q = rl_inference.infer(elapsed.count(), cmd, q, dq, omega, eul_ang);
-        // Joint_Angles left_ref_angle = {target_q[0], target_q[1], target_q[2], target_q[3], target_q[4]};
-        // Joint_Angles right_ref_angle = {target_q[5], target_q[6], target_q[7], target_q[8], target_q[9]};
+        Joint_Angles left_ref_angle = {target_q[0], target_q[1], target_q[2], target_q[3], target_q[4]};
+        Joint_Angles right_ref_angle = {target_q[5], target_q[6], target_q[7], target_q[8], target_q[9]};
 
-        Joint_Angles left_ref_angle = {0, 0, 0, sin(2 * PI * elapsed.count() / 2.0), 0};
-        Joint_Angles right_ref_angle = {0, 0, 0, 0, 0};
+        // Joint_Angles left_ref_angle = {0.3*sin(2 * PI * elapsed.count() / 2.0), 0, 0, 0, 0};
+        // Joint_Angles right_ref_angle = {0, 0, 0, 0, 0};
         robot.setLegRefAngles(left_ref_angle, right_ref_angle);
         std::cout << "Left Angles: " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
         std::cout << "Right Angle: " << right_ref_angle.hip_yaw << " | " << right_ref_angle.hip_roll << " | " << right_ref_angle.hip_pitch << " | " << right_ref_angle.knee_pitch << " | " << right_ref_angle.ankle_pitch << std::endl;
@@ -190,12 +206,10 @@ void compute_thread()
         // Test the foot wrench computation (checked)
         // Wrench right_foot_wrench = dynamics.computeFootWrench(robot.getLegActTorque(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
 
-        // logDataToCSV(left_ref_angle.hip_yaw, left_ref_angle.hip_roll, left_ref_angle.hip_pitch, left_ref_angle.knee_pitch, left_ref_angle.ankle_pitch);
-        logDataToCSV(elapsed.count(), left_act_angle.knee_pitch, left_ref_angle.knee_pitch);
-        // auto end = std::chrono::high_resolution_clock::now();
-        // std::chrono::duration<double> elapsed = end - start;
-        // std::cout << "Current time: " << elapsed.count() << " seconds" << std::endl;
+        // logDataToCSV(elapsed.count(), left_ref_angle.hip_yaw, left_ref_angle.hip_roll, left_ref_angle.hip_pitch, left_ref_angle.knee_pitch, left_ref_angle.ankle_pitch);
+        // logDataToCSV(elapsed.count(),eul_ang[0],eul_ang[1],eul_ang[2]);
         lock.unlock(); // Unlock the shared data
+        std::this_thread::sleep_until(next_cycle);
     }
 }
 
@@ -213,9 +227,8 @@ void CAN_receive_thread()
             stm32.decodeData(shared_data.motor, shared_data.imu, shared_data.command); // Decode the received data
 #endif
             shared_data.new_data = true; // Set the new data flag
+            shared_data_cv.notify_one(); // Notify the compute thread that new data is available
         }
-        shared_data_cv.notify_one(); // Notify the compute thread that new data is available
-        
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = end - start;
         // std::cout << "Current time: " << elapsed.count() << " seconds" << std::endl;
@@ -225,8 +238,10 @@ void CAN_receive_thread()
 void CAN_send_thread()
 {
     auto start = std::chrono::high_resolution_clock::now();
+    auto next_cycle = std::chrono::steady_clock::now();
     while (true)
     {
+        next_cycle += std::chrono::milliseconds(1);
         {
             std::lock_guard<std::mutex> lock(shared_data_mutex); // Lock the shared data
 #ifdef USE_LITE_PACKAGE
@@ -236,9 +251,47 @@ void CAN_send_thread()
 #endif
         }
         stm32.sendData(can); // Send the data to the STM32
+        std::this_thread::sleep_until(next_cycle);
 
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = end - start;
-        std::cout << "Current time: " << elapsed.count() << " seconds" << std::endl;
+        // std::cout << "Current time: " << elapsed.count() << " seconds" << std::endl;
+    }
+}
+
+void set_thread_realtime(std::thread &thread, int priority)
+{
+    // Convert std::thread to pthread
+    pthread_t native_handle = thread.native_handle();
+
+    // Prepare the scheduling params
+    sched_param sch_params;
+    sch_params.sched_priority = priority;
+
+    // Attempt to set the policy & priority
+    int policy = SCHED_FIFO;
+    int ret = pthread_setschedparam(native_handle, policy, &sch_params);
+    if (ret != 0) {
+        std::cerr << "Failed to set RT priority for thread. Errno: " << ret << std::endl;
+    }
+}
+
+void pinThreadToCore(std::thread &thr, int core_id)
+{
+    // Prepare a CPU set
+    cpu_set_t cpuset;
+    CPU_ZERO(&cpuset);
+    CPU_SET(core_id, &cpuset);
+
+    // Convert std::thread to pthread
+    pthread_t native_handle = thr.native_handle();
+
+    // Call pthread_setaffinity_np
+    int rc = pthread_setaffinity_np(native_handle, sizeof(cpu_set_t), &cpuset);
+    if (rc != 0) {
+        std::cerr << "Error calling pthread_setaffinity_np: " 
+                  << strerror(rc) << std::endl;
+    } else {
+        std::cout << "Pinned thread to core " << core_id << std::endl;
     }
 }

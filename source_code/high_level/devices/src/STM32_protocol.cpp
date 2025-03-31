@@ -239,55 +239,96 @@ void STM32::decodeDataLite(Motor &motor, IMU &imu, Command &command)
 {
     // only receive position and velocity
     uint16_t pos_tmp, vel_tmp;
+    float pos, vel;
     pos_tmp = receive_data_lite[0][0] << 8 | receive_data_lite[0][1];
     vel_tmp = receive_data_lite[0][2] << 4 | receive_data_lite[0][3] >> 4;
-    motor.setActPos(Left_Hip_Yaw, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Left_Hip_Yaw, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
+    vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
+    pos = (1-filter_coeff) * motor.getActPos(Left_Hip_Yaw) + filter_coeff * pos;
+    vel = (1-filter_coeff) * motor.getActVel(Left_Hip_Yaw) + filter_coeff * vel;
+    motor.setActPos(Left_Hip_Yaw, pos);
+    motor.setActVel(Left_Hip_Yaw, vel);
 
     pos_tmp = receive_data_lite[0][4] << 8 | receive_data_lite[0][5];
     vel_tmp = receive_data_lite[0][6] << 4 | receive_data_lite[0][7] >> 4;
-    motor.setActPos(Left_Hip_Roll, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Left_Hip_Roll, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
+    vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
+    pos = (1-filter_coeff) * motor.getActPos(Left_Hip_Roll) + filter_coeff * pos;
+    vel = (1-filter_coeff) * motor.getActVel(Left_Hip_Roll) + filter_coeff * vel;
+    motor.setActPos(Left_Hip_Roll, pos);
+    motor.setActVel(Left_Hip_Roll, vel);
 
     pos_tmp = receive_data_lite[1][0] << 8 | receive_data_lite[1][1];
     vel_tmp = receive_data_lite[1][2] << 4 | receive_data_lite[1][3] >> 4;
-    motor.setActPos(Left_Hip_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Left_Hip_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
+    vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
+    pos = (1-filter_coeff) * motor.getActPos(Left_Hip_Pitch) + filter_coeff * pos;
+    vel = (1-filter_coeff) * motor.getActVel(Left_Hip_Pitch) + filter_coeff * vel;
+    motor.setActPos(Left_Hip_Pitch, pos);
+    motor.setActVel(Left_Hip_Pitch, vel);
 
     pos_tmp = receive_data_lite[1][4] << 8 | receive_data_lite[1][5];
     vel_tmp = receive_data_lite[1][6] << 4 | receive_data_lite[1][7] >> 4;
-    motor.setActPos(Left_Knee_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Left_Knee_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
+    vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
+    pos = (1-filter_coeff) * motor.getActPos(Left_Knee_Pitch) + filter_coeff * pos;
+    vel = (1-filter_coeff) * motor.getActVel(Left_Knee_Pitch) + filter_coeff * vel;
+    motor.setActPos(Left_Knee_Pitch, pos);
+    motor.setActVel(Left_Knee_Pitch, vel);
 
     pos_tmp = receive_data_lite[2][0] << 8 | receive_data_lite[2][1];
     vel_tmp = receive_data_lite[2][2] << 4 | receive_data_lite[2][3] >> 4;
-    motor.setActPos(Left_Ankle_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Left_Ankle_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
+    vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
+    pos = (1-filter_coeff) * motor.getActPos(Left_Ankle_Pitch) + filter_coeff * pos;
+    vel = (1-filter_coeff) * motor.getActVel(Left_Ankle_Pitch) + filter_coeff * vel;
+    motor.setActPos(Left_Ankle_Pitch, pos);
+    motor.setActVel(Left_Ankle_Pitch, vel);
 
     pos_tmp = receive_data_lite[2][4] << 8 | receive_data_lite[2][5];
     vel_tmp = receive_data_lite[2][6] << 4 | receive_data_lite[2][7] >> 4;
-    motor.setActPos(Right_Hip_Yaw, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Right_Hip_Yaw, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
+    vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
+    pos = (1-filter_coeff) * motor.getActPos(Right_Hip_Yaw) + filter_coeff * pos;
+    vel = (1-filter_coeff) * motor.getActVel(Right_Hip_Yaw) + filter_coeff * vel;
+    motor.setActPos(Right_Hip_Yaw, pos);
+    motor.setActVel(Right_Hip_Yaw, vel);
 
     pos_tmp = receive_data_lite[3][0] << 8 | receive_data_lite[3][1];
     vel_tmp = receive_data_lite[3][2] << 4 | receive_data_lite[3][3] >> 4;
-    motor.setActPos(Right_Hip_Roll, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Right_Hip_Roll, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
+    vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
+    pos = (1-filter_coeff) * motor.getActPos(Right_Hip_Roll) + filter_coeff * pos;
+    vel = (1-filter_coeff) * motor.getActVel(Right_Hip_Roll) + filter_coeff * vel;
+    motor.setActPos(Right_Hip_Roll, pos);
+    motor.setActVel(Right_Hip_Roll, vel);
 
     pos_tmp = receive_data_lite[3][4] << 8 | receive_data_lite[3][5];
     vel_tmp = receive_data_lite[3][6] << 4 | receive_data_lite[3][7] >> 4;
-    motor.setActPos(Right_Hip_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Right_Hip_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
+    vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
+    pos = (1-filter_coeff) * motor.getActPos(Right_Hip_Pitch) + filter_coeff * pos;
+    vel = (1-filter_coeff) * motor.getActVel(Right_Hip_Pitch) + filter_coeff * vel;
+    motor.setActPos(Right_Hip_Pitch, pos);
+    motor.setActVel(Right_Hip_Pitch, vel);
 
     pos_tmp = receive_data_lite[4][0] << 8 | receive_data_lite[4][1];
     vel_tmp = receive_data_lite[4][2] << 4 | receive_data_lite[4][3] >> 4;
-    motor.setActPos(Right_Knee_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Right_Knee_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
+    vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
+    pos = (1-filter_coeff) * motor.getActPos(Right_Knee_Pitch) + filter_coeff * pos;
+    vel = (1-filter_coeff) * motor.getActVel(Right_Knee_Pitch) + filter_coeff * vel;
+    motor.setActPos(Right_Knee_Pitch, pos);
+    motor.setActVel(Right_Knee_Pitch, vel);
 
     pos_tmp = receive_data_lite[4][4] << 8 | receive_data_lite[4][5];
     vel_tmp = receive_data_lite[4][6] << 4 | receive_data_lite[4][7] >> 4;
-    motor.setActPos(Right_Ankle_Pitch, uint_to_float(pos_tmp, P_MIN, P_MAX, 16));
-    motor.setActVel(Right_Ankle_Pitch, uint_to_float(vel_tmp, V_MIN, V_MAX, 12));
+    pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
+    vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
+    pos = (1-filter_coeff) * motor.getActPos(Right_Ankle_Pitch) + filter_coeff * pos;
+    vel = (1-filter_coeff) * motor.getActVel(Right_Ankle_Pitch) + filter_coeff * vel;
+    motor.setActPos(Right_Ankle_Pitch, pos);
+    motor.setActVel(Right_Ankle_Pitch, vel);
 
     uint8_t vx_tmp, vy_tmp, wz_tmp;
     vx_tmp = receive_data_lite[5][0];

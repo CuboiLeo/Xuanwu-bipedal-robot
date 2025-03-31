@@ -51,6 +51,7 @@ private:
     uint8_t receive_data[RECEIVE_PACKAGE_NUM][PACKAGE_SIZE] = {};
     uint8_t send_data_lite[SEND_PACKAGE_NUM_LITE][PACKAGE_SIZE] = {};
     uint8_t receive_data_lite[RECEIVE_PACKAGE_NUM_LITE][PACKAGE_SIZE] = {};
+    float filter_coeff = 0.01f;
 };
 
 #endif
