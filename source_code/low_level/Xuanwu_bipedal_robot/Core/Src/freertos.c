@@ -54,7 +54,7 @@ osThreadId_t DebugHandle;
 const osThreadAttr_t Debug_attributes = {
   .name = "Debug",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for IMU */
 osThreadId_t IMUHandle;

@@ -25,6 +25,7 @@ public:
     float getVel(const int motor) const { return motor_info[motor].para.vel; };
     float getTor(const int motor) const { return motor_info[motor].para.tor; };
     float getRefPos(const int motor) const { return motor_info[motor].ctrl.pos_set; };
+		float getRefTor(const int motor) const { return motor_info[motor].ctrl.tor_set; };
     void setPos(const int motor, const float pos) { motor_info[motor].ctrl.pos_set = pos; };
     void setVel(const int motor, const float vel) { motor_info[motor].ctrl.vel_set = vel; };
     void setTor(const int motor, const float tor) { motor_info[motor].ctrl.tor_set = tor; };

@@ -1,5 +1,5 @@
 source_code/low_level/Xuanwu_bipedal_robot/MDK-ARM/*
 !source_code/low_level/Xuanwu_bipedal_robot/MDK-ARM/Xuanwu_bipedal_robot.uvprojx
 !source_code/low_level/Xuanwu_bipedal_robot/MDK-ARM/startup_stm32h723xx.s
-
+source_code/high_level/data_plotter/log.csv
 source_code/high_level/build
