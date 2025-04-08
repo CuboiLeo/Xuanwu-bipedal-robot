@@ -172,9 +172,9 @@ void compute_thread()
         // robot.setLegRefTorque({0, 0, 0, 0, 0}, {0, 0, 0, 0, 0});
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> elapsed = end - start;
-        std::cout << "Current time: " << elapsed.count() << " seconds" << std::endl;
+        // std::cout << "Current time: " << elapsed.count() << " seconds" << std::endl;
 
-        std::vector<float> cmd = {0.0f, 0.3f, 0.0f};
+        std::vector<float> cmd = {(float)shared_data.command.getLinearVel().x, (float)shared_data.command.getLinearVel().y, (float)shared_data.command.getAngularVel().z};
         std::vector<float> q = {(float)left_act_angle.hip_yaw, (float)left_act_angle.hip_roll, (float)left_act_angle.hip_pitch, (float)left_act_angle.knee_pitch, (float)left_act_angle.ankle_pitch, (float)right_act_angle.hip_yaw, (float)right_act_angle.hip_roll, (float)right_act_angle.hip_pitch, (float)right_act_angle.knee_pitch, (float)right_act_angle.ankle_pitch};
         std::vector<float> dq = {(float)left_act_vel.hip_yaw, (float)left_act_vel.hip_roll, (float)left_act_vel.hip_pitch, (float)left_act_vel.knee_pitch, (float)left_act_vel.ankle_pitch, (float)right_act_vel.hip_yaw, (float)right_act_vel.hip_roll, (float)right_act_vel.hip_pitch, (float)right_act_vel.knee_pitch, (float)right_act_vel.ankle_pitch};
         Eigen::Vector3d gyro = shared_data.imu.getGyro();
@@ -185,20 +185,11 @@ void compute_thread()
         Joint_Angles left_ref_angle = {target_q[0], target_q[1], target_q[2], target_q[3], target_q[4]};
         Joint_Angles right_ref_angle = {target_q[5], target_q[6], target_q[7], target_q[8], target_q[9]};
 
-        // Joint_Angles left_ref_angle = {0.3*sin(2 * PI * elapsed.count() / 2.0), 0, 0, 0, 0};
+        // Joint_Angles left_ref_angle = {0.2*sin(2 * PI * elapsed.count() / 0.64), 0.4*sin(2 * PI * elapsed.count() / 0.64), -0.5*sin(2 * PI * elapsed.count() / 0.64), sin(2 * PI * elapsed.count() / 0.64), -0.5*sin(2 * PI * elapsed.count() / 0.64)};
         // Joint_Angles right_ref_angle = {0, 0, 0, 0, 0};
         robot.setLegRefAngles(left_ref_angle, right_ref_angle);
-        std::cout << "Left Angles: " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
-        std::cout << "Right Angle: " << right_ref_angle.hip_yaw << " | " << right_ref_angle.hip_roll << " | " << right_ref_angle.hip_pitch << " | " << right_ref_angle.knee_pitch << " | " << right_ref_angle.ankle_pitch << std::endl;
-
-        // std::vector<float> tau = rl_inference.infer(elapsed.count(), cmd, q, dq, omega, eul_ang);
-        // Joint_Torques left_ref_torque = {tau[0], tau[1], tau[2], tau[3], tau[4]};
-        // Joint_Torques right_ref_torque = {tau[5], tau[6], tau[7], tau[8], tau[9]};
-        // robot.setLegRefTorque(left_ref_torque, right_ref_torque);
-        // robot.setLegRefAngles({0, 0, 0, 0, 0}, {0, 0, 0, 0, 0});
-        // robot.setLegRefVel({0, 0, 0, 0, 0}, {0, 0, 0, 0, 0});
-        // std::cout << "Left Torques: " << left_ref_torque.hip_yaw << " | " << left_ref_torque.hip_roll << " | " << left_ref_torque.hip_pitch << " | " << left_ref_torque.knee_pitch << " | " << left_ref_torque.ankle_pitch << std::endl;
-        // std::cout << "Right Torques: " << right_ref_torque.hip_yaw << " | " << right_ref_torque.hip_roll << " | " << right_ref_torque.hip_pitch << " | " << right_ref_torque.knee_pitch << " | " << right_ref_torque.ankle_pitch << std::endl;
+        // std::cout << "Left Angles: " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
+        // std::cout << "Right Angle: " << right_ref_angle.hip_yaw << " | " << right_ref_angle.hip_roll << " | " << right_ref_angle.hip_pitch << " | " << right_ref_angle.knee_pitch << " | " << right_ref_angle.ankle_pitch << std::endl;
 
         // Set the motor data
         robot.setMotorData(shared_data.motor);
