@@ -5,7 +5,7 @@
 #include "User_Math.h"
 #include "Robot_Types.h"
 
-#define ROBOT_MAX_VEL (1.0f)
+#define ROBOT_MAX_VEL (0.5f)
 #define ROBOT_MAX_ANG_VEL (0.5f)
 
 static constexpr float ROBOT_TASK_PERIOD = 0.002f; // Robot task period in seconds

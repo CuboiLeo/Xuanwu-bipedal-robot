@@ -10,7 +10,7 @@ class Remote
 {
 public:
     Remote();
-    static constexpr int16_t CHANNEL_MAX_VALUE = 671;
+    static constexpr float CHANNEL_MAX_VALUE = 671.0f;
     enum switch_state
     {
         SWITCH_DOWN = -1,

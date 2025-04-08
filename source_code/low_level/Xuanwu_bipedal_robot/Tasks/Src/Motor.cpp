@@ -89,15 +89,9 @@ uint8_t Motor::returnZeroPos(void)
 	{
 		for (int i = 0; i < NUM_MOTORS; i++)
 		{
-			// motor_info[i].ctrl.kp_set = 20.0f;
-			// motor_info[i].ctrl.kd_set = 2.0f;
-			motor_info[i].ctrl.kp_set = 0.0f;
-			motor_info[i].ctrl.kd_set = 0.0f;
+			motor_info[i].ctrl.kp_set = kps[i];
+			motor_info[i].ctrl.kd_set = kds[i];
 		}
-		// motor_info[Left_Hip_Roll].ctrl.kp_set = 80.0f;
-		// motor_info[Right_Hip_Roll].ctrl.kp_set = 80.0f;
-		// motor_info[Left_Ankle_Pitch].ctrl.kp_set = 10.0f;
-		// motor_info[Right_Ankle_Pitch].ctrl.kp_set = 10.0f;
 	}
 
 	return all_joints_zeroed_flag;
@@ -128,15 +122,10 @@ void Motor::createVirtualBoundary(void)
 		}
 		else 
 		{
-			// motor_info[i].ctrl.kp_set = 20.0f;
-			// motor_info[i].ctrl.kd_set = 2.0f;
-			// motor_info[Left_Hip_Roll].ctrl.kp_set = 80.0f;
-			// motor_info[Right_Hip_Roll].ctrl.kp_set = 80.0f;
-			// motor_info[Left_Ankle_Pitch].ctrl.kp_set = 10.0f;
-			// motor_info[Right_Ankle_Pitch].ctrl.kp_set = 10.0f;
-			
-			motor_info[i].ctrl.kp_set = 0.0f;
-			motor_info[i].ctrl.kd_set = 0.0f;
+			motor_info[i].ctrl.kp_set = kps[i];
+			motor_info[i].ctrl.kd_set = kds[i];	
+			// motor_info[i].ctrl.kp_set = 0.0f;
+			// motor_info[i].ctrl.kd_set = 0.0f;
 		}
 	}
 }

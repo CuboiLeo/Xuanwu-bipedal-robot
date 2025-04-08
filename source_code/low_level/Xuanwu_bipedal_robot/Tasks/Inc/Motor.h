@@ -39,6 +39,11 @@ private:
     motor_t motor_info[NUM_MOTORS];
 		uint8_t all_joints_zeroed_flag;
     uint8_t soft_start_flag;
+
+    float kps[NUM_MOTORS] = {20.0f, 60.0f, 60.0f, 60.0f, 10.0f,
+                              20.0f, 60.0f, 60.0f, 60.0f, 10.0f};
+    float kds[NUM_MOTORS] = {1.0f, 2.0f, 2.0f, 2.0f, 0.5f,
+                              1.0f, 2.0f, 2.0f, 2.0f, 0.5f};
 };
 
 #endif

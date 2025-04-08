@@ -39,7 +39,7 @@
     <body name="base_link" pos="0 0 0.556">
       <freejoint/>
       <site name="imu" pos="0 0 0"/>
-      <inertial pos="0.001 -0.004 0.068" mass="2.14" diaginertia="0.0258995 0.0211673 0.0073052"/>
+      <inertial pos="0.0013 -0.007 0.0995" mass="1.42" diaginertia="0.0218737, 0.0205378, 0.00365051"/>
       <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="base_link"/>
       <geom size="0.08 0.05 0.05" pos="0 0 0.1" type="box" rgba="1 1 1 0" />
       <body name="link_1" pos="-0.073 0 -0.001" quat="1 0 0 0">
@@ -73,12 +73,12 @@
         </body>
       </body>
       <body name="link_6" pos="0.073 0 -0.001" quat="1 0 0 0">
-        <inertial pos="0.007 -0.06 -0.072" mass="0.574" diaginertia="0.00755737 0.00753574 0.000533885"/>
+        <inertial pos="0.006 -0.065 -0.0806" mass="0.469" diaginertia="0.00755737 0.00753574 0.000533885"/>
         <joint name="joint_6" pos="0 0 0" axis="0 0 1" range="-0.5 0.5" damping="0.01" frictionloss="0.01" armature="0.01" limited="true"/>
         <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="link_6"/>
         <!-- <geom size="0.04 0.08 0.04" pos="0 -0.04 0" type="box" rgba="1 1 1 0" /> -->
         <body name="link_7" pos="0 -0.083 -0.11" quat="1 0 0 0">
-          <inertial pos="0 0.078 0" mass="0.364" diaginertia="0.002356 0.002344 0.0000939956"/>
+          <inertial pos="0 0.078 0" mass="0.364" diaginertia="0.00773379, 0.006798, 0.0000131738"/>
           <joint name="joint_7" pos="0 0 0" axis="0 1 0" range="-0.7 0.7" damping="0.01" frictionloss="0.01" armature="0.01" limited="true"/>
           <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="1 1 1 1" mesh="link_7"/>
           <!-- <geom size="0.03 0.05 0.03" pos="0 0.07 0.02" type="box" rgba="1 1 1 0" /> -->
