@@ -8,17 +8,17 @@
     name="base_link">
     <inertial>
       <origin
-        xyz="0.0013 -0.007 0.0995"
+        xyz="0.001 -0.0001 0.0685"
         rpy="0 0 0" />
       <mass
-        value="1.42" />
+        value="1.874" />
       <inertia
-        ixx="0.020538"
-        ixy="-0.000023"
+        ixx="0.018815"
+        ixy="-0.000024"
         ixz="-0.000076"
-        iyy="0.021832"
-        iyz="0.000865"
-        izz="0.003692" />
+        iyy="0.023869"
+        iyz="0.000022"
+        izz="0.006187" />
     </inertial>
     <visual>
       <origin
@@ -337,17 +337,17 @@
     name="link_6">
     <inertial>
       <origin
-        xyz="0.007 -0.06 -0.072"
+        xyz="0.006 -0.065 -0.0806"
         rpy="0 0 0" />
       <mass
-        value="0.574" />
+        value="0.469" />
       <inertia
-        ixx="0.007536"
-        ixy="-0.000001"
-        ixz="-0.000005"
-        iyy="0.004789"
-        iyz="-0.003432"
-        izz="0.003302" />
+        ixx="0.006798"
+        ixy="-0.00002"
+        ixz="-0.00005"
+        iyy="0.004351"
+        iyz="-0.003147"
+        izz="0.002837" />
     </inertial>
     <visual>
       <origin
