@@ -89,10 +89,10 @@ uint8_t Motor::returnZeroPos(void)
 	{
 		for (int i = 0; i < NUM_MOTORS; i++)
 		{
-			// motor_info[i].ctrl.kp_set = kps[i];
-			// motor_info[i].ctrl.kd_set = kds[i];
-			motor_info[i].ctrl.kp_set = 0.0f;
-			motor_info[i].ctrl.kd_set = 0.0f;
+			motor_info[i].ctrl.kp_set = kps[i];
+			motor_info[i].ctrl.kd_set = kds[i];
+			// motor_info[i].ctrl.kp_set = 0.0f;
+			// motor_info[i].ctrl.kd_set = 0.0f;
 		}
 	}
 
@@ -124,10 +124,10 @@ void Motor::createVirtualBoundary(void)
 		}
 		else 
 		{
-			// motor_info[i].ctrl.kp_set = kps[i];
-			// motor_info[i].ctrl.kd_set = kds[i];	
-			motor_info[i].ctrl.kp_set = 0.0f;
-			motor_info[i].ctrl.kd_set = 0.0f;
+			motor_info[i].ctrl.kp_set = kps[i];
+			motor_info[i].ctrl.kd_set = kds[i];	
+			// motor_info[i].ctrl.kp_set = 0.0f;
+			// motor_info[i].ctrl.kd_set = 0.0f;
 		}
 	}
 }

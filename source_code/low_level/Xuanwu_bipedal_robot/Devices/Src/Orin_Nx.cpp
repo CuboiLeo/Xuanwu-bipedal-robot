@@ -403,7 +403,7 @@ void Orin::decodeDataLite(Motor &motor)
         ref_tor[Left_Hip_Yaw] = tor;
         motor.setPos(Left_Hip_Yaw, pos);
         motor.setVel(Left_Hip_Yaw, 0.0f);
-        motor.setTor(Left_Hip_Yaw, tor);
+        motor.setTor(Left_Hip_Yaw, 0.0f);
 
         pos_tmp = receive_data_lite[0][3] << 8 | receive_data_lite[0][4];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
@@ -413,7 +413,7 @@ void Orin::decodeDataLite(Motor &motor)
         ref_tor[Left_Hip_Roll] = tor;
         motor.setPos(Left_Hip_Roll, pos);
         motor.setVel(Left_Hip_Roll, 0.0f);
-        motor.setTor(Left_Hip_Roll, tor);
+        motor.setTor(Left_Hip_Roll, 0.0f);
 
         pos_tmp = receive_data_lite[0][5] << 8 | receive_data_lite[0][6];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
@@ -423,7 +423,7 @@ void Orin::decodeDataLite(Motor &motor)
         ref_tor[Left_Hip_Pitch] = tor;
         motor.setPos(Left_Hip_Pitch, pos);
         motor.setVel(Left_Hip_Pitch, 0.0f);
-        motor.setTor(Left_Hip_Pitch, tor);
+        motor.setTor(Left_Hip_Pitch, 0.0f);
 
         pos_tmp = receive_data_lite[0][7] << 8 | receive_data_lite[1][0];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
@@ -433,7 +433,7 @@ void Orin::decodeDataLite(Motor &motor)
         ref_tor[Left_Knee_Pitch] = tor;
         motor.setPos(Left_Knee_Pitch, pos);
         motor.setVel(Left_Knee_Pitch, 0.0f);
-        motor.setTor(Left_Knee_Pitch, tor);
+        motor.setTor(Left_Knee_Pitch, 0.0f);
 
         pos_tmp = receive_data_lite[1][1] << 8 | receive_data_lite[1][2];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
@@ -443,7 +443,7 @@ void Orin::decodeDataLite(Motor &motor)
         ref_tor[Left_Ankle_Pitch] = tor;
         motor.setPos(Left_Ankle_Pitch, pos);
         motor.setVel(Left_Ankle_Pitch, 0.0f); 
-        motor.setTor(Left_Ankle_Pitch, tor);
+        motor.setTor(Left_Ankle_Pitch, 0.0f);
 
         pos_tmp = receive_data_lite[1][3] << 8 | receive_data_lite[1][4];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
@@ -453,7 +453,7 @@ void Orin::decodeDataLite(Motor &motor)
         ref_tor[Right_Hip_Yaw] = tor;
         motor.setPos(Right_Hip_Yaw, pos);
         motor.setVel(Right_Hip_Yaw, 0.0f);
-        motor.setTor(Right_Hip_Yaw, tor);
+        motor.setTor(Right_Hip_Yaw, 0.0f);
 
         pos_tmp = receive_data_lite[1][5] << 8 | receive_data_lite[1][6];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
@@ -463,7 +463,7 @@ void Orin::decodeDataLite(Motor &motor)
         ref_tor[Right_Hip_Roll] = tor;
         motor.setPos(Right_Hip_Roll, pos);
         motor.setVel(Right_Hip_Roll, 0.0f);
-        motor.setTor(Right_Hip_Roll, tor);
+        motor.setTor(Right_Hip_Roll, 0.0f);
 
         pos_tmp = receive_data_lite[1][7] << 8 | receive_data_lite[2][0];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
@@ -473,7 +473,7 @@ void Orin::decodeDataLite(Motor &motor)
         ref_tor[Right_Hip_Pitch] = tor;
         motor.setPos(Right_Hip_Pitch, pos);
         motor.setVel(Right_Hip_Pitch, 0.0f);
-        motor.setTor(Right_Hip_Pitch, tor);
+        motor.setTor(Right_Hip_Pitch, 0.0f);
 
         pos_tmp = receive_data_lite[2][1] << 8 | receive_data_lite[2][2];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
@@ -483,7 +483,7 @@ void Orin::decodeDataLite(Motor &motor)
         ref_tor[Right_Knee_Pitch] = tor;
         motor.setPos(Right_Knee_Pitch, pos);
         motor.setVel(Right_Knee_Pitch, 0.0f);
-        motor.setTor(Right_Knee_Pitch, tor);
+        motor.setTor(Right_Knee_Pitch, 0.0f);
 
         pos_tmp = receive_data_lite[2][3] << 8 | receive_data_lite[2][4];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
@@ -493,6 +493,6 @@ void Orin::decodeDataLite(Motor &motor)
         ref_tor[Right_Ankle_Pitch] = tor;
         motor.setPos(Right_Ankle_Pitch, pos);
         motor.setVel(Right_Ankle_Pitch, 0.0f);
-        motor.setTor(Right_Ankle_Pitch, tor);
+        motor.setTor(Right_Ankle_Pitch, 0.0f);
     }
 }
