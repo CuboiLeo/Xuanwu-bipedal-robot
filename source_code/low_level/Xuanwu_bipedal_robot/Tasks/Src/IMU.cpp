@@ -11,6 +11,8 @@ IMU::IMU()
     gyro = {0.0f, 0.0f, 0.0f};
     euler_rad = {0.0f, 0.0f, 0.0f};
     euler_deg = {0.0f, 0.0f, 0.0f};
+		prev_temp_error = 0;
+		temp_error = 0;
     temp = 0;
     rotation_matrix = {1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f};
     FusionAhrsInitialise(&IMU_AHRS);
@@ -18,20 +20,15 @@ IMU::IMU()
 
 void IMU::heatControl()
 {
-    if (temp < DESIRED_TEMP)
-    {
-        htim3.Instance->CCR4 = MAX_OUTPUT;
-    }
-    else
-    {
-        htim3.Instance->CCR4 = 0;
-    }
+		prev_temp_error = temp_error;
+		temp_error = DESIRED_TEMP - temp;
+    htim3.Instance->CCR4 = CLIP(temp_error*KP + (temp_error - prev_temp_error)*KD, 0, MAX_OUTPUT);
 }
 
 void IMU::updateRaw(const float accel[3], const float gyro[3], float temperature)
 {
     this->accel = {accel[0],accel[1],accel[2]};
-    this->gyro = {gyro[0], gyro[1], gyro[2]};
+    this->gyro = {gyro[0]-GYRO_X_OFFSET, gyro[1]-GYRO_Y_OFFSET, gyro[2]-GYRO_Z_OFFSET};
     temp = temperature;
 }
 

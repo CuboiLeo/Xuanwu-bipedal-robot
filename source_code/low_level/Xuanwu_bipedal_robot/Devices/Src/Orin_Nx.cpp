@@ -7,7 +7,7 @@ void Orin::sendData(const Motor &motor, const IMU &imu, const Direction_Vector &
     pos_tmp = float_to_uint(motor.getPos(Left_Hip_Yaw), P_MIN, P_MAX, 16);
     vel_tmp = float_to_uint(motor.getVel(Left_Hip_Yaw), V_MIN, V_MAX, 12);
     tor_tmp = float_to_uint(motor.getTor(Left_Hip_Yaw), T_MIN, T_MAX, 12);
-    send_data[0][0] = 0x01; //reserved bit 1
+    send_data[0][0] = 0x01; // reserved bit 1
     send_data[0][1] = (pos_tmp >> 8);
     send_data[0][2] = pos_tmp;
     send_data[0][3] = (vel_tmp >> 4);
@@ -47,7 +47,7 @@ void Orin::sendData(const Motor &motor, const IMU &imu, const Direction_Vector &
     send_data[2][5] = (vel_tmp >> 4);
     send_data[2][6] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[2][7] = tor_tmp;
-    send_data[3][0] = 0x02; //reserved bit 2
+    send_data[3][0] = 0x02; // reserved bit 2
     send_data[3][1] = (pos_tmp >> 8);
     send_data[3][2] = pos_tmp;
 
@@ -75,7 +75,7 @@ void Orin::sendData(const Motor &motor, const IMU &imu, const Direction_Vector &
     send_data[4][5] = (vel_tmp >> 4);
     send_data[4][6] = ((vel_tmp & 0xF) << 4) | (tor_tmp >> 8);
     send_data[4][7] = tor_tmp;
-    send_data[5][0] = 0x03; //reserved bit 3
+    send_data[5][0] = 0x03; // reserved bit 3
     send_data[5][1] = pos_tmp >> 8;
     send_data[5][2] = pos_tmp;
 
@@ -207,7 +207,7 @@ void Orin::sendDataLite(const Motor &motor, const IMU &imu, const Direction_Vect
     send_data_lite[4][1] = pos_tmp;
     send_data_lite[4][2] = (vel_tmp >> 4);
     send_data_lite[4][3] = ((vel_tmp & 0xF) << 4);
-    
+
     pos_tmp = float_to_uint(motor.getPos(Right_Ankle_Pitch), P_MIN, P_MAX, 16);
     vel_tmp = float_to_uint(motor.getVel(Right_Ankle_Pitch), V_MIN, V_MAX, 12);
     send_data_lite[4][4] = (pos_tmp >> 8);
@@ -256,6 +256,7 @@ void Orin::sendDataLite(const Motor &motor, const IMU &imu, const Direction_Vect
     else
     {
         watchdog = 0;
+        received_data_flag = 0;
     }
 }
 
@@ -294,6 +295,7 @@ void Orin::receiveData(void)
 void Orin::receiveDataLite(void)
 {
     watchdog = 10;
+    received_data_flag = 1;
     uint16_t rec_id;
     uint8_t rx_data[8] = {0};
     fdcanx_receive(&hfdcan3, &rec_id, rx_data);
@@ -389,7 +391,7 @@ void Orin::decodeData(Motor &motor)
 }
 
 void Orin::decodeDataLite(Motor &motor)
-{ 
+{
     if (receive_data_lite[0][0] == 0x01)
     {
         // only decode motor's pos
@@ -397,102 +399,82 @@ void Orin::decodeDataLite(Motor &motor)
         float pos, tor;
         pos_tmp = receive_data_lite[0][1] << 8 | receive_data_lite[0][2];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
-        pos = (1-filter_coeff)*motor.getRefPos(Left_Hip_Yaw) + filter_coeff*pos;
-        tor = kps[Left_Hip_Yaw]*(pos - motor.getPos(Left_Hip_Yaw)) + kds[Left_Hip_Yaw]*(0 - motor.getVel(Left_Hip_Yaw));
+        tor = kps[Left_Hip_Yaw] * (pos - motor.getPos(Left_Hip_Yaw)) + kds[Left_Hip_Yaw] * (0 - motor.getVel(Left_Hip_Yaw));
         tor = CLIP(tor, -tor_limit, tor_limit);
-        ref_tor[Left_Hip_Yaw] = tor;
         motor.setPos(Left_Hip_Yaw, pos);
         motor.setVel(Left_Hip_Yaw, 0.0f);
-        motor.setTor(Left_Hip_Yaw, 0.0f);
+        motor.setTor(Left_Hip_Yaw, tor);
 
         pos_tmp = receive_data_lite[0][3] << 8 | receive_data_lite[0][4];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
-        pos = (1-filter_coeff)*motor.getRefPos(Left_Hip_Roll) + filter_coeff*pos;
-        tor = kps[Left_Hip_Roll]*(pos - motor.getPos(Left_Hip_Roll)) + kds[Left_Hip_Roll]*(0 - motor.getVel(Left_Hip_Roll));
+        tor = kps[Left_Hip_Roll] * (pos - motor.getPos(Left_Hip_Roll)) + kds[Left_Hip_Roll] * (0 - motor.getVel(Left_Hip_Roll));
         tor = CLIP(tor, -tor_limit, tor_limit);
-        ref_tor[Left_Hip_Roll] = tor;
         motor.setPos(Left_Hip_Roll, pos);
         motor.setVel(Left_Hip_Roll, 0.0f);
-        motor.setTor(Left_Hip_Roll, 0.0f);
+        motor.setTor(Left_Hip_Roll, tor);
 
         pos_tmp = receive_data_lite[0][5] << 8 | receive_data_lite[0][6];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
-        pos = (1-filter_coeff)*motor.getRefPos(Left_Hip_Pitch) + filter_coeff*pos;
-        tor = kps[Left_Hip_Pitch]*(pos - motor.getPos(Left_Hip_Pitch)) + kds[Left_Hip_Pitch]*(0 - motor.getVel(Left_Hip_Pitch));
+        tor = kps[Left_Hip_Pitch] * (pos - motor.getPos(Left_Hip_Pitch)) + kds[Left_Hip_Pitch] * (0 - motor.getVel(Left_Hip_Pitch));
         tor = CLIP(tor, -tor_limit, tor_limit);
-        ref_tor[Left_Hip_Pitch] = tor;
         motor.setPos(Left_Hip_Pitch, pos);
         motor.setVel(Left_Hip_Pitch, 0.0f);
-        motor.setTor(Left_Hip_Pitch, 0.0f);
+        motor.setTor(Left_Hip_Pitch, tor);
 
         pos_tmp = receive_data_lite[0][7] << 8 | receive_data_lite[1][0];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
-        pos = (1-filter_coeff)*motor.getRefPos(Left_Knee_Pitch) + filter_coeff*pos;
-        tor = kps[Left_Knee_Pitch]*(pos - motor.getPos(Left_Knee_Pitch)) + kds[Left_Knee_Pitch]*(0 - motor.getVel(Left_Knee_Pitch));
+        tor = kps[Left_Knee_Pitch] * (pos - motor.getPos(Left_Knee_Pitch)) + kds[Left_Knee_Pitch] * (0 - motor.getVel(Left_Knee_Pitch));
         tor = CLIP(tor, -tor_limit, tor_limit);
-        ref_tor[Left_Knee_Pitch] = tor;
         motor.setPos(Left_Knee_Pitch, pos);
         motor.setVel(Left_Knee_Pitch, 0.0f);
-        motor.setTor(Left_Knee_Pitch, 0.0f);
+        motor.setTor(Left_Knee_Pitch, tor);
 
         pos_tmp = receive_data_lite[1][1] << 8 | receive_data_lite[1][2];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
-        pos = (1-filter_coeff)*motor.getRefPos(Left_Ankle_Pitch) + filter_coeff*pos;
-        tor = kps[Left_Ankle_Pitch]*(pos - motor.getPos(Left_Ankle_Pitch)) + kds[Left_Ankle_Pitch]*(0 - motor.getVel(Left_Ankle_Pitch));
+        tor = kps[Left_Ankle_Pitch] * (pos - motor.getPos(Left_Ankle_Pitch)) + kds[Left_Ankle_Pitch] * (0 - motor.getVel(Left_Ankle_Pitch));
         tor = CLIP(tor, -tor_limit, tor_limit);
-        ref_tor[Left_Ankle_Pitch] = tor;
         motor.setPos(Left_Ankle_Pitch, pos);
-        motor.setVel(Left_Ankle_Pitch, 0.0f); 
-        motor.setTor(Left_Ankle_Pitch, 0.0f);
+        motor.setVel(Left_Ankle_Pitch, 0.0f);
+        motor.setTor(Left_Ankle_Pitch, tor);
 
         pos_tmp = receive_data_lite[1][3] << 8 | receive_data_lite[1][4];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
-        pos = (1-filter_coeff)*motor.getRefPos(Right_Hip_Yaw) + filter_coeff*pos;
-        tor = kps[Right_Hip_Yaw]*(pos - motor.getPos(Right_Hip_Yaw)) + kds[Right_Hip_Yaw]*(0 - motor.getVel(Right_Hip_Yaw));
+        tor = kps[Right_Hip_Yaw] * (pos - motor.getPos(Right_Hip_Yaw)) + kds[Right_Hip_Yaw] * (0 - motor.getVel(Right_Hip_Yaw));
         tor = CLIP(tor, -tor_limit, tor_limit);
-        ref_tor[Right_Hip_Yaw] = tor;
         motor.setPos(Right_Hip_Yaw, pos);
         motor.setVel(Right_Hip_Yaw, 0.0f);
-        motor.setTor(Right_Hip_Yaw, 0.0f);
+        motor.setTor(Right_Hip_Yaw, tor);
 
         pos_tmp = receive_data_lite[1][5] << 8 | receive_data_lite[1][6];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
-        pos = (1-filter_coeff)*motor.getRefPos(Right_Hip_Roll) + filter_coeff*pos;
-        tor = kps[Right_Hip_Roll]*(pos - motor.getPos(Right_Hip_Roll)) + kds[Right_Hip_Roll]*(0 - motor.getVel(Right_Hip_Roll));
+        tor = kps[Right_Hip_Roll] * (pos - motor.getPos(Right_Hip_Roll)) + kds[Right_Hip_Roll] * (0 - motor.getVel(Right_Hip_Roll));
         tor = CLIP(tor, -tor_limit, tor_limit);
-        ref_tor[Right_Hip_Roll] = tor;
         motor.setPos(Right_Hip_Roll, pos);
         motor.setVel(Right_Hip_Roll, 0.0f);
-        motor.setTor(Right_Hip_Roll, 0.0f);
+        motor.setTor(Right_Hip_Roll, tor);
 
         pos_tmp = receive_data_lite[1][7] << 8 | receive_data_lite[2][0];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
-        pos = (1-filter_coeff)*motor.getRefPos(Right_Hip_Pitch) + filter_coeff*pos;
-        tor = kps[Right_Hip_Pitch]*(pos - motor.getPos(Right_Hip_Pitch)) + kds[Right_Hip_Pitch]*(0 - motor.getVel(Right_Hip_Pitch));
+        tor = kps[Right_Hip_Pitch] * (pos - motor.getPos(Right_Hip_Pitch)) + kds[Right_Hip_Pitch] * (0 - motor.getVel(Right_Hip_Pitch));
         tor = CLIP(tor, -tor_limit, tor_limit);
-        ref_tor[Right_Hip_Pitch] = tor;
         motor.setPos(Right_Hip_Pitch, pos);
         motor.setVel(Right_Hip_Pitch, 0.0f);
-        motor.setTor(Right_Hip_Pitch, 0.0f);
+        motor.setTor(Right_Hip_Pitch, tor);
 
         pos_tmp = receive_data_lite[2][1] << 8 | receive_data_lite[2][2];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
-        pos = (1-filter_coeff)*motor.getRefPos(Right_Knee_Pitch) + filter_coeff*pos;
-        tor = kps[Right_Knee_Pitch]*(pos - motor.getPos(Right_Knee_Pitch)) + kds[Right_Knee_Pitch]*(0 - motor.getVel(Right_Knee_Pitch));
+        tor = kps[Right_Knee_Pitch] * (pos - motor.getPos(Right_Knee_Pitch)) + kds[Right_Knee_Pitch] * (0 - motor.getVel(Right_Knee_Pitch));
         tor = CLIP(tor, -tor_limit, tor_limit);
-        ref_tor[Right_Knee_Pitch] = tor;
         motor.setPos(Right_Knee_Pitch, pos);
         motor.setVel(Right_Knee_Pitch, 0.0f);
-        motor.setTor(Right_Knee_Pitch, 0.0f);
+        motor.setTor(Right_Knee_Pitch, tor);
 
         pos_tmp = receive_data_lite[2][3] << 8 | receive_data_lite[2][4];
         pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
-        pos = (1-filter_coeff)*motor.getRefPos(Right_Ankle_Pitch) + filter_coeff*pos;
-        tor = kps[Right_Ankle_Pitch]*(pos - motor.getPos(Right_Ankle_Pitch)) + kds[Right_Ankle_Pitch]*(0 - motor.getVel(Right_Ankle_Pitch));
+        tor = kps[Right_Ankle_Pitch] * (pos - motor.getPos(Right_Ankle_Pitch)) + kds[Right_Ankle_Pitch] * (0 - motor.getVel(Right_Ankle_Pitch));
         tor = CLIP(tor, -tor_limit, tor_limit);
-        ref_tor[Right_Ankle_Pitch] = tor;
         motor.setPos(Right_Ankle_Pitch, pos);
         motor.setVel(Right_Ankle_Pitch, 0.0f);
-        motor.setTor(Right_Ankle_Pitch, 0.0f);
+        motor.setTor(Right_Ankle_Pitch, tor);
     }
 }

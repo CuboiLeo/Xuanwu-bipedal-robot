@@ -4,6 +4,7 @@
 #include "Fusion.h"
 #include "BMI088driver.h"
 #include "BMI088Middleware.h"
+#include "User_Math.h"
 
 static constexpr float IMU_TASK_PERIOD = 0.001f; // IMU task period in seconds
 
@@ -23,13 +24,20 @@ public:
     float getTemp() const { return temp; }
 
 private:
-    float static constexpr DESIRED_TEMP = 40.0f;
-    float static constexpr MAX_OUTPUT = 500;
+    float static constexpr DESIRED_TEMP = 50.0f;
+    float static constexpr MAX_OUTPUT = 500.0f;
     float static constexpr FILTER_COEFFICIENT = 0.01f;
+		float static constexpr KP = 50.0f;
+		float static constexpr KD = 10.0f;
+		float static constexpr GYRO_X_OFFSET = 0.002919685f;
+		float static constexpr GYRO_Y_OFFSET = 0.002117431f;
+		float static constexpr GYRO_Z_OFFSET = 0.000218696f;
     FusionVector accel;           // Accelerometer values in m/s^2
     FusionVector gyro;            // Gyroscope values in rad/s
     FusionEuler euler_rad;        // Euler angles in radians
     FusionEuler euler_deg;        // Euler angles in degrees
+		float temp_error;
+		float prev_temp_error;
     float temp;                   // Temperature in degrees Celsius
     FusionMatrix rotation_matrix; // Rotation matrix for IMU orientation
     FusionAhrs IMU_AHRS;          // Fusion AHRS object for quaternion calculations

@@ -62,23 +62,23 @@ void Motor_Ctrl_Task(void *argument)
         uint8_t soft_start_flag = motor.getSoftStartFlag();
         if (soft_start_flag != motor.ALL_JOINTS_ZEROED_FLAG)
         {
-            soft_start_flag = motor.returnZeroPos();
+            soft_start_flag = motor.returnZeroPos(orin.getReceivedDataFlag());
             motor.setSoftStartFlag(soft_start_flag);
         }
         else
-				{
+        {
             motor.createVirtualBoundary();
 #ifdef USE_LITE_PACKAGE
             orin.decodeDataLite(motor);
 #else
             orin.decodeData(motor);
 #endif
-				} 
+        }
 
         motor.sendAll();
-				curr_time = HAL_GetTick();
-				elapsed_time = curr_time - last_time;
-				last_time = curr_time;
+        curr_time = HAL_GetTick();
+        elapsed_time = curr_time - last_time;
+        last_time = curr_time;
 
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
@@ -98,16 +98,19 @@ void Debug_Task(void *argument)
         char buffer[128]; // Adjust the size based on the data you need to print
 
         // Format the string using sprintf
-        // sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getRefTor(Left_Hip_Yaw), motor.getRefTor(Left_Hip_Roll), motor.getRefTor(Left_Hip_Pitch), motor.getRefTor(Left_Knee_Pitch),
-		// 	motor.getRefTor(Left_Ankle_Pitch), motor.getRefTor(Right_Hip_Yaw), motor.getRefTor(Right_Hip_Roll), motor.getRefTor(Right_Hip_Pitch), motor.getRefTor(Right_Knee_Pitch), motor.getRefTor(Right_Ankle_Pitch));
+        sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getRefTor(Left_Hip_Yaw), motor.getRefTor(Left_Hip_Yaw), motor.getRefTor(Left_Hip_Roll), motor.getRefTor(Left_Hip_Roll),
+                motor.getRefTor(Left_Hip_Pitch), motor.getRefTor(Left_Hip_Pitch), motor.getRefTor(Left_Knee_Pitch), motor.getRefTor(Left_Knee_Pitch), motor.getRefTor(Left_Ankle_Pitch), motor.getRefTor(Left_Ankle_Pitch));
         // sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getRefPos(Left_Hip_Yaw), motor.getRefPos(Left_Hip_Roll), motor.getRefPos(Left_Hip_Pitch), motor.getRefPos(Left_Knee_Pitch),
-		//   	motor.getRefPos(Left_Ankle_Pitch), motor.getRefPos(Right_Hip_Yaw), motor.getRefPos(Right_Hip_Roll), motor.getRefPos(Right_Hip_Pitch), motor.getRefPos(Right_Knee_Pitch), motor.getRefPos(Right_Ankle_Pitch));
+        //   	motor.getRefPos(Left_Ankle_Pitch), motor.getRefPos(Right_Hip_Yaw), motor.getRefPos(Right_Hip_Roll), motor.getRefPos(Right_Hip_Pitch), motor.getRefPos(Right_Knee_Pitch), motor.getRefPos(Right_Ankle_Pitch));
         // sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getPos(Left_Hip_Yaw), motor.getPos(Left_Hip_Roll), motor.getPos(Left_Hip_Pitch), motor.getPos(Left_Knee_Pitch),
-		//  	motor.getPos(Left_Ankle_Pitch), motor.getPos(Right_Hip_Yaw), motor.getPos(Right_Hip_Roll), motor.getPos(Right_Hip_Pitch), motor.getPos(Right_Knee_Pitch), motor.getPos(Right_Ankle_Pitch));
-//        sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getRefPos(Left_Hip_Yaw), motor.getPos(Left_Hip_Yaw), motor.getRefPos(Left_Hip_Roll), motor.getPos(Left_Hip_Roll),
-//		 	motor.getRefPos(Left_Hip_Pitch), motor.getPos(Left_Hip_Pitch), motor.getRefPos(Left_Knee_Pitch), motor.getPos(Left_Knee_Pitch), motor.getRefPos(Left_Ankle_Pitch), motor.getPos(Left_Ankle_Pitch));
-			sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getRefPos(Right_Hip_Yaw), motor.getPos(Right_Hip_Yaw), motor.getRefPos(Right_Hip_Roll), motor.getPos(Right_Hip_Roll),
-		 	motor.getRefPos(Right_Hip_Pitch), motor.getPos(Right_Hip_Pitch), motor.getRefPos(Right_Knee_Pitch), motor.getPos(Right_Knee_Pitch), motor.getRefPos(Right_Ankle_Pitch), motor.getPos(Right_Ankle_Pitch));
+        //  	motor.getPos(Left_Ankle_Pitch), motor.getPos(Right_Hip_Yaw), motor.getPos(Right_Hip_Roll), motor.getPos(Right_Hip_Pitch), motor.getPos(Right_Knee_Pitch), motor.getPos(Right_Ankle_Pitch));
+        //        sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getVel(Left_Hip_Yaw), motor.getVel(Left_Hip_Yaw), motor.getVel(Left_Hip_Roll), motor.getVel(Left_Hip_Roll),
+        //		 	motor.getVel(Left_Hip_Pitch), motor.getVel(Left_Hip_Pitch), motor.getVel(Left_Knee_Pitch), motor.getVel(Left_Knee_Pitch), motor.getVel(Left_Ankle_Pitch), motor.getVel(Left_Ankle_Pitch));
+        //			sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getRefPos(Left_Hip_Yaw), motor.getPos(Left_Hip_Yaw), motor.getRefPos(Left_Hip_Roll), motor.getPos(Left_Hip_Roll),
+        //		 	motor.getRefPos(Left_Hip_Pitch), motor.getPos(Left_Hip_Pitch), motor.getRefPos(Left_Knee_Pitch), motor.getPos(Left_Knee_Pitch), motor.getRefPos(Left_Ankle_Pitch), motor.getPos(Left_Ankle_Pitch));
+        //				FusionVector gyro = imu.getGyro();
+        //			sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", gyro.axis.x, gyro.axis.x, gyro.axis.y, gyro.axis.y,
+        //		 	gyro.axis.z, gyro.axis.z, 0.0f, 0.0f, 0.0f, 0.0f);
         // Transmit the formatted string over UART
         HAL_UART_Transmit(&huart7, (uint8_t *)buffer, strlen(buffer), 0xFFFF);
 
@@ -121,8 +124,7 @@ void IMU_Task(void *argument)
 {
     portTickType xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    const TickType_t TimeIncrement = pdMS_TO_TICKS(2);
-
+    const TickType_t TimeIncrement = pdMS_TO_TICKS(5);
     float gyro[3], accel[3], temperature;
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
     while (BMI088_init())
@@ -141,7 +143,7 @@ void IMU_Task(void *argument)
         imu.updateRaw(accel, gyro, temperature);
         // Process IMU to update orientation
         imu.processData();
-			
+
         vTaskDelayUntil(&xLastWakeTime, TimeIncrement);
     }
 }

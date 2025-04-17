@@ -19,7 +19,7 @@ public:
     void sendAll(void);
     void disableAll(void);
     void enableAll(void);
-    uint8_t returnZeroPos(void);
+    uint8_t returnZeroPos(uint8_t received_data_flag);
     void createVirtualBoundary(void);
     float getPos(const int motor) const { return motor_info[motor].para.pos; };
     float getVel(const int motor) const { return motor_info[motor].para.vel; };

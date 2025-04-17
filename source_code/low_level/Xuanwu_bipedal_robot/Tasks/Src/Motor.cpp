@@ -1,6 +1,7 @@
 #include "Motor.h"
 #include "math.h"
 #include "Robot_Types.h"
+#include "cmsis_os.h"
 
 Motor::Motor()
 {
@@ -57,7 +58,7 @@ Motor::Motor()
 	soft_start_flag = 0;
 }
 
-uint8_t Motor::returnZeroPos(void)
+uint8_t Motor::returnZeroPos(uint8_t received_data_flag)
 {
 	all_joints_zeroed_flag = 1;
 	for (int i = 0; i < NUM_MOTORS; i++)
@@ -73,7 +74,7 @@ uint8_t Motor::returnZeroPos(void)
 		motor_info[i].ctrl.kp_set = 10.0f;
 		motor_info[i].ctrl.kd_set = 1.0f;
 		
-		if (fabs(motor_info[i].para.pos - motor_info[i].ctrl.pos_set) < 0.2f)
+		if (fabs(motor_info[i].para.pos - motor_info[i].ctrl.pos_set) < 0.1f)
 		{
 			motor_info[i].reached_pos_flag = 1;
 		}
@@ -85,18 +86,19 @@ uint8_t Motor::returnZeroPos(void)
 		all_joints_zeroed_flag = all_joints_zeroed_flag && motor_info[i].reached_pos_flag;
 	}
 
-	if (all_joints_zeroed_flag)
+	if (all_joints_zeroed_flag && received_data_flag)
 	{
 		for (int i = 0; i < NUM_MOTORS; i++)
 		{
-			motor_info[i].ctrl.kp_set = kps[i];
-			motor_info[i].ctrl.kd_set = kds[i];
-			// motor_info[i].ctrl.kp_set = 0.0f;
-			// motor_info[i].ctrl.kd_set = 0.0f;
+			// motor_info[i].ctrl.kp_set = kps[i];
+			// motor_info[i].ctrl.kd_set = kds[i];
+			motor_info[i].ctrl.kp_set = 0.0f;
+			motor_info[i].ctrl.kd_set = 0.0f;
 		}
+		return true;
 	}
 
-	return all_joints_zeroed_flag;
+	return false;
 }
 
 void Motor::createVirtualBoundary(void)
@@ -124,10 +126,10 @@ void Motor::createVirtualBoundary(void)
 		}
 		else 
 		{
-			motor_info[i].ctrl.kp_set = kps[i];
-			motor_info[i].ctrl.kd_set = kds[i];	
-			// motor_info[i].ctrl.kp_set = 0.0f;
-			// motor_info[i].ctrl.kd_set = 0.0f;
+			// motor_info[i].ctrl.kp_set = kps[i];
+			// motor_info[i].ctrl.kd_set = kds[i];	
+			motor_info[i].ctrl.kp_set = 0.0f;
+			motor_info[i].ctrl.kd_set = 0.0f;
 		}
 	}
 }

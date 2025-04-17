@@ -25,6 +25,8 @@ extern "C" {
 #define T_MIN -10.0f
 #define T_MAX 10.0f
 
+#define LPF_COEFF 0.85f
+
 typedef struct 
 {
 	int id;
