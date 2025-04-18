@@ -71,7 +71,7 @@ uint8_t Motor::returnZeroPos(uint8_t received_data_flag)
 		motor_info[Right_Knee_Pitch].ctrl.pos_set = -0.36f;
 		motor_info[Right_Ankle_Pitch].ctrl.pos_set = 0.208f;
 		
-		motor_info[i].ctrl.kp_set = 10.0f;
+		motor_info[i].ctrl.kp_set = 20.0f;
 		motor_info[i].ctrl.kd_set = 1.0f;
 		
 		if (fabs(motor_info[i].para.pos - motor_info[i].ctrl.pos_set) < 0.1f)

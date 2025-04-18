@@ -98,16 +98,18 @@ void Debug_Task(void *argument)
         char buffer[128]; // Adjust the size based on the data you need to print
 
         // Format the string using sprintf
-        sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getRefTor(Left_Hip_Yaw), motor.getRefTor(Left_Hip_Yaw), motor.getRefTor(Left_Hip_Roll), motor.getRefTor(Left_Hip_Roll),
-                motor.getRefTor(Left_Hip_Pitch), motor.getRefTor(Left_Hip_Pitch), motor.getRefTor(Left_Knee_Pitch), motor.getRefTor(Left_Knee_Pitch), motor.getRefTor(Left_Ankle_Pitch), motor.getRefTor(Left_Ankle_Pitch));
+//        sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getRefTor(Left_Hip_Yaw), motor.getRefTor(Left_Hip_Yaw), motor.getRefTor(Left_Hip_Roll), motor.getRefTor(Left_Hip_Roll),
+//                motor.getRefTor(Left_Hip_Pitch), motor.getRefTor(Left_Hip_Pitch), motor.getRefTor(Left_Knee_Pitch), motor.getRefTor(Left_Knee_Pitch), motor.getRefTor(Left_Ankle_Pitch), motor.getRefTor(Left_Ankle_Pitch));
         // sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getRefPos(Left_Hip_Yaw), motor.getRefPos(Left_Hip_Roll), motor.getRefPos(Left_Hip_Pitch), motor.getRefPos(Left_Knee_Pitch),
         //   	motor.getRefPos(Left_Ankle_Pitch), motor.getRefPos(Right_Hip_Yaw), motor.getRefPos(Right_Hip_Roll), motor.getRefPos(Right_Hip_Pitch), motor.getRefPos(Right_Knee_Pitch), motor.getRefPos(Right_Ankle_Pitch));
         // sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getPos(Left_Hip_Yaw), motor.getPos(Left_Hip_Roll), motor.getPos(Left_Hip_Pitch), motor.getPos(Left_Knee_Pitch),
         //  	motor.getPos(Left_Ankle_Pitch), motor.getPos(Right_Hip_Yaw), motor.getPos(Right_Hip_Roll), motor.getPos(Right_Hip_Pitch), motor.getPos(Right_Knee_Pitch), motor.getPos(Right_Ankle_Pitch));
         //        sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getVel(Left_Hip_Yaw), motor.getVel(Left_Hip_Yaw), motor.getVel(Left_Hip_Roll), motor.getVel(Left_Hip_Roll),
         //		 	motor.getVel(Left_Hip_Pitch), motor.getVel(Left_Hip_Pitch), motor.getVel(Left_Knee_Pitch), motor.getVel(Left_Knee_Pitch), motor.getVel(Left_Ankle_Pitch), motor.getVel(Left_Ankle_Pitch));
-        //			sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getRefPos(Left_Hip_Yaw), motor.getPos(Left_Hip_Yaw), motor.getRefPos(Left_Hip_Roll), motor.getPos(Left_Hip_Roll),
-        //		 	motor.getRefPos(Left_Hip_Pitch), motor.getPos(Left_Hip_Pitch), motor.getRefPos(Left_Knee_Pitch), motor.getPos(Left_Knee_Pitch), motor.getRefPos(Left_Ankle_Pitch), motor.getPos(Left_Ankle_Pitch));
+//        			sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getRefPos(Left_Hip_Yaw), motor.getPos(Left_Hip_Yaw), motor.getRefPos(Left_Hip_Roll), motor.getPos(Left_Hip_Roll),
+//        		 	motor.getRefPos(Left_Hip_Pitch), motor.getPos(Left_Hip_Pitch), motor.getRefPos(Left_Knee_Pitch), motor.getPos(Left_Knee_Pitch), motor.getRefPos(Left_Ankle_Pitch), motor.getPos(Left_Ankle_Pitch));
+			sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", motor.getRefPos(Right_Hip_Yaw), motor.getPos(Right_Hip_Yaw), motor.getRefPos(Right_Hip_Roll), motor.getPos(Right_Hip_Roll),
+        		 	motor.getRefPos(Right_Hip_Pitch), motor.getPos(Right_Hip_Pitch), motor.getRefPos(Right_Knee_Pitch), motor.getPos(Right_Knee_Pitch), motor.getRefPos(Right_Ankle_Pitch), motor.getPos(Right_Ankle_Pitch));
         //				FusionVector gyro = imu.getGyro();
         //			sprintf(buffer, "/*%f, %f, %f, %f, %f, %f, %f, %f, %f, %f*/\n", gyro.axis.x, gyro.axis.x, gyro.axis.y, gyro.axis.y,
         //		 	gyro.axis.z, gyro.axis.z, 0.0f, 0.0f, 0.0f, 0.0f);
