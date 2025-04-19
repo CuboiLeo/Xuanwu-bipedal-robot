@@ -244,8 +244,6 @@ void STM32::decodeDataLite(Motor &motor, IMU &imu, Command &command)
     vel_tmp = receive_data_lite[0][2] << 4 | receive_data_lite[0][3] >> 4;
     pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
     vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
-    pos = (1-filter_coeff) * motor.getActPos(Left_Hip_Yaw) + filter_coeff * pos;
-    vel = (1-filter_coeff) * motor.getActVel(Left_Hip_Yaw) + filter_coeff * vel;
     motor.setActPos(Left_Hip_Yaw, pos);
     motor.setActVel(Left_Hip_Yaw, vel);
 
@@ -253,8 +251,6 @@ void STM32::decodeDataLite(Motor &motor, IMU &imu, Command &command)
     vel_tmp = receive_data_lite[0][6] << 4 | receive_data_lite[0][7] >> 4;
     pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
     vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
-    pos = (1-filter_coeff) * motor.getActPos(Left_Hip_Roll) + filter_coeff * pos;
-    vel = (1-filter_coeff) * motor.getActVel(Left_Hip_Roll) + filter_coeff * vel;
     motor.setActPos(Left_Hip_Roll, pos);
     motor.setActVel(Left_Hip_Roll, vel);
 
@@ -262,8 +258,6 @@ void STM32::decodeDataLite(Motor &motor, IMU &imu, Command &command)
     vel_tmp = receive_data_lite[1][2] << 4 | receive_data_lite[1][3] >> 4;
     pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
     vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
-    pos = (1-filter_coeff) * motor.getActPos(Left_Hip_Pitch) + filter_coeff * pos;
-    vel = (1-filter_coeff) * motor.getActVel(Left_Hip_Pitch) + filter_coeff * vel;
     motor.setActPos(Left_Hip_Pitch, pos);
     motor.setActVel(Left_Hip_Pitch, vel);
 
@@ -271,8 +265,6 @@ void STM32::decodeDataLite(Motor &motor, IMU &imu, Command &command)
     vel_tmp = receive_data_lite[1][6] << 4 | receive_data_lite[1][7] >> 4;
     pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
     vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
-    pos = (1-filter_coeff) * motor.getActPos(Left_Knee_Pitch) + filter_coeff * pos;
-    vel = (1-filter_coeff) * motor.getActVel(Left_Knee_Pitch) + filter_coeff * vel;
     motor.setActPos(Left_Knee_Pitch, pos);
     motor.setActVel(Left_Knee_Pitch, vel);
 
@@ -280,8 +272,6 @@ void STM32::decodeDataLite(Motor &motor, IMU &imu, Command &command)
     vel_tmp = receive_data_lite[2][2] << 4 | receive_data_lite[2][3] >> 4;
     pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
     vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
-    pos = (1-filter_coeff) * motor.getActPos(Left_Ankle_Pitch) + filter_coeff * pos;
-    vel = (1-filter_coeff) * motor.getActVel(Left_Ankle_Pitch) + filter_coeff * vel;
     motor.setActPos(Left_Ankle_Pitch, pos);
     motor.setActVel(Left_Ankle_Pitch, vel);
 
@@ -289,8 +279,6 @@ void STM32::decodeDataLite(Motor &motor, IMU &imu, Command &command)
     vel_tmp = receive_data_lite[2][6] << 4 | receive_data_lite[2][7] >> 4;
     pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
     vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
-    pos = (1-filter_coeff) * motor.getActPos(Right_Hip_Yaw) + filter_coeff * pos;
-    vel = (1-filter_coeff) * motor.getActVel(Right_Hip_Yaw) + filter_coeff * vel;
     motor.setActPos(Right_Hip_Yaw, pos);
     motor.setActVel(Right_Hip_Yaw, vel);
 
@@ -298,8 +286,6 @@ void STM32::decodeDataLite(Motor &motor, IMU &imu, Command &command)
     vel_tmp = receive_data_lite[3][2] << 4 | receive_data_lite[3][3] >> 4;
     pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
     vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
-    pos = (1-filter_coeff) * motor.getActPos(Right_Hip_Roll) + filter_coeff * pos;
-    vel = (1-filter_coeff) * motor.getActVel(Right_Hip_Roll) + filter_coeff * vel;
     motor.setActPos(Right_Hip_Roll, pos);
     motor.setActVel(Right_Hip_Roll, vel);
 
@@ -307,8 +293,6 @@ void STM32::decodeDataLite(Motor &motor, IMU &imu, Command &command)
     vel_tmp = receive_data_lite[3][6] << 4 | receive_data_lite[3][7] >> 4;
     pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
     vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
-    pos = (1-filter_coeff) * motor.getActPos(Right_Hip_Pitch) + filter_coeff * pos;
-    vel = (1-filter_coeff) * motor.getActVel(Right_Hip_Pitch) + filter_coeff * vel;
     motor.setActPos(Right_Hip_Pitch, pos);
     motor.setActVel(Right_Hip_Pitch, vel);
 
@@ -316,8 +300,6 @@ void STM32::decodeDataLite(Motor &motor, IMU &imu, Command &command)
     vel_tmp = receive_data_lite[4][2] << 4 | receive_data_lite[4][3] >> 4;
     pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
     vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
-    pos = (1-filter_coeff) * motor.getActPos(Right_Knee_Pitch) + filter_coeff * pos;
-    vel = (1-filter_coeff) * motor.getActVel(Right_Knee_Pitch) + filter_coeff * vel;
     motor.setActPos(Right_Knee_Pitch, pos);
     motor.setActVel(Right_Knee_Pitch, vel);
 
@@ -325,8 +307,6 @@ void STM32::decodeDataLite(Motor &motor, IMU &imu, Command &command)
     vel_tmp = receive_data_lite[4][6] << 4 | receive_data_lite[4][7] >> 4;
     pos = uint_to_float(pos_tmp, P_MIN, P_MAX, 16);
     vel = uint_to_float(vel_tmp, V_MIN, V_MAX, 12);
-    pos = (1-filter_coeff) * motor.getActPos(Right_Ankle_Pitch) + filter_coeff * pos;
-    vel = (1-filter_coeff) * motor.getActVel(Right_Ankle_Pitch) + filter_coeff * vel;
     motor.setActPos(Right_Ankle_Pitch, pos);
     motor.setActVel(Right_Ankle_Pitch, vel);
 
@@ -334,8 +314,14 @@ void STM32::decodeDataLite(Motor &motor, IMU &imu, Command &command)
     vx_tmp = receive_data_lite[5][0];
     vy_tmp = receive_data_lite[5][1];
     wz_tmp = receive_data_lite[5][2];
-    command.setLinearVel({uint_to_float(vx_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 8), uint_to_float(vy_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 8), 0});
-    command.setAngularVel({0.0f, 0.0f, uint_to_float(wz_tmp, ANGULAR_VEL_MIN, ANGULAR_VEL_MAX, 8)});
+    float vx = uint_to_float(vx_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 8);
+    float vy = uint_to_float(vy_tmp, LINEAR_VEL_MIN, LINEAR_VEL_MAX, 8);
+    float wz = uint_to_float(wz_tmp, ANGULAR_VEL_MIN, ANGULAR_VEL_MAX, 8);
+    vx = fabs(vx) < 0.05f ? 0.0f : vx;
+    vy = fabs(vy) < 0.05f ? 0.0f : vy;
+    wz = fabs(wz) < 0.05f ? 0.0f : wz;
+    command.setLinearVel({vx, vy, 0.0f});
+    command.setAngularVel({0.0f, 0.0f, wz});
 
     float acc_x_tmp, acc_y_tmp, acc_z_tmp, gyro_x_tmp, gyro_y_tmp, gyro_z_tmp;
     acc_x_tmp = uint_to_float(receive_data_lite[5][3] << 8 | receive_data_lite[5][4], A_MIN, A_MAX, 16);

@@ -65,13 +65,13 @@ int main()
 
 void compute_thread()
 {
-    Robot robot;                                                                 // Robot object for robot state
-    Kinematics kinematics;                                                       // Kinematics object for kinematics computation
-    Dynamics dynamics;                                                           // Dynamics object for dynamics computation
-    Controls controls;                                                           // Controls object for control computation
-    Estimations estimations;                                                     // Estimation object for estimation computation
-    Walking_Patterns walking_patterns;                                           // Walking patterns object for walking pattern computation
-    RL_Inference rl_inference("../../RL/trained_policy/flat_ground_walking_v7.pt"); // RL inference object for RL policy inference
+    Robot robot;                                                                    // Robot object for robot state
+    Kinematics kinematics;                                                          // Kinematics object for kinematics computation
+    Dynamics dynamics;                                                              // Dynamics object for dynamics computation
+    Controls controls;                                                              // Controls object for control computation
+    Estimations estimations;                                                        // Estimation object for estimation computation
+    Walking_Patterns walking_patterns;                                              // Walking patterns object for walking pattern computation
+    RL_Inference rl_inference("../../RL/trained_policy/flat_ground_walking_v1.pt"); // RL inference object for RL policy inference
     auto start = std::chrono::high_resolution_clock::now();
     auto next_cycle = std::chrono::steady_clock::now();
 
@@ -184,8 +184,8 @@ void compute_thread()
         std::vector<float> target_q = rl_inference.infer(elapsed.count(), cmd, q, dq, omega, eul_ang);
         Joint_Angles left_ref_angle = {target_q[0], target_q[1], target_q[2], target_q[3], target_q[4]};
         Joint_Angles right_ref_angle = {target_q[5], target_q[6], target_q[7], target_q[8], target_q[9]};
-
-        // Joint_Angles left_ref_angle = {0.2*sin(2 * PI * elapsed.count() / 0.64), 0.4*sin(2 * PI * elapsed.count() / 0.64), -0.5*sin(2 * PI * elapsed.count() / 0.64), sin(2 * PI * elapsed.count() / 0.64), -0.5*sin(2 * PI * elapsed.count() / 0.64)};
+        // float scale = 0.0f;
+        // Joint_Angles left_ref_angle = {0.0 * sin(2 * PI * elapsed.count() / 0.64), 0.2 * sin(2 * PI * elapsed.count() / 0.64), scale * sin(2 * PI * elapsed.count() / 0.64) + 0.152f, -2.0f*scale* sin(2 * PI * elapsed.count() / 0.64) - 0.36f, scale * sin(2 * PI * elapsed.count() / 0.64) + 0.208f};
         // Joint_Angles right_ref_angle = {0, 0, 0, 0, 0};
         robot.setLegRefAngles(left_ref_angle, right_ref_angle);
         // std::cout << "Left Angles: " << left_ref_angle.hip_yaw << " | " << left_ref_angle.hip_roll << " | " << left_ref_angle.hip_pitch << " | " << left_ref_angle.knee_pitch << " | " << left_ref_angle.ankle_pitch << std::endl;
@@ -198,7 +198,7 @@ void compute_thread()
         // Wrench right_foot_wrench = dynamics.computeFootWrench(robot.getLegActTorque(RIGHT_LEG_ID), robot.getLegActAngles(RIGHT_LEG_ID), RIGHT_LEG_ID);
 
         // logDataToCSV(elapsed.count(), left_ref_angle.hip_yaw, left_ref_angle.hip_roll, left_ref_angle.hip_pitch, left_ref_angle.knee_pitch, left_ref_angle.ankle_pitch);
-        // logDataToCSV(elapsed.count(),eul_ang[0],eul_ang[1],eul_ang[2]);
+        // logDataToCSV(elapsed.count(),omega[0],omega[1],omega[2]);
         lock.unlock(); // Unlock the shared data
         std::this_thread::sleep_until(next_cycle);
     }
@@ -262,7 +262,8 @@ void set_thread_realtime(std::thread &thread, int priority)
     // Attempt to set the policy & priority
     int policy = SCHED_FIFO;
     int ret = pthread_setschedparam(native_handle, policy, &sch_params);
-    if (ret != 0) {
+    if (ret != 0)
+    {
         std::cerr << "Failed to set RT priority for thread. Errno: " << ret << std::endl;
     }
 }
@@ -279,10 +280,13 @@ void pinThreadToCore(std::thread &thr, int core_id)
 
     // Call pthread_setaffinity_np
     int rc = pthread_setaffinity_np(native_handle, sizeof(cpu_set_t), &cpuset);
-    if (rc != 0) {
-        std::cerr << "Error calling pthread_setaffinity_np: " 
+    if (rc != 0)
+    {
+        std::cerr << "Error calling pthread_setaffinity_np: "
                   << strerror(rc) << std::endl;
-    } else {
+    }
+    else
+    {
         std::cout << "Pinned thread to core " << core_id << std::endl;
     }
 }
