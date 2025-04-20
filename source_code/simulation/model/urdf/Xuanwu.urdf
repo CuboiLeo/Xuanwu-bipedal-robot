@@ -8,17 +8,17 @@
     name="base_link">
     <inertial>
       <origin
-        xyz="0.001 -0.0001 0.0685"
+        xyz="0.000934 -0.004880 0.069827"
         rpy="0 0 0" />
       <mass
-        value="1.874" />
+        value="2.016243" />
       <inertia
-        ixx="0.018815"
+        ixx="0.020615"
         ixy="-0.000024"
         ixz="-0.000076"
-        iyy="0.023869"
-        iyz="0.000022"
-        izz="0.006187" />
+        iyy="0.025088"
+        iyz="0.000865"
+        izz="0.006959" />
     </inertial>
     <visual>
       <origin
@@ -47,17 +47,17 @@
     name="link_1">
     <inertial>
       <origin
-        xyz="-0.006 -0.065 -0.0806"
+        xyz="-0.006856 -0.062152 -0.076118"
         rpy="0 0 0" />
       <mass
-        value="0.469" />
+        value="0.504" />
       <inertia
-        ixx="0.006798"
+        ixx="0.006998"
         ixy="0.000002"
-        ixz="0.000005"
-        iyy="0.004351"
-        iyz="-0.003146"
-        izz="0.002837" />
+        ixz="0.000015"
+        iyy="0.004490"
+        iyz="-0.003216"
+        izz="0.002973" />
     </inertial>
     <visual>
       <origin
@@ -87,7 +87,7 @@
     name="joint_1"
     type="revolute">
     <origin
-      xyz="-0.073 0 -0.001"
+      xyz="-0.073035 -1.4472E-05 -0.00095242"
       rpy="0 0 0" />
     <parent
       link="base_link" />
@@ -105,17 +105,17 @@
     name="link_2">
     <inertial>
       <origin
-        xyz="0 0.078 0"
+        xyz="-0.000218 0.076679 0.000024"
         rpy="0 0 0" />
       <mass
-        value="0.364" />
+        value="0.390" />
       <inertia
-        ixx="0.000134"
-        ixy="0"
-        ixz="0"
-        iyy="0.000094"
-        iyz="0"
-        izz="0.000146" />
+        ixx="0.002461"
+        ixy="0.000007"
+        ixz="0.000000"
+        iyy="0.000116"
+        iyz="-0.000001"
+        izz="0.002479" />
     </inertial>
     <visual>
       <origin
@@ -145,7 +145,7 @@
     name="joint_2"
     type="revolute">
     <origin
-      xyz="0 -0.083 -0.11"
+      xyz="4.9294E-05 -0.083183 -0.11003"
       rpy="0 0 0" />
     <parent
       link="link_1" />
@@ -163,17 +163,17 @@
     name="link_3">
     <inertial>
       <origin
-        xyz="0 0 -0.145"
+        xyz="-0.000371 -0.000049 -0.144385"
         rpy="0 0 0" />
       <mass
-        value="0.475" />
+        value="0.481" />
       <inertia
-        ixx="0.011707"
-        ixy="0"
-        ixz="-0.000057"
-        iyy="0.011788"
+        ixx="0.011775"
+        ixy="0.000000"
+        ixz="-0.000059"
+        iyy="0.011859"
         iyz="-0.000004"
-        izz="0.000256" />
+        izz="0.000263" />
     </inertial>
     <visual>
       <origin
@@ -203,7 +203,7 @@
     name="joint_3"
     type="revolute">
     <origin
-      xyz="0 0.082 0"
+      xyz="0.00098795 0.082032 2.035E-05"
       rpy="0 0 0" />
     <parent
       link="link_2" />
@@ -221,17 +221,17 @@
     name="link_4">
     <inertial>
       <origin
-        xyz="0 0 -0.145"
+        xyz="-0.000371 0.000032 -0.144426"
         rpy="0 0 0" />
       <mass
-        value="0.475" />
+        value="0.481" />
       <inertia
-        ixx="0.011713"
-        ixy="0"
-        ixz="-0.000057"
-        iyy="0.011793"
+        ixx="0.011781"
+        ixy="0.000000"
+        ixz="-0.000059"
+        iyy="0.011865"
         iyz="0.000002"
-        izz="0.000256" />
+        izz="0.000263" />
     </inertial>
     <visual>
       <origin
@@ -261,7 +261,7 @@
     name="joint_4"
     type="revolute">
     <origin
-      xyz="0 0 -0.18"
+      xyz="5E-05 -5.7742E-05 -0.17996"
       rpy="0 0 0" />
     <parent
       link="link_3" />
@@ -279,17 +279,17 @@
     name="link_5">
     <inertial>
       <origin
-        xyz="0 0 -0.053"
+        xyz="0.000400 -0.000014 -0.053536"
         rpy="0 0 0" />
       <mass
-        value="0.107" />
+        value="0.122" />
       <inertia
-        ixx="0.000494"
-        ixy="0"
-        ixz="-0.000005"
-        iyy="0.000482"
-        iyz="0"
-        izz="0.000180" />
+        ixx="0.000567"
+        ixy="0.000000"
+        ixz="-0.000006"
+        iyy="0.000555"
+        iyz="0.000000"
+        izz="0.000202" />
     </inertial>
     <visual>
       <origin
@@ -319,7 +319,7 @@
     name="joint_5"
     type="revolute">
     <origin
-      xyz="0 0 -0.18"
+      xyz="5E-05 3.7392E-05 -0.18"
       rpy="0 0 0" />
     <parent
       link="link_4" />
@@ -337,17 +337,17 @@
     name="link_6">
     <inertial>
       <origin
-        xyz="0.006 -0.065 -0.0806"
+        xyz="0.006873 -0.062180 -0.076118"
         rpy="0 0 0" />
       <mass
-        value="0.469" />
+        value="0.504" />
       <inertia
-        ixx="0.006798"
-        ixy="-0.00002"
-        ixz="-0.00005"
-        iyy="0.004351"
-        iyz="-0.003147"
-        izz="0.002837" />
+        ixx="0.007000"
+        ixy="-0.000001"
+        ixz="-0.000014"
+        iyy="0.004490"
+        iyz="-0.003218"
+        izz="0.002974" />
     </inertial>
     <visual>
       <origin
@@ -377,7 +377,7 @@
     name="joint_6"
     type="revolute">
     <origin
-      xyz="0.073 0 -0.001"
+      xyz="0.073035 1.4472E-05 -0.00095242"
       rpy="0 0 0" />
     <parent
       link="base_link" />
@@ -395,17 +395,17 @@
     name="link_7">
     <inertial>
       <origin
-        xyz="0 0.078 0"
+        xyz="0.000189 0.076679 0.000046"
         rpy="0 0 0" />
       <mass
-        value="0.364" />
+        value="0.390" />
       <inertia
-        ixx="0.002344"
-        ixy="0.000003"
-        ixz="0"
-        iyy="0.000094"
+        ixx="0.002461"
+        ixy="-0.000006"
+        ixz="0.000000"
+        iyy="0.000116"
         iyz="-0.000001"
-        izz="0.002356" />
+        izz="0.002479" />
     </inertial>
     <visual>
       <origin
@@ -435,7 +435,7 @@
     name="joint_7"
     type="revolute">
     <origin
-      xyz="0 -0.083 -0.11"
+      xyz="-2.035E-05 -0.083212 -0.11003"
       rpy="0 0 0" />
     <parent
       link="link_6" />
@@ -453,17 +453,17 @@
     name="link_8">
     <inertial>
       <origin
-        xyz="0 0 -0.145"
+        xyz="0.000371 -0.000021 -0.144414"
         rpy="0 0 0" />
       <mass
-        value="0.475" />
+        value="0.481" />
       <inertia
-        ixx="0.011711"
-        ixy="0"
-        ixz="0.000057"
-        iyy="0.011792"
+        ixx="0.011779"
+        ixy="0.000000"
+        ixz="0.000059"
+        iyy="0.011863"
         iyz="-0.000001"
-        izz="0.000256" />
+        izz="0.000263" />
     </inertial>
     <visual>
       <origin
@@ -493,7 +493,7 @@
     name="joint_8"
     type="revolute">
     <origin
-      xyz="0 0.082 0"
+      xyz="-0.0010169 0.082032 4.9294E-05"
       rpy="0 0 0" />
     <parent
       link="link_7" />
@@ -511,17 +511,17 @@
     name="link_9">
     <inertial>
       <origin
-        xyz="0 0 -0.145"
+        xyz="0.000371 -0.000001 -0.144439"
         rpy="0 0 0" />
       <mass
-        value="0.475" />
+        value="0.481" />
       <inertia
-        ixx="0.011715"
-        ixy="0"
-        ixz="0.000057"
-        iyy="0.011796"
-        iyz="0"
-        izz="0.000256" />
+        ixx="0.011783"
+        ixy="0.000000"
+        ixz="0.000059"
+        iyy="0.011867"
+        iyz="0.000000"
+        izz="0.000263" />
     </inertial>
     <visual>
       <origin
@@ -551,7 +551,7 @@
     name="joint_9"
     type="revolute">
     <origin
-      xyz="0 0 -0.18"
+      xyz="-5E-05 -1.1901E-05 -0.17998"
       rpy="0 0 0" />
     <parent
       link="link_8" />
@@ -569,17 +569,17 @@
     name="link_10">
     <inertial>
       <origin
-        xyz="0 0 -0.053"
+        xyz="-0.000400 -0.000035 -0.053516"
         rpy="0 0 0" />
       <mass
-        value="0.107" />
+        value="0.122" />
       <inertia
-        ixx="0.000493"
-        ixy="0"
-        ixz="0.000005"
-        iyy="0.000482"
-        iyz="0"
-        izz="0.000180" />
+        ixx="0.000566"
+        ixy="0.000000"
+        ixz="0.000006"
+        iyy="0.000554"
+        iyz="0.000000"
+        izz="0.000202" />
     </inertial>
     <visual>
       <origin
@@ -609,7 +609,7 @@
     name="joint_10"
     type="revolute">
     <origin
-      xyz="0 0 -0.18"
+      xyz="-5E-05 1.1901E-05 -0.18002"
       rpy="0 0 0" />
     <parent
       link="link_9" />
